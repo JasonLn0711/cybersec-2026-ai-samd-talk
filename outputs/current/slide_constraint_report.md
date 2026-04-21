@@ -41,7 +41,7 @@ This report is the slide-level quality firewall. It does not replace the macro `
 
 | Slide | Pass/Fail | Violations | Severity | Penalty | Required Redesign |
 | --- | --- | --- | --- | --- | --- |
-| 6 | FAIL | Risk of legal-text density if FDA evidence is shown as source quotes instead of a chain. | Major | 3 | Keep only Evidence, not slogans; Risk -> Control -> Test -> Fix -> Evidence; Monitor | Patch | Disclose | SBOM. |
+| 6 | FAIL | Risk of legal-text density if FDA evidence is shown as source quotes instead of a chain. | Major | 3 | Keep only Evidence, not slogans; Risk -> Control -> Test -> Fix -> Evidence; Monitor \| CVD \| Patch \| SBOM. |
 | 7 | FAIL | Three-column bridge can become a control catalog. | Major | 3 | Reduce each column to one noun phrase plus three labels; speak the rest. |
 | 11 | PASS | Minor tool-catalog risk if examples expand. | Minor | 1 | Keep contrast between early repair and external exposure; output strip must say finding list + retest evidence. |
 | 12 | PASS | Minor risk that flow competes with Decision node. | Minor | 1 | Make Decision visually dominant and outcomes secondary. |

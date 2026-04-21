@@ -4,43 +4,45 @@ Canonical repository for the CYBERSEC 2026 speech-delivery package:
 
 `AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地`
 
-This repo owns the presentation design system, compact slide specification, stage script, scoring rubric, slide constraint layer, and rehearsal process. It exists because CYBERSEC talk preparation is a standalone professional delivery project, not a TA grading artifact.
+This repo owns what the talk says, shows, scores, and rehearses. It exists because CYBERSEC delivery is a standalone professional talk project, not a TA grading artifact and not a planning dashboard.
+
+Agent-facing working rules live in [`AGENTS.md`](AGENTS.md).
 
 ## First-Principles Boundary
 
 | Question | Decision |
 | --- | --- |
-| What is the artifact? | A public conference talk package for CYBERSEC 2026. |
+| What is the artifact? | A public `30:00` CYBERSEC conference talk package. |
 | Who uses it? | Speaker, deck editor, rehearsal reviewer, and evaluator. |
-| What must it optimize? | Clarity, credibility, timing, memorability, and rubric-aligned delivery. |
-| Where should it live? | In this dedicated sibling repo, not inside `ns-practice-ta-grading-2026s`. |
-| What does the planning repo do? | Holds project context, source anchors, deck artifacts, and a handoff link to this repo. |
-| What should not happen? | Do not mix speech-delivery artifacts with student grading, raw submissions, or unrelated course evaluation records. |
+| What must it optimize? | Clarity, credibility, timing, memorability, public safety, and delivery readiness. |
+| Where should it live? | In this dedicated sibling repo, not inside planning or grading repos. |
+| What is the active delivery surface? | Compact `14`-slide deck, `28:30` spoken content, `1:30` buffer. |
+| What should not happen? | Do not mix speech-delivery artifacts with student grading, raw submissions, private hospital/client material, or unrelated course records. |
 
-Recommended working model:
+Routing model:
 
-`planning-everything-track` = project operating context and source anchors.
+```text
+planning-everything-track = why / when / priority / status / capacity
+cybersec-2026-ai-samd-talk = what the talk says / shows / scores / rehearses
+```
 
-`cybersec-2026-ai-samd-talk` = canonical talk design, rehearsal, and evaluation package.
+## Canonical Human Docs
 
-## Canonical Files
+| File | Use It For |
+| --- | --- |
+| [`docs/01_talk_design.md`](docs/01_talk_design.md) | First-principles talk model, audience promise, `14`-slide design, timing, build path, and full stage script. |
+| [`docs/02_evaluation_system.md`](docs/02_evaluation_system.md) | `100`-point speech rubric, slide hard gates, penalties, multiplier, and generated evaluation outputs. |
+| [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md) | Dry-run loop, timing checkpoints, peer-review questions, repair order, and readiness checklist. |
 
-| File | Use It For | Primary Output |
-| --- | --- | --- |
-| [`docs/01_strategy_and_rubric_alignment.md`](docs/01_strategy_and_rubric_alignment.md) | Talk positioning, audience promise, narrative, timing, visual strategy, rubric translation | Design decisions |
-| [`docs/02_compact_14_slide_deck_spec.md`](docs/02_compact_14_slide_deck_spec.md) | Build-ready slide plan for the recommended compact deck | Exact slide production spec |
-| [`docs/03_speaker_script_and_stage_rhythm.md`](docs/03_speaker_script_and_stage_rhythm.md) | Taiwan Traditional Chinese delivery script, rhythm map, cue cards, stage behavior | Rehearsal script |
-| [`docs/04_scoring_rubric.md`](docs/04_scoring_rubric.md) | Strict `100`-point evaluator framework and scoring sheet | Evaluation form |
-| [`docs/05_rehearsal_and_iteration_runbook.md`](docs/05_rehearsal_and_iteration_runbook.md) | Review passes, dry runs, fix-order by score band, final readiness | Iteration system |
-| [`docs/06_slide_design_constraint_system.md`](docs/06_slide_design_constraint_system.md) | Pass/fail slide design gates, penalties, multiplier, and redesign prompt | Slide quality firewall |
+These three files replace the older split between strategy, deck spec, transcript, scoring rubric, slide constraints, and rehearsal runbook. The goal is one mental model: design, evaluate, rehearse.
 
-## Generated Operating-System Outputs
+## Machine Source And Generated Outputs
 
-The canonical docs stay in `docs/`. The reusable generated artifacts live under `outputs/current/` and are rebuilt from the single structured source file:
+Structured source of truth:
 
 `data/presentation_os.json`
 
-Run:
+Generate current reports:
 
 ```bash
 python3 tools/generate_presentation_outputs.py
@@ -50,13 +52,13 @@ Generated files:
 
 | File | Use It For |
 | --- | --- |
-| `outputs/current/main_strategy.md` | Design brief, narrative architecture, timing, rubric translation, visual strategy, and source anchors |
-| `outputs/current/slide_blueprint.md` | Slide-by-slide Apple-style blueprint for the compact `14`-slide talk |
-| `outputs/current/evaluation_report.md` | Baseline and optimized macro scoring with slide-adjusted readiness score |
-| `outputs/current/slide_constraint_report.md` | Hard-gate slide review, baseline violations, and optimized pass/fail status |
-| `outputs/current/optimization_plan.md` | Top failure points, high-leverage improvements, transitions, and simulated second pass |
-| `outputs/current/scoring_report.csv` | Spreadsheet-ready score report with `Category,Score,MaxScore,Strengths,Weaknesses,Evidence` |
-| `outputs/current/slide_validation.csv` | Spreadsheet-ready slide gate report with `SlideID,PassFail,Violations,Severity` |
+| `outputs/current/main_strategy.md` | Generated strategy, narrative, timing, source anchors, and rubric translation. |
+| `outputs/current/slide_blueprint.md` | Generated slide-by-slide compact `14`-slide blueprint. |
+| `outputs/current/evaluation_report.md` | Baseline and optimized scoring with slide-adjusted readiness. |
+| `outputs/current/slide_constraint_report.md` | Slide hard-gate report and redesign queue. |
+| `outputs/current/optimization_plan.md` | Top failure points and second-pass repair plan. |
+| `outputs/current/scoring_report.csv` | Spreadsheet-ready score report. |
+| `outputs/current/slide_validation.csv` | Spreadsheet-ready slide gate report. |
 
 The generator enforces exactly `14` slides, exactly `1710` seconds / `28:30` content time, and exactly `100` rubric points.
 
@@ -65,8 +67,10 @@ The generator enforces exactly `14` slides, exactly `1710` seconds / `28:30` con
 Build the optimized compact deck from the same JSON source:
 
 ```bash
-/Users/iKev/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node tools/build_optimized_deck.mjs
+node tools/build_optimized_deck.mjs
 ```
+
+Dependency note: the deck builder requires `@oai/artifact-tool` to be resolvable by the active Node environment.
 
 Deck artifact:
 
@@ -76,16 +80,13 @@ The deck uses editable PowerPoint text, shapes, diagrams, and speaker notes. Sli
 
 ## Working Order
 
-1. Lock the audience promise and timing with [`docs/01_strategy_and_rubric_alignment.md`](docs/01_strategy_and_rubric_alignment.md).
-2. Build or revise the deck from [`docs/02_compact_14_slide_deck_spec.md`](docs/02_compact_14_slide_deck_spec.md).
-3. Run the slide gate in [`docs/06_slide_design_constraint_system.md`](docs/06_slide_design_constraint_system.md) before timed rehearsal.
-4. Regenerate `outputs/current/` so the reports and CSVs match the current structured source.
-5. Build the editable deck only after reports pass.
-6. Rehearse from [`docs/03_speaker_script_and_stage_rhythm.md`](docs/03_speaker_script_and_stage_rhythm.md).
-7. Score each run with [`docs/04_scoring_rubric.md`](docs/04_scoring_rubric.md).
-8. Apply the next repair pass from [`docs/05_rehearsal_and_iteration_runbook.md`](docs/05_rehearsal_and_iteration_runbook.md).
-
-The recommended delivery surface is the compact `14`-slide version. Older `23`-slide materials are source context in the planning repo, not active working files here.
+1. Read [`docs/01_talk_design.md`](docs/01_talk_design.md) to confirm the thesis, audience promise, slide map, timing, script, and public-safety boundary.
+2. Edit `data/presentation_os.json` only when generated reports or deck text need to change.
+3. Run `python3 tools/generate_presentation_outputs.py`.
+4. Build the editable PPTX with `node tools/build_optimized_deck.mjs` when the deck artifact must change and dependencies are available.
+5. Apply [`docs/02_evaluation_system.md`](docs/02_evaluation_system.md) before timed rehearsal.
+6. Rehearse and repair using [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md).
+7. Update the planning handoff only with status, links, and workflow changes; do not duplicate this package into the planning repo.
 
 ## Evaluation Architecture
 
@@ -100,23 +101,23 @@ Optimization Engine
 -> rewrite only the worst failed slides
 ```
 
-Do not merge these layers into one generic checklist. The speech rubric evaluates the talk. The slide constraint system prevents the deck from becoming text-heavy, generic, or visually undisciplined.
+The speech rubric evaluates the talk. The slide gate protects clarity. The rehearsal loop chooses the next repair.
 
 ## Planning Repo Connection
 
-Planning repo:
+Planning repo local sibling path:
 
-`/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/`
+`../planning-everything-track/`
 
-Primary planning handoff:
+Primary planning handoff local sibling path:
 
-`/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-presentation-scoring-system-handoff-20260421.md`
+`../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-presentation-scoring-system-handoff-20260421.md`
 
-Project index:
+Project index local sibling path:
 
-`/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck.md`
+`../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck.md`
 
-Connection rule: update the planning handoff when this repo changes its canonical file set or workflow. Do not duplicate the full package into the planning repo.
+Connection rule: update the planning handoff when this repo changes its canonical file set or workflow.
 
 ## Source Anchors
 
@@ -126,24 +127,27 @@ Official anchors:
 - CYBERSEC speaker page: <https://cybersec.ithome.com.tw/2026/speaker/2060>
 - FDA cybersecurity page: <https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity>
 - FDA 2025 cybersecurity guidance PDF: <https://www.fda.gov/files/guidance%20documents/published/GUI00001825-final-PremarketCybersecurity-2025.pdf>
+- Public Law 117-328, section 524B: <https://www.congress.gov/117/plaws/publ328/PLAW-117publ328.pdf>
+- NIST AI Risk Management Framework playbook: <https://www.nist.gov/itl/ai-risk-management-framework/nist-ai-rmf-playbook>
+- NIST Cybersecurity Framework 2.0: <https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20>
 
 Local planning anchors:
 
-- v0.9 deck: `/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pptx`
-- v0.9 PDF: `/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pdf`
-- v0.9 speaker notes: `/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-speaker-notes-v0.9-20260422.md`
-- v0.9 rehearsal runbook: `/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-first-rehearsal-runbook-v0.9-20260422.md`
-- Official event source bundle: `/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md`
+- v0.9 deck source: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pptx`
+- v0.9 PDF source: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pdf`
+- v0.9 speaker notes source: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-speaker-notes-v0.9-20260422.md`
+- v0.9 rehearsal runbook source: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-first-rehearsal-runbook-v0.9-20260422.md`
+- Official event source bundle: `../planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md`
 
 ## Design Contract
 
-| Constraint | Package Rule | Rubric Protected |
-| --- | --- | --- |
-| Serious conference tone | Use product-risk, evidence-chain, and operating-decision language | Content Depth and Value, Stage Presence |
-| No classroom report posture | Every slide must answer a decision question: what risk, what evidence, what action | Delivery Quality, Audience Impact |
-| No decorative security imagery | Visuals must show architecture, evidence, workflow, comparison, or decision | Visual Design |
-| No slide bloat | One dominant message per slide; secondary detail belongs in speaker notes or Q&A | Structure and Narrative Design, Stage Rhythm and Time Control |
-| No public sensitive content | Exclude proprietary code, private hospital/client detail, student records, raw submissions, exploit recipes, and patent-sensitive implementation mechanics | Stage Presence, Content Depth and Value |
+| Constraint | Package Rule |
+| --- | --- |
+| Serious conference tone | Use product-risk, evidence-chain, and operating-decision language. |
+| No classroom report posture | Every slide must answer: what risk, what evidence, what action. |
+| No decorative security imagery | Visuals must show architecture, evidence, workflow, comparison, or decision. |
+| No slide bloat | One dominant message per slide; detail belongs in speaker notes or Q&A. |
+| No public sensitive content | Exclude proprietary code, private hospital/client detail, student records, raw submissions, exploit recipes, and patent-sensitive implementation mechanics. |
 
 ## Current Delivery Promise
 

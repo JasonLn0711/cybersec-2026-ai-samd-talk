@@ -41,6 +41,15 @@ async function readImageBlob(imagePath) {
   return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
 }
 
+function resolveRepoPath(filePath) {
+  if (!filePath || path.isAbsolute(filePath)) return filePath;
+  return path.resolve(root, filePath);
+}
+
+function toRepoRelative(filePath) {
+  return path.relative(root, filePath);
+}
+
 function secondsToTime(seconds) {
   const minutes = Math.floor(seconds / 60);
   const rem = String(seconds % 60).padStart(2, "0");
@@ -178,10 +187,11 @@ function buildTitleSlide(presentation, slideData) {
 async function buildDisclaimerSlide(presentation, slideData, metadata) {
   const slide = presentation.slides.add();
   slide.background.fill = COLORS.bg;
+  const disclaimerImage = resolveRepoPath(metadata.disclaimer_image);
   try {
-    await fs.access(metadata.disclaimer_image);
+    await fs.access(disclaimerImage);
     const image = slide.images.add({
-      blob: await readImageBlob(metadata.disclaimer_image),
+      blob: await readImageBlob(disclaimerImage),
       fit: "contain",
       alt: "Required CYBERSEC disclaimer",
     });
@@ -261,11 +271,11 @@ function buildInfrastructureSlide(presentation, slideData) {
   addLine(slide, 670, 260, 340, 3, COLORS.accent);
   addLine(slide, 1008, 244, 4, 36, COLORS.risk);
   addLine(slide, 1010, 260, 110, 3, COLORS.dim);
-  addText(slide, "Care continuity", { left: 672, top: 298, width: 400, height: 44 }, {
+  addText(slide, "Clinical continuity", { left: 672, top: 298, width: 400, height: 44 }, {
     size: 28,
     bold: true,
   });
-  addText(slide, "Cyber incidents become care disruption", { left: 672, top: 360, width: 430, height: 54 }, {
+  addText(slide, "Cyber incidents can disrupt care", { left: 672, top: 360, width: 430, height: 54 }, {
     size: 23,
     color: COLORS.muted,
   });
@@ -331,7 +341,7 @@ function buildEvidenceChain(presentation, slideData) {
     });
     if (idx < nodes.length - 1) addLine(slide, left + 150, 340, 45, 2.5, COLORS.accent);
   });
-  ["Monitor", "Patch", "Disclose", "SBOM"].forEach((label, idx) => {
+  ["Monitor", "CVD", "Patch", "SBOM"].forEach((label, idx) => {
     addPill(slide, label, 184 + idx * 215, 455, 130, idx === 1 ? COLORS.risk : COLORS.accent);
   });
   addSpeakerNotes(slide, slideData.speaker_note);
@@ -348,7 +358,7 @@ function buildThreeColumnBridge(presentation, slideData) {
   });
   const cols = [
     ["Model evidence", ["Intended use", "Data", "V&V"]],
-    ["Governance language", ["Govern", "Protect", "Recover"]],
+    ["AI RMF language", ["Govern", "Map", "Measure", "Manage"]],
     ["AI stack", ["Provenance", "Isolation", "Updates"]],
   ];
   cols.forEach(([heading, labels], idx) => {
@@ -394,7 +404,7 @@ function buildContrastSlide(presentation, slideData) {
           ["Viewer", ["Parser", "Upload", "Cache", "Output limits"], COLORS.risk],
         ]
       : [
-          ["Platform / Database", ["Identity", "RBAC", "API", "Database", "Audit log"], COLORS.accent],
+          ["Platform / Database", ["Identity", "API", "Database", "Audit log", "Backup"], COLORS.accent],
           ["Connected Medical System", ["PACS / HIS", "Hospital network", "Update server", "Remote service"], COLORS.risk],
         ];
   panels.forEach(([heading, labels, color], idx) => {
@@ -549,14 +559,14 @@ async function buildDeck() {
     });
     const previewPath = path.join(previewDir, `slide-${String(index + 1).padStart(2, "0")}.png`);
     await fs.writeFile(previewPath, Buffer.from(await rendered.arrayBuffer()));
-    previewFiles.push(previewPath);
+    previewFiles.push(toRepoRelative(previewPath));
   }
 
   const pptx = await PresentationFile.exportPptx(presentation);
   await pptx.save(deckPath);
 
   const report = {
-    deckPath,
+    deckPath: toRepoRelative(deckPath),
     slideCount: presentation.slides.count,
     timingSeconds: totalSeconds,
     timing: secondsToTime(totalSeconds),

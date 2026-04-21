@@ -1,17 +1,18 @@
 {
-  "deckPath": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/cybersec-2026-ai-samd-compact-optimized.pptx",
+  "deckPath": "outputs/deck/cybersec-2026-ai-samd-compact-optimized.pptx",
   "slideCount": 14,
   "timingSeconds": 1710,
   "timing": "28:30",
   "editableTextSource": "All visible talk text except the organizer disclaimer image is created as editable PowerPoint text/shapes.",
   "hardConstraintGate": "PASS",
+  "manualPatchNote": "2026-04-21 source-audit label patch applied directly to PPTX XML because @oai/artifact-tool was unavailable in the active Node environment. Updated slides 4, 6, 7, and 9 plus notes for slides 4 and 7.",
   "previewFiles": [
-    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-01.png",
-    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-03.png",
-    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-05.png",
-    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-10.png",
-    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-12.png",
-    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-14.png"
+    "outputs/deck/previews/slide-01.png",
+    "outputs/deck/previews/slide-03.png",
+    "outputs/deck/previews/slide-05.png",
+    "outputs/deck/previews/slide-10.png",
+    "outputs/deck/previews/slide-12.png",
+    "outputs/deck/previews/slide-14.png"
   ],
   "keyText": [
     "你賣的不是模型",

@@ -40,14 +40,18 @@ def fmt_seconds(seconds: int) -> str:
     return f"{minutes}:{rem:02d}"
 
 
+def md_table_cell(value: object) -> str:
+    return str(value).replace("|", "\\|").replace("\n", "<br>")
+
+
 def table(headers: Iterable[str], rows: Iterable[Iterable[object]]) -> str:
-    header_list = [str(h) for h in headers]
+    header_list = [md_table_cell(h) for h in headers]
     lines = [
         "| " + " | ".join(header_list) + " |",
         "| " + " | ".join("---" for _ in header_list) + " |",
     ]
     for row in rows:
-        cells = [str(cell).replace("\n", "<br>") for cell in row]
+        cells = [md_table_cell(cell) for cell in row]
         lines.append("| " + " | ".join(cells) + " |")
     return "\n".join(lines)
 

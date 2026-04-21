@@ -62,7 +62,7 @@ This generated strategy file turns the existing compact CYBERSEC talk into a reu
 ### Desired Takeaways
 
 - Product scale determines cybersecurity evidence burden.
-- FDA 524B and FDA 2025 can be translated into monitor, patch, disclose, SBOM, and traceability work.
+- FDA 524B and FDA 2025 can be translated into monitor/identify/address, CVD, updates/patches, SBOM, and traceability work.
 - TFDA-facing AI/ML SaMD preparation needs model evidence, governance language, and stack-level security boundaries.
 - White-box and black-box testing are valuable when findings become decisions and retest evidence.
 - Patch SLA is the operating bridge between vulnerability discovery, product trust, and audit readiness.
@@ -185,7 +185,7 @@ Normal target: `28:30` content plus `1:30` buffer.
 | CYBERSEC speaker page | https://cybersec.ithome.com.tw/2026/speaker/2060 |
 | FDA cybersecurity page | https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity |
 | FDA 2025 cybersecurity guidance PDF | https://www.fda.gov/files/guidance%20documents/published/GUI00001825-final-PremarketCybersecurity-2025.pdf |
-| Local CYBERSEC source bundle | /Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md |
-| v0.9 deck source | /Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pptx |
-| v0.9 speaker notes | /Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-speaker-notes-v0.9-20260422.md |
-| v0.9 rehearsal runbook | /Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-first-rehearsal-runbook-v0.9-20260422.md |
+| Local CYBERSEC source bundle | ../planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md |
+| v0.9 deck source | ../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pptx |
+| v0.9 speaker notes | ../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-speaker-notes-v0.9-20260422.md |
+| v0.9 rehearsal runbook | ../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-first-rehearsal-runbook-v0.9-20260422.md |

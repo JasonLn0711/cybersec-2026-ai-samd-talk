@@ -30,7 +30,7 @@ This generated blueprint is the active 14-slide CYBERSEC 2026 target. Slide 2 is
 | Audience understanding | The talk connects FDA 524B, threat modeling, and Patch SLA into one implementation path. |
 | Recommended visual form | Big statement |
 | Visual concept | Restrained title slide with a faint product-system outline and one calm accent line. |
-| On-screen content | AI 軟體醫材的資安實戰<br>FDA 524B -> Threat Modeling -> Patch SLA<br>林家聖 | CYBERSEC 2026 |
+| On-screen content | AI 軟體醫材的資安實戰<br>FDA 524B -> Threat Modeling -> Patch SLA<br>林家聖 \| CYBERSEC 2026 |
 | What must not appear | Long biography<br>Credential stack<br>Decorative security imagery |
 | Speaking time | 0:10 (cumulative 0:10) |
 | Transition in | Walk on with calm posture; no biography expansion. |
@@ -76,18 +76,18 @@ This generated blueprint is the active 14-slide CYBERSEC 2026 target. Slide 2 is
 
 | Field | Blueprint |
 | --- | --- |
-| Slide objective | When AI becomes infrastructure, cyber incidents can become care disruption. |
-| One-sentence message | When AI becomes infrastructure, cyber incidents can become care disruption. |
+| Slide objective | When AI becomes infrastructure, cyber incidents can disrupt clinical care. |
+| One-sentence message | When AI becomes infrastructure, cyber incidents can disrupt clinical care. |
 | Audience understanding | Medical AI security scope grows with deployment scope. |
 | Recommended visual form | Diagram |
 | Visual concept | Three-layer AI stack on the left; clinical continuity line with one interruption on the right. |
-| On-screen content | AI is becoming infrastructure<br>Model<br>Runtime<br>Infrastructure<br>Care continuity |
+| On-screen content | AI is becoming infrastructure<br>Model<br>Runtime<br>Infrastructure<br>Clinical continuity |
 | What must not appear | News screenshots<br>Vendor logos<br>Fear-heavy patient imagery |
 | Speaking time | 2:10 (cumulative 4:30) |
 | Transition in | Use the 2026 urgency question from Slide 3. |
 | Transition out | 所以我們需要一張產品尺度地圖，先決定風險到底長在哪裡。 |
 | Supported rubric categories | Content Depth and Value, Audience Impact, Stage Rhythm and Time Control |
-| Stage cue | 醫療資安也已經不只是 IT 後台問題；當 AI 進入醫療，cyber incident 很快就會變成 care disruption。 |
+| Stage cue | 醫療資安也已經不只是 IT 後台問題；當 AI 進入醫療，cyber incident 可能直接干擾 clinical care。 |
 
 ## Slide 5. Risk grows with architecture
 
@@ -112,10 +112,10 @@ This generated blueprint is the active 14-slide CYBERSEC 2026 target. Slide 2 is
 | --- | --- |
 | Slide objective | Regulation asks for traceable evidence, not claims. |
 | One-sentence message | Regulation asks for traceable evidence, not claims. |
-| Audience understanding | Monitor, patch, disclose, SBOM, architecture, threat model, controls, tests, and finding disposition must connect. |
+| Audience understanding | Monitor/identify/address, CVD, updates/patches, SBOM, architecture, threat model, controls, tests, and finding disposition must connect. |
 | Recommended visual form | Progressive build |
 | Visual concept | Horizontal evidence chain with four FDA 524B verbs as a side rail. |
-| On-screen content | Evidence, not slogans<br>Risk<br>Control<br>Test<br>Fix<br>Evidence<br>Monitor<br>Patch<br>Disclose<br>SBOM |
+| On-screen content | Evidence, not slogans<br>Risk<br>Control<br>Test<br>Fix<br>Evidence<br>Monitor<br>CVD<br>Patch<br>SBOM |
 | What must not appear | Long legal quotes<br>Full guidance screenshots<br>Section-number clutter |
 | Speaking time | 4:10 (cumulative 10:40) |
 | Transition in | Use the product-scale map to ask what regulation actually requires. |
@@ -132,13 +132,13 @@ This generated blueprint is the active 14-slide CYBERSEC 2026 target. Slide 2 is
 | Audience understanding | Model evidence alone is not enough; governance and stack boundaries must be clear. |
 | Recommended visual form | Diagram |
 | Visual concept | Three-column bridge: model evidence, governance language, AI stack security. |
-| On-screen content | Model evidence<br>Intended use<br>Data<br>V&V<br>Governance language<br>Govern<br>Protect<br>Recover<br>AI stack<br>Provenance<br>Isolation<br>Updates |
+| On-screen content | Model evidence<br>Intended use<br>Data<br>V&V<br>AI RMF language<br>Govern<br>Map<br>Measure<br>Manage<br>AI stack<br>Provenance<br>Isolation<br>Updates |
 | What must not appear | Full control catalog<br>Submission-form detail<br>Cloud architecture export |
 | Speaking time | 3:20 (cumulative 14:00) |
 | Transition in | Translate the evidence chain into Taiwan-team communication layers. |
 | Transition out | 接下來回到剛才的四層產品尺度，看每一層到底多了什麼風險。 |
 | Supported rubric categories | Content Depth and Value, Audience Impact, Visual Design |
-| Stage cue | 這三件事接起來，才是醫療 AI team 真正能拿去討論、治理、送審、跟客戶溝通的 security language。 |
+| Stage cue | NIST 在這裡是共同語言，不是控制清單；AI RMF 講 Govern, Map, Measure, Manage，CSF 可補上資安營運語言。 |
 
 ## Slide 8. Scale 1-2
 
@@ -163,10 +163,10 @@ This generated blueprint is the active 14-slide CYBERSEC 2026 target. Slide 2 is
 | --- | --- |
 | Slide objective | Platform and hospital integration make cybersecurity a business and patient-safety issue. |
 | One-sentence message | Platform and hospital integration make cybersecurity a business and patient-safety issue. |
-| Audience understanding | Scale 3 introduces identity/API/database/log/backup; Scale 4 introduces hospital network and service continuity. |
+| Audience understanding | Scale 3 introduces identity/API/database/audit log/backup; Scale 4 introduces hospital network and service continuity. |
 | Recommended visual form | Contrast |
 | Visual concept | Two-panel system map: product platform to connected clinical environment. |
-| On-screen content | Platform / Database<br>Identity<br>RBAC<br>API<br>Database<br>Audit log<br>Connected Medical System<br>PACS / HIS<br>Hospital network<br>Update server<br>Remote service |
+| On-screen content | Platform / Database<br>Identity<br>API<br>Database<br>Audit log<br>Backup<br>Connected Medical System<br>PACS / HIS<br>Hospital network<br>Update server<br>Remote service |
 | What must not appear | Specific hospital topology<br>Customer architecture<br>Internal network detail |
 | Speaking time | 2:40 (cumulative 19:20) |
 | Transition in | Escalate from user-facing risk to operating and continuity risk. |

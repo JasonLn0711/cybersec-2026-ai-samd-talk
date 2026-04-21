@@ -1,21 +1,25 @@
-# 05 Rehearsal And Iteration Runbook
+# 03 Rehearsal Workflow
 
-Purpose: turn the scoring rubric into a practical rehearsal and repair system for the compact `14`-slide CYBERSEC deck.
+Purpose: turn the compact deck, script, and evaluation system into a low-friction rehearsal loop.
 
-## 1. Review Sequence
+First principle: rehearse to find the next constraint, not to keep polishing everything. Each run should produce one repair target.
 
-| Pass | When | Goal | Output |
-| --- | --- | --- | --- |
-| Draft structure review | Before editing slides | Confirm thesis, map, evidence chain, Patch SLA, close. | Structural repair list. |
-| Slide constraint review | After first compact deck build | Enforce pass/fail slide constraints and penalties from `06_slide_design_constraint_system.md`. | Redesign queue. |
-| Script review | Before first timed rehearsal | Ensure each slide has a speakable point and cut marker. | Cue-card draft. |
-| Dry run | First timed run alone | Find timing and language failures. | Rubric score and timing log. |
-| Live rehearsal | With peer evaluator | Test audience comprehension and stage presence. | Evidence-based scoring sheet. |
-| Final readiness review | Before conference delivery | Confirm no safety boundary issues and no rushed close. | Go/no-go decision. |
+## Operating Loop
 
-## 2. First-Draft Review Checklist
+| Step | When | Action | Output |
+| ---: | --- | --- | --- |
+| 1 | Before slide edits | Read `docs/01_talk_design.md` and confirm the promise, memory anchors, timing, and public-safety boundary. | Talk spine locked. |
+| 2 | Before rebuilding outputs | Edit `data/presentation_os.json` only when generated reports or deck text need to change. | Single source updated. |
+| 3 | After JSON edits | Run `python3 tools/generate_presentation_outputs.py`. | Reports and CSVs aligned. |
+| 4 | When the deck must change | Run `node tools/build_optimized_deck.mjs` if `@oai/artifact-tool` is available. | Editable `14`-slide PPTX. |
+| 5 | Before timed rehearsal | Apply `docs/02_evaluation_system.md` slide gates. | Redesign queue or pass. |
+| 6 | First timed run | Speak the deck with cut markers, record checkpoints. | Timing log and weak spots. |
+| 7 | After each run | Score using `docs/02_evaluation_system.md`. | One next repair target. |
+| 8 | Final pass | Confirm no public-safety issue, no rushed close, and no hard slide failures. | Go/no-go decision. |
 
-Use this before polishing visual details:
+## First-Draft Gate
+
+Do this before visual polish:
 
 - [ ] Slide 3 says `你賣的不是模型` and makes trust/patch/evidence explicit.
 - [ ] Slide 5 clearly shows four product scales.
@@ -26,26 +30,26 @@ Use this before polishing visual details:
 - [ ] Slide 13 gives a credible `30 / 60 / 90` path.
 - [ ] Slide 14 contains no new framework or extra content.
 
-Rubric gate: if any of these fail, do not spend time on visual polish yet. Repair Structure and Narrative Design first.
+Gate: if any item fails, repair structure before improving visual style.
 
-## 3. Slide Constraint Review Checklist
+## Slide-Gate Checklist
 
-- [ ] Run every slide through `06_slide_design_constraint_system.md`.
-- [ ] Each slide has exactly one controlling message.
-- [ ] Headline/sentence text stays under `12` words unless the slide is the required disclaimer.
+- [ ] Exactly one controlling message per slide.
+- [ ] Headline/sentence text stays under `12` words, except required disclaimer.
 - [ ] Technical labels are labels, not sentence explanations.
 - [ ] At least `70%` of each slide is visual structure or whitespace.
 - [ ] Each slide uses an allowed layout: big statement, full visual, contrast, diagram, or progressive build.
 - [ ] No layout pattern repeats more than `3` slides in a row.
 - [ ] Slide 12's `Decision` node is visually dominant.
 - [ ] No decorative AI/security imagery competes with the message.
-- [ ] No sensitive public-safety boundary is violated.
+- [ ] No public-safety boundary is violated.
+- [ ] Slide 6 says `Monitor / CVD / Patch / SBOM`, while the speaker explains FDA 524B as monitor, identify, address, coordinated vulnerability disclosure, updates/patches, and SBOM.
+- [ ] Slide 7 keeps AI RMF language separate from CSF 2.0 language; do not collapse both into an incomplete NIST function list.
+- [ ] Slide 12 treats `Patch SLA` as this talk's operating model, not as a quoted FDA term.
 
-Gate: if any slide has a hard failure, redesign that slide before timed rehearsal. Do not try to solve slide-density problems by speaking faster.
+Gate: if any slide has a hard failure, redesign that slide before timed rehearsal. Do not solve slide-density problems by speaking faster.
 
-## 4. Dry-Run Checklist
-
-Record slide timestamps:
+## Dry-Run Checkpoints
 
 | Checkpoint | Target | Actual | Action If Late |
 | --- | ---: | ---: | --- |
@@ -54,22 +58,22 @@ Record slide timestamps:
 | Slide 7 ends | `14:00` |  | Cut slide 7 to one sentence per column. |
 | Slide 10 starts | `19:20` |  | Compress slides 8-9. |
 | Slide 12 starts | `23:00` |  | Cut slide 11 examples. |
-| Slide 14 starts | `27:40` |  | Slide 13 one output per bucket. |
+| Slide 14 starts | `27:40` |  | Slide 13 becomes one output per bucket. |
 | Finish | `28:30` |  | Use safe version next run. |
 
-After the run, score only these five items first:
+After the run, answer only five questions first:
 
 1. Can the thesis be remembered?
 2. Did the product-scale map become clear?
 3. Did regulation become an evidence chain rather than a legal block?
 4. Did Patch SLA feel like the climax?
-5. Did the close land before the clock pressure became visible?
+5. Did the close land before clock pressure became visible?
 
-## 5. Live Rehearsal Checklist
+## Peer-Review Questions
 
-Ask the evaluator to write answers before giving opinions:
+Ask the evaluator to answer these before giving opinions:
 
-| Question | What A Good Answer Contains |
+| Question | Good Answer Contains |
 | --- | --- |
 | What was the talk's central thesis? | Not model; trustable, patchable, auditable system. |
 | What was the map? | Model, Viewer, Platform/Database, Connected Medical System. |
@@ -77,9 +81,9 @@ Ask the evaluator to write answers before giving opinions:
 | What is the operational climax? | Patch SLA; every finding needs a decision. |
 | What should a small team do next? | 30 inventory, 60 workflow, 90 validation. |
 
-If an evaluator cannot answer one of these, repair the corresponding slide before improving delivery polish.
+If an evaluator cannot answer one of these, repair the corresponding slide before polishing delivery.
 
-## 6. Self-Evaluation Worksheet
+## Self-Evaluation Note
 
 ```text
 Run version:
@@ -89,38 +93,21 @@ Slide 14 start time:
 
 Which line landed best?
 Which slide felt too dense?
-Where did I start explaining instead of deciding?
+Where did I explain instead of deciding?
 Where did I speak faster instead of cutting?
 What is the one repair before the next run?
 ```
 
-## 7. Peer-Review Worksheet
-
-```text
-Evaluator:
-Total score:
-
-Strongest slide:
-Weakest slide:
-
-Evidence of clarity:
-Evidence of confusion:
-Evidence of credibility:
-Evidence of weak pacing:
-
-Most important fix:
-```
-
-## 8. Score-Band Repair Order
+## Repair Order By Score
 
 ### Below 70
 
 Do not polish slides. Repair the talk spine:
 
-1. Rebuild slides 3, 5, 6, 12, and 14 first.
+1. Rebuild slides 3, 5, 6, 12, and 14.
 2. Remove secondary examples from slides 7-11.
-3. Rehearse only the transition sentences until the arc is clear.
-4. Use the `20:00` emergency path once to find the essential talk.
+3. Rehearse transition sentences until the arc is clear.
+4. Run the `20:00` emergency path once to find the essential talk.
 
 ### 70-80
 
@@ -129,51 +116,49 @@ The talk is understandable but not conference-ready:
 1. Reduce visual density.
 2. Tighten regulatory section to evidence-chain logic.
 3. Practice cut markers.
-4. Score timing again before adding any detail.
+4. Score timing again before adding detail.
 
 ### 80-90
 
 The talk is strong enough to refine:
 
 1. Improve slide 6 and slide 12 wording.
-2. Add silence after the major lines.
+2. Add silence after major lines.
 3. Make visual style more consistent.
-4. Improve final minute so it feels intentional, not merely finished.
+4. Improve the final minute so it feels intentional.
 
 ### 90+
 
 The difference is control:
 
-1. The speaker lands strong lines without rushing.
-2. The audience can repeat the map and Patch SLA after the talk.
-3. The deck looks serious without looking overloaded.
-4. The final slide contains only the principle and a clean stop.
+1. Land strong lines without rushing.
+2. Make the audience able to repeat the map and Patch SLA.
+3. Keep the deck serious without overload.
+4. End on the principle and stop.
 
-## 9. Timing Variants For Rehearsal
+## Timing Variants
 
-| Version | Target | How To Run It |
+| Version | Target | Rule |
 | --- | ---: | --- |
 | Normal | `28:30` | Full compact script with planned pauses. |
 | Safe | `27:30` | Cut secondary examples from slides 7, 8, 9, and 11. |
 | Rushed | `25:00` | Slide 6 evidence chain only; slide 13 one output per bucket. |
 | Emergency | `20:00` | Skip slides 4 and 11 as standalone sections. |
 
-Rehearsal rule: practice the safe version at least twice before the final normal run. The speaker should know the cuts before needing them.
+Rehearsal rule: practice the safe version at least twice before the final normal run.
 
-## 10. Final Readiness Checklist
+## Final Readiness
 
 - [ ] The deck has exactly `14` slides.
 - [ ] Slide 2 is the required CYBERSEC disclaimer and is not treated as narrative content.
-- [ ] The deck has passed the slide constraint system with no hard failures.
+- [ ] The deck has passed the slide gate with no hard failures.
 - [ ] The talk finishes by `28:30` in at least two consecutive runs.
 - [ ] The speaker can deliver slides 3, 6, 10, 12, and 14 without looking back.
-- [ ] The evaluator score is at least `85`.
+- [ ] Evaluator score is at least `85`.
 - [ ] No slide includes private hospital/client detail, student data, proprietary code, exploit recipe, or patent-sensitive implementation mechanics.
 - [ ] The final slide ends with the trust-before-audit principle and no new content.
 
-## 11. Post-Rehearsal Repair Log
-
-Use this table after each scored run:
+## Repair Log
 
 | Date | Version | Score | Timing Issue | Lowest Category | Repair Made | Next Run Target |
 | --- | --- | ---: | --- | --- | --- | --- |

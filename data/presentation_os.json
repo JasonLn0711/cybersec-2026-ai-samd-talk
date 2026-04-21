@@ -8,7 +8,7 @@
     "content_time": "28:30",
     "buffer_time": "1:30",
     "canonical_topic": "AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地",
-    "disclaimer_image": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/assets/cybersec-2026-disclaimer-slide.jpg"
+    "disclaimer_image": "../planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/assets/cybersec-2026-disclaimer-slide.jpg"
   },
   "engines": [
     {
@@ -68,7 +68,7 @@
     ],
     "desired_takeaways": [
       "Product scale determines cybersecurity evidence burden.",
-      "FDA 524B and FDA 2025 can be translated into monitor, patch, disclose, SBOM, and traceability work.",
+      "FDA 524B and FDA 2025 can be translated into monitor/identify/address, CVD, updates/patches, SBOM, and traceability work.",
       "TFDA-facing AI/ML SaMD preparation needs model evidence, governance language, and stack-level security boundaries.",
       "White-box and black-box testing are valuable when findings become decisions and retest evidence.",
       "Patch SLA is the operating bridge between vulnerability discovery, product trust, and audit readiness."
@@ -111,19 +111,19 @@
     },
     {
       "label": "Local CYBERSEC source bundle",
-      "path": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md"
+      "path": "../planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md"
     },
     {
       "label": "v0.9 deck source",
-      "path": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pptx"
+      "path": "../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pptx"
     },
     {
       "label": "v0.9 speaker notes",
-      "path": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-speaker-notes-v0.9-20260422.md"
+      "path": "../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-speaker-notes-v0.9-20260422.md"
     },
     {
       "label": "v0.9 rehearsal runbook",
-      "path": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-first-rehearsal-runbook-v0.9-20260422.md"
+      "path": "../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-first-rehearsal-runbook-v0.9-20260422.md"
     }
   ],
   "narrative": {
@@ -487,7 +487,7 @@
       "violations": "Risk of legal-text density if FDA evidence is shown as source quotes instead of a chain.",
       "severity": "Major",
       "penalty": 3,
-      "redesign": "Keep only Evidence, not slogans; Risk -> Control -> Test -> Fix -> Evidence; Monitor | Patch | Disclose | SBOM."
+      "redesign": "Keep only Evidence, not slogans; Risk -> Control -> Test -> Fix -> Evidence; Monitor | CVD | Patch | SBOM."
     },
     {
       "slide_id": 7,
@@ -611,7 +611,7 @@
     {
       "id": 4,
       "title": "AI 變成基礎設施",
-      "message": "When AI becomes infrastructure, cyber incidents can become care disruption.",
+      "message": "When AI becomes infrastructure, cyber incidents can disrupt clinical care.",
       "audience_understanding": "Medical AI security scope grows with deployment scope.",
       "visual_concept": "Three-layer AI stack on the left; clinical continuity line with one interruption on the right.",
       "onscreen": [
@@ -619,7 +619,7 @@
         "Model",
         "Runtime",
         "Infrastructure",
-        "Care continuity"
+        "Clinical continuity"
       ],
       "must_not_show": [
         "News screenshots",
@@ -635,7 +635,7 @@
         "Audience Impact",
         "Stage Rhythm and Time Control"
       ],
-      "speaker_note": "醫療資安也已經不只是 IT 後台問題；當 AI 進入醫療，cyber incident 很快就會變成 care disruption。",
+      "speaker_note": "醫療資安也已經不只是 IT 後台問題；當 AI 進入醫療，cyber incident 可能直接干擾 clinical care。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -681,7 +681,7 @@
       "id": 6,
       "title": "Evidence, not slogans",
       "message": "Regulation asks for traceable evidence, not claims.",
-      "audience_understanding": "Monitor, patch, disclose, SBOM, architecture, threat model, controls, tests, and finding disposition must connect.",
+      "audience_understanding": "Monitor/identify/address, CVD, updates/patches, SBOM, architecture, threat model, controls, tests, and finding disposition must connect.",
       "visual_concept": "Horizontal evidence chain with four FDA 524B verbs as a side rail.",
       "onscreen": [
         "Evidence, not slogans",
@@ -691,8 +691,8 @@
         "Fix",
         "Evidence",
         "Monitor",
+        "CVD",
         "Patch",
-        "Disclose",
         "SBOM"
       ],
       "must_not_show": [
@@ -727,10 +727,11 @@
         "Intended use",
         "Data",
         "V&V",
-        "Governance language",
+        "AI RMF language",
         "Govern",
-        "Protect",
-        "Recover",
+        "Map",
+        "Measure",
+        "Manage",
         "AI stack",
         "Provenance",
         "Isolation",
@@ -750,7 +751,7 @@
         "Audience Impact",
         "Visual Design"
       ],
-      "speaker_note": "這三件事接起來，才是醫療 AI team 真正能拿去討論、治理、送審、跟客戶溝通的 security language。",
+      "speaker_note": "NIST 在這裡是共同語言，不是控制清單；AI RMF 講 Govern, Map, Measure, Manage，CSF 可補上資安營運語言。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -799,15 +800,15 @@
       "id": 9,
       "title": "Scale 3-4",
       "message": "Platform and hospital integration make cybersecurity a business and patient-safety issue.",
-      "audience_understanding": "Scale 3 introduces identity/API/database/log/backup; Scale 4 introduces hospital network and service continuity.",
+      "audience_understanding": "Scale 3 introduces identity/API/database/audit log/backup; Scale 4 introduces hospital network and service continuity.",
       "visual_concept": "Two-panel system map: product platform to connected clinical environment.",
       "onscreen": [
         "Platform / Database",
         "Identity",
-        "RBAC",
         "API",
         "Database",
         "Audit log",
+        "Backup",
         "Connected Medical System",
         "PACS / HIS",
         "Hospital network",
