@@ -1,8 +1,14 @@
 # 01 Talk Design
 
-Purpose: define the public CYBERSEC 2026 talk as one compact, speakable, evidence-driven conference package.
+Purpose: define the public CYBERSEC 2026 talk as one speakable, evidence-driven conference package.
 
-This file combines the former strategy brief, `14`-slide deck spec, and stage-script docs. Use it when deciding what the talk says, shows, and sounds like.
+This file combines the former strategy brief, generated `14`-slide deck spec, and stage-script docs. The current owner-approved canonical deck PDF is `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf`; the generated compact `14`-slide deck remains an editable fallback/reference package.
+
+First-principles split:
+
+- Use this file for the talk thesis, audience promise, and generated compact fallback script.
+- Use `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` for current `v1.3` slide-by-slide rehearsal.
+- Use `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` for cross-slide audience Q&A.
 
 ## First-Principles Model
 
@@ -12,7 +18,7 @@ This file combines the former strategy brief, `14`-slide deck spec, and stage-sc
 | Who must it serve? | Healthcare-security, medical-device, regulatory, QA, product, and security-engineering listeners. |
 | What must they leave with? | A product-scale map, evidence-chain logic, testing strategy, Patch SLA model, and small-team roadmap. |
 | What is the core thesis? | AI SaMD teams do not sell a model; they sell a trustable, patchable, auditable clinical product system. |
-| What is the active deck? | `14` slides, `28:30` spoken content, `1:30` buffer. |
+| What is the active deck? | `v1.3` canonical PDF deck in `outputs/deck/`; generated `14`-slide package remains fallback/reference. |
 | What national context matters? | Taiwan's 2025 cybersecurity strategy links AI security, critical infrastructure resilience, key industries, and supply-chain security; medical AI SaMD is one concrete intersection, not a reason to broaden the whole talk. |
 | What is the language policy? | Taiwan Traditional Chinese stage language with English technical terms where they carry shared meaning. |
 | What must stay out? | Private hospital/client details, proprietary code, student records, exploit recipes, and patent-sensitive implementation mechanics. |
@@ -70,7 +76,9 @@ Common misconceptions to break:
 - `Small teams cannot start`
 - `Cybersecurity is IT, not patient safety`
 
-## Timing Architecture
+## Generated Compact Fallback Timing Architecture
+
+The timing table below is the generated compact fallback timing model. Use it for rehearsal discipline and repair planning, but do not treat it as proof that the current `v1.3` PDF has only `14` slides.
 
 | Slide | Time | Cumulative | Job |
 | ---: | ---: | ---: | --- |
@@ -93,6 +101,17 @@ Timing rule: if slide 7 ends after `14:30`, compress slides 8-9 to one example p
 
 ## Build Path
 
+Current canonical deck PDF:
+
+`outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf`
+
+No editable `v1.3` source PPTX is currently present in this repo. The files below remain the generated compact fallback path.
+
+Speaker-prep companions for the canonical `v1.3` deck:
+
+- `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` for per-slide audience questions, responses, trends, and the 8 hardest questions.
+- `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` for broader role-based Taiwanese Mandarin Q&A rehearsal.
+
 The structured source is:
 
 `data/presentation_os.json`
@@ -110,19 +129,19 @@ npm install
 npm run build:deck
 ```
 
-Active deck artifact:
+Generated compact fallback deck artifact:
 
 `outputs/deck/cybersec-2026-ai-samd-compact-optimized.pptx`
 
 Build rules:
 
-- Exactly `14` slides.
+- Exactly `14` slides for the generated compact fallback.
 - Exactly `1710` seconds / `28:30` content time.
 - Slide 2 may be the official CYBERSEC disclaimer image.
 - All other visible talk text should remain editable PowerPoint text/shapes.
 - Use generated reports for consistency checks; do not hand-edit generated outputs as independent sources.
 
-## Slide And Script Spine
+## Generated Compact Fallback Slide And Script Spine
 
 | Slide | On-Screen Job | Visual Form | Must-Say Line | Cut Rule |
 | ---: | --- | --- | --- | --- |
@@ -141,7 +160,7 @@ Build rules:
 | 13 | Small Team `30 / 60 / 90` | Three-step roadmap. | `重點不是三個月變完美，而是三個月後，公司開始自動留下可信證據。` | One output per bucket. |
 | 14 | Trust before audit | Quiet closing principle. | `先把安全做進產品，法規文件才會自然長出來。` | If late, say only this and `謝謝大家`. |
 
-## Full Stage Script
+## Generated Compact Fallback Stage Script
 
 ### Slide 1. Title
 
@@ -209,7 +228,7 @@ FDA 524B 如果用商業語言講，就是：如果你的醫材會連線，上�
 
 這件事的重點不是多交一份文件，而是公司在產品設計階段，就要知道上市後漏洞怎麼被看見、誰判斷、誰修補、怎麼通知、怎麼留下紀錄。
 
-FDA 2025 guidance 再往下問的是 traceability。你的 architecture 在哪裡？Threat model 怎麼畫？Controls 對應到哪些風險？Testing 有沒有真的打到攻擊面？每個 finding 最後去哪裡了？
+FDA 2026 cybersecurity guidance 再往下問的是 traceability。你的 architecture 在哪裡？Threat model 怎麼畫？Controls 對應到哪些風險？Testing 有沒有真的打到攻擊面？每個 finding 最後去哪裡了？
 
 所以我會把它壓成一條線：
 
@@ -337,7 +356,7 @@ Pause.
 
 謝謝大家。
 
-## Emergency Path
+## Generated Compact Fallback Emergency Path
 
 For a `20:00` delivery, keep slides 1, 2, 3, 5, 6, 7, 8-9, 10, 12, 13, and 14. Skip slides 4 and 11 as standalone sections; mention AI infrastructure on slide 5 and testing output on slide 12.
 

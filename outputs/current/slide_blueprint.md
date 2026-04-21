@@ -1,6 +1,6 @@
 # Slide Blueprint
 
-This generated blueprint is the active 14-slide CYBERSEC 2026 target. Slide 2 is preserved as the required CYBERSEC disclaimer and functions as a compliance beat, not narrative content.
+This generated blueprint is the editable compact 14-slide fallback/reference package for CYBERSEC 2026. The current delivery deck is the owner-approved canonical v1.3 PDF. Slide 2 is preserved as the required CYBERSEC disclaimer and functions as a compliance beat, not narrative content.
 
 ## Timing Summary
 
@@ -121,7 +121,7 @@ This generated blueprint is the active 14-slide CYBERSEC 2026 target. Slide 2 is
 | Transition in | Use the product-scale map to ask what regulation actually requires. |
 | Transition out | 回到公司內部治理，這條證據鏈還需要把模型、軟體堆疊和臨床流程分清楚。 |
 | Supported rubric categories | Content Depth and Value, Delivery Quality, Stage Rhythm and Time Control |
-| Stage cue | FDA 524B 可以壓成幾個生命週期義務：上市後要 monitor、identify、address vulnerability；要有 coordinated vulnerability disclosure；要能提供 updates and patches；也要提供 SBOM。FDA 2025 guidance 往下要求的是安全架構視圖、邊界、角色、介面、threat model、testing evidence，以及 traceability。換成工程語言，就是一條證據鏈：架構怎麼畫、威脅怎麼判斷、控制怎麼設計、測試打到哪裡、finding 怎麼決定、修補和重測怎麼留下紀錄。 |
+| Stage cue | FDA 524B 可以壓成幾個生命週期義務：上市後要 monitor、identify、address vulnerability；要有 coordinated vulnerability disclosure；要能提供 updates and patches；也要提供 SBOM。FDA 2026 cybersecurity guidance 往下要求的是安全架構視圖、邊界、角色、介面、threat model、testing evidence，以及 traceability。換成工程語言，就是一條證據鏈：架構怎麼畫、威脅怎麼判斷、控制怎麼設計、測試打到哪裡、finding 怎麼決定、修補和重測怎麼留下紀錄。 |
 
 ## Slide 7. Three Risk Layers, One Governance Language
 

@@ -45,10 +45,11 @@ The planning repo may link to this repo for project context. This repo should no
 | talk design and stage script | `docs/01_talk_design.md` | Owns audience promise, slide spine, timing, script, and build path |
 | scoring and slide gates | `docs/02_evaluation_system.md` | Owns macro rubric, hard slide constraints, penalties, and generated evaluation outputs |
 | rehearsal workflow | `docs/03_rehearsal_workflow.md` | Owns dry-run checkpoints, repair order, and readiness |
-| tracked speaker prep notes | `docs/speaker-notes/` | Owner-approved versioned rehearsal notes and transcript working copies |
+| tracked speaker prep notes | `docs/speaker-notes/` | Current `v1.3` slide-by-slide analysis, role Q&A, and retained deep-note companions; avoid duplicate same-language version copies |
 | structured source | `data/presentation_os.json` | Source of generated operating outputs and deck content |
 | generated reports | `outputs/current/` | Rebuildable from structured source |
-| generated deck | `outputs/deck/` | Rebuildable presentation artifact |
+| canonical deck PDF | `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` | Owner-approved current deck artifact; no editable v1.3 source PPTX is currently present |
+| generated compact fallback deck | `outputs/deck/` | Rebuildable fallback presentation artifact from `data/presentation_os.json` |
 | generators | `tools/` | Keep commands documented and reproducible |
 | local heavy/private work | `.local/` or ignored paths | Do not commit unless explicitly safe |
 
@@ -61,8 +62,9 @@ The planning repo may link to this repo for project context. This repo should no
 2. Keep the talk package public-safe.
    - Exclude proprietary code, raw student records, private hospital/client detail, credentials, exploit-ready private instructions, and patent-sensitive implementation mechanics.
 
-3. Keep the deck compact.
-   - The active talk target is the compact `14`-slide package unless `README.md` or the project owner changes that decision.
+3. Preserve the owner-approved deck target.
+   - The active deck is the `v1.3` canonical PDF unless `README.md` or the project owner changes that decision.
+   - The compact `14`-slide generated package remains fallback/reference material, not the current canonical deck.
 
 4. Maintain traceability.
    - Talk design, evaluation, rehearsal workflow, generated reports, and deck output should stay mutually consistent.

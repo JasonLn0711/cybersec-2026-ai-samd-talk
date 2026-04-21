@@ -16,7 +16,7 @@ Agent-facing working rules live in [`AGENTS.md`](AGENTS.md).
 | Who uses it? | Speaker, deck editor, rehearsal reviewer, and evaluator. |
 | What must it optimize? | Clarity, credibility, timing, memorability, public safety, and delivery readiness. |
 | Where should it live? | In this dedicated sibling repo, not inside planning or grading repos. |
-| What is the active delivery surface? | Compact `14`-slide deck, `28:30` spoken content, `1:30` buffer. |
+| What is the active delivery surface? | Owner-approved `v1.3` canonical PDF deck, with the generated compact `14`-slide deck retained as an editable fallback/reference. |
 | What should not happen? | Do not mix speech-delivery artifacts with student grading, raw submissions, private hospital/client material, or unrelated course records. |
 
 Routing model:
@@ -30,18 +30,32 @@ cybersec-2026-ai-samd-talk = what the talk says / shows / scores / rehearses
 
 | File | Use It For |
 | --- | --- |
-| [`docs/01_talk_design.md`](docs/01_talk_design.md) | First-principles talk model, audience promise, `14`-slide design, timing, build path, and full stage script. |
+| [`docs/01_talk_design.md`](docs/01_talk_design.md) | First-principles talk model, audience promise, current `v1.3` deck routing, generated fallback design, timing, build path, and stage script. |
 | [`docs/02_evaluation_system.md`](docs/02_evaluation_system.md) | `100`-point speech rubric, slide hard gates, penalties, multiplier, and generated evaluation outputs. |
 | [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md) | Dry-run loop, timing checkpoints, peer-review questions, repair order, and readiness checklist. |
-| [`docs/speaker-notes/`](docs/speaker-notes/) | Tracked versioned speaker-prep notes, deeper case material, and transcript working copies. |
+| [`docs/speaker-notes/`](docs/speaker-notes/) | Tracked versioned speaker-prep notes, deeper case material, transcript working copies, audience Q&A prep, and slide-by-slide audience analysis. |
 
 The three numbered docs replace the older split between strategy, deck spec, transcript, scoring rubric, slide constraints, and rehearsal runbook. The speaker-notes folder is supplemental and versioned for rehearsal depth.
+
+## Current Canonical Deck
+
+| Artifact | Role |
+| --- | --- |
+| `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` | Current owner-approved canonical deck PDF. No editable source PPTX for `v1.3` is currently present. |
+| `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` | Current `v1.3` slide-by-slide audience analysis, trend response, and 8 hard-question drill. |
+| `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` | Broader role-based Taiwanese Mandarin Q&A prep. |
+| `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v1.md` | Legacy zh-TW deep-note baseline for the generated compact/fallback storyline. |
+| `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v2-en.md` | English deep-note companion retained for rehearsal depth. |
+
+The original imported file under `~/Downloads` is not the repo source of truth and should not be modified or deleted by agent work.
 
 ## Machine Source And Generated Outputs
 
 Structured source of truth:
 
 `data/presentation_os.json`
+
+This structured source still owns the generated compact fallback package. It is no longer the canonical `v1.3` deck source.
 
 Generate current reports:
 
@@ -63,9 +77,9 @@ Generated files:
 
 The generator enforces exactly `14` slides, exactly `1710` seconds / `28:30` content time, and exactly `100` rubric points.
 
-## Editable PPTX Build
+## Generated Compact Fallback Deck
 
-Build the optimized compact deck from the same JSON source:
+Build the optimized compact fallback deck from the same JSON source:
 
 ```bash
 npm install
@@ -74,25 +88,28 @@ npm run build:deck
 
 Dependency note: the deck builder uses the public `pptxgenjs` package. PDF export and preview PNG rendering use local LibreOffice and Poppler (`pdftoppm`) when those CLI tools are available.
 
-Deck artifact:
+Fallback editable PPTX:
 
 `outputs/deck/cybersec-2026-ai-samd-compact-optimized.pptx`
 
-PDF preview / USB backup copy:
+Fallback PDF preview / USB backup copy:
 
 `outputs/deck/cybersec-2026-ai-samd-compact-optimized.pdf`
 
-The deck uses editable PowerPoint text, shapes, diagrams, and speaker notes. Slide 2 uses the official CYBERSEC disclaimer image from the planning source bundle when that image is available.
+The generated fallback deck uses editable PowerPoint text, shapes, diagrams, and speaker notes. Slide 2 uses the official CYBERSEC disclaimer image from the planning source bundle when that image is available.
 
 ## Working Order
 
-1. Read [`docs/01_talk_design.md`](docs/01_talk_design.md) to confirm the thesis, audience promise, slide map, timing, script, and public-safety boundary.
-2. Edit `data/presentation_os.json` only when generated reports or deck text need to change.
-3. Run `npm run build:reports` or `python3 tools/generate_presentation_outputs.py`.
-4. Build the editable PPTX with `npm run build:deck` when the deck artifact must change.
-5. Apply [`docs/02_evaluation_system.md`](docs/02_evaluation_system.md) before timed rehearsal.
-6. Rehearse and repair using [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md).
-7. Update the planning handoff only with status, links, and workflow changes; do not duplicate this package into the planning repo.
+1. Use `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` as the current canonical deck PDF.
+2. Read [`docs/01_talk_design.md`](docs/01_talk_design.md) to confirm the thesis, audience promise, slide map, timing, script, and public-safety boundary.
+3. Use `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` for per-slide audience challenge prep and the 8 hard-question drill.
+4. Use `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` for broader Taiwanese Mandarin audience Q&A prep.
+5. Edit `data/presentation_os.json` only when generated fallback reports or fallback deck text need to change.
+6. Run `npm run build:reports` or `python3 tools/generate_presentation_outputs.py` only when the generated fallback package needs regeneration.
+7. Build the editable fallback PPTX with `npm run build:deck` only when the generated fallback artifact must change.
+8. Apply [`docs/02_evaluation_system.md`](docs/02_evaluation_system.md) before timed rehearsal.
+9. Rehearse and repair using [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md).
+10. Update the planning handoff only with status, links, and workflow changes; do not duplicate this package into the planning repo.
 
 ## Evaluation Architecture
 
@@ -125,30 +142,26 @@ Project index local sibling path:
 
 Connection rule: update the planning handoff when this repo changes its canonical file set or workflow.
 
-## Source Anchors
+## Source Ownership
 
-Official anchors:
+Keep source detail where it is used:
+
+- Current source-verified `v1.3` slide and Q&A references live in `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` and `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md`.
+- Generated compact fallback source anchors live in `data/presentation_os.json` and rebuild into `outputs/current/main_strategy.md`.
+- Event and deadline state lives in the planning repo, not in this README.
+
+This README should stay a routing map. Do not duplicate long source lists here unless the repo's source ownership model changes.
+
+Essential stable anchors:
 
 - CYBERSEC session page: <https://cybersec.ithome.com.tw/2026/session/4284>
-- CYBERSEC speaker page: <https://cybersec.ithome.com.tw/2026/speaker/2060>
-- FDA cybersecurity page: <https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity>
-- FDA 2025 cybersecurity guidance PDF: <https://www.fda.gov/files/guidance%20documents/published/GUI00001825-final-PremarketCybersecurity-2025.pdf>
-- Public Law 117-328, section 524B: <https://www.congress.gov/117/plaws/publ328/PLAW-117publ328.pdf>
-- NIST AI Risk Management Framework playbook: <https://www.nist.gov/itl/ai-risk-management-framework/nist-ai-rmf-playbook>
-- NIST Cybersecurity Framework 2.0: <https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20>
-- ROC National Cybersecurity Strategy 2025: <https://www.president.gov.tw/File/Doc/9d056651-e4a0-4d51-adeb-5fee5ee71299>
-- Executive Yuan National Cybersecurity Development Program, 114-117: <https://www.ey.gov.tw/Page/448DE008087A1971/a954ca38-9dfb-446b-879a-9e7ed88495a4>
-- Executive Yuan critical-infrastructure domain reference: <https://digi.nstc.gov.tw/Page/1538F8CF7474AB4E/e262d09b-a434-4f0f-bb89-8015ab70e459>
-- FSC Financial Cybersecurity Resilience Blueprint news page: <https://www.fsc.gov.tw/ch/home.jsp?id=96&parentpath=0,2&mcustomize=news_view.jsp&dataserno=202512300002&dtable=News>
-- FSC Financial Cybersecurity Resilience Blueprint PDF mirror: <https://www.twsa.org.tw/save/doc/%E9%87%91%E8%9E%8D%E8%B3%87%E5%AE%89%E9%9F%8C%E6%80%A7%E7%99%BC%E5%B1%95%E8%97%8D%E5%9C%96.pdf>
-
-Local planning anchors:
-
-- v0.9 deck source: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pptx`
-- v0.9 PDF source: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pdf`
-- v0.9 speaker notes source: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-speaker-notes-v0.9-20260422.md`
-- v0.9 rehearsal runbook source: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-first-rehearsal-runbook-v0.9-20260422.md`
-- Official event source bundle: `../planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md`
+- FDA 2026 cybersecurity guidance: <https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cybersecurity-medical-devices-quality-management-system-considerations-and-content-premarket>
+- FDA cybersecurity FAQ / Section 524B reference: <https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity-medical-devices-frequently-asked-questions-faqs>
+- FDA AI-enabled DSF lifecycle draft guidance: <https://www.fda.gov/regulatory-information/search-fda-guidance-documents/artificial-intelligence-enabled-device-software-functions-lifecycle-management-and-marketing>
+- FDA AI PCCP final guidance: <https://www.fda.gov/regulatory-information/search-fda-guidance-documents/marketing-submission-recommendations-predetermined-change-control-plan-artificial-intelligence>
+- TFDA AI/ML CADe / CADx guidance update: <https://www.fda.gov.tw/tc/siteListContent.aspx?id=49448&sid=310>
+- NIST AI RMF playbook: <https://www.nist.gov/itl/ai-risk-management-framework/nist-ai-rmf-playbook>
+- NIST CSF 2.0: <https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20>
 
 ## Design Contract
 

@@ -66,8 +66,8 @@ def numbered(items: Iterable[str]) -> str:
 
 def validate(data: dict) -> None:
     slides = data["slides"]
-    if len(slides) != data["metadata"]["active_slide_count"]:
-        raise ValueError("slide count must equal metadata.active_slide_count")
+    if len(slides) != data["metadata"]["generated_fallback_slide_count"]:
+        raise ValueError("slide count must equal metadata.generated_fallback_slide_count")
 
     timing_total = sum(int(slide["speaking_seconds"]) for slide in slides)
     if timing_total != data["metadata"]["content_seconds"]:
@@ -107,7 +107,7 @@ def render_main_strategy(data: dict) -> str:
         "",
         f"Canonical topic: `{metadata['canonical_topic']}`",
         "",
-        "This generated strategy file turns the existing compact CYBERSEC talk into a reusable operating system. The macro speech rubric stays at `100` points; the slide constraint layer is a separate pass/fail and penalty gate; the optimization loop repairs the highest-leverage failures before rehearsal.",
+        "This generated strategy file describes the editable compact fallback/reference package. The current delivery deck is the owner-approved canonical PDF listed below. The macro speech rubric stays at `100` points; the slide constraint layer is a separate pass/fail and penalty gate; the optimization loop repairs the highest-leverage failures before rehearsal.",
         "",
         "## 1. Engine Architecture",
         "",
@@ -127,7 +127,8 @@ def render_main_strategy(data: dict) -> str:
                 ("Why this matters now", brief["why_now"]),
                 ("Speaker authority angle", brief["speaker_authority_angle"]),
                 ("Differentiator", brief["differentiator"]),
-                ("Active deck", f"{metadata['active_slide_count']} slides, {metadata['content_time']} content plus {metadata['buffer_time']} buffer"),
+                ("Canonical deck PDF", metadata["canonical_deck_pdf"]),
+                ("Generated fallback deck", f"{metadata['generated_fallback_slide_count']} slides, {metadata['content_time']} content plus {metadata['buffer_time']} buffer"),
                 ("Language policy", metadata["language_policy"]),
             ],
         ),
@@ -299,7 +300,7 @@ def render_slide_blueprint(data: dict) -> str:
     lines = [
         "# Slide Blueprint",
         "",
-        "This generated blueprint is the active 14-slide CYBERSEC 2026 target. Slide 2 is preserved as the required CYBERSEC disclaimer and functions as a compliance beat, not narrative content.",
+        "This generated blueprint is the editable compact 14-slide fallback/reference package for CYBERSEC 2026. The current delivery deck is the owner-approved canonical v1.3 PDF. Slide 2 is preserved as the required CYBERSEC disclaimer and functions as a compliance beat, not narrative content.",
         "",
         "## Timing Summary",
         "",

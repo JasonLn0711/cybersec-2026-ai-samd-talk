@@ -2,7 +2,7 @@
 
 Canonical topic: `AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地`
 
-This generated strategy file turns the existing compact CYBERSEC talk into a reusable operating system. The macro speech rubric stays at `100` points; the slide constraint layer is a separate pass/fail and penalty gate; the optimization loop repairs the highest-leverage failures before rehearsal.
+This generated strategy file describes the editable compact fallback/reference package. The current delivery deck is the owner-approved canonical PDF listed below. The macro speech rubric stays at `100` points; the slide constraint layer is a separate pass/fail and penalty gate; the optimization loop repairs the highest-leverage failures before rehearsal.
 
 ## 1. Engine Architecture
 
@@ -20,12 +20,13 @@ This generated strategy file turns the existing compact CYBERSEC talk into a reu
 | Field | Decision |
 | --- | --- |
 | Recommended title | AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地 |
-| Positioning | A decision-grade operating model for AI SaMD teams that must turn product boundary, Taiwan AI/critical-infrastructure resilience context, FDA 524B lifecycle obligations, FDA 2025 cybersecurity evidence expectations, testing evidence, and Patch SLA governance into product, engineering, and management decisions. |
+| Positioning | A decision-grade operating model for AI SaMD teams that must turn product boundary, Taiwan AI/critical-infrastructure resilience context, FDA 524B lifecycle obligations, FDA 2026 cybersecurity evidence expectations, testing evidence, and Patch SLA governance into product, engineering, and management decisions. |
 | Core thesis | AI SaMD cybersecurity is not a model-security checklist. It is a clinical product-risk operating system: define the product boundary, generate traceable evidence, test real exposure, govern findings, and prove repairability. |
 | Why this matters now | AI medical products are moving from standalone model demonstrations into deployed systems with viewers, runtimes, data stores, identity, update mechanisms, hospital integrations, and support workflows. Taiwan's 2025 national cybersecurity frame also links AI security, critical infrastructure, key industries, and supply-chain resilience. For medical AI, that shift turns cybersecurity into product-continuity, vendor-risk, and patient-safety risk. |
 | Speaker authority angle | The speaker translates regulatory expectations, AI-stack risk, testing practice, and product operations into one implementation model for teams preparing for real CYBERSEC-level scrutiny. |
 | Differentiator | The talk does not list regulations or tools. It uses product-boundary reasoning, one evidence chain, a testing-question portfolio, and one Patch SLA decision loop to make cybersecurity operational for engineers and decision-makers. |
-| Active deck | 14 slides, 28:30 content plus 1:30 buffer |
+| Canonical deck PDF | outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf |
+| Generated fallback deck | 14 slides, 28:30 content plus 1:30 buffer |
 | Language policy | English for strategy and evaluation; Taiwan Traditional Chinese for stage-language examples. |
 
 ### Title Candidates
@@ -62,7 +63,7 @@ This generated strategy file turns the existing compact CYBERSEC talk into a reu
 ### Desired Takeaways
 
 - Product boundary determines attack surface, evidence burden, testing depth, and operating responsibility.
-- FDA 524B and FDA 2025 can be translated into concrete lifecycle evidence: monitor/identify/address, CVD, updates/patches, SBOM, architecture views, traceability, testing evidence, and finding disposition.
+- FDA 524B and FDA 2026 cybersecurity guidance can be translated into concrete lifecycle evidence: monitor/identify/address, CVD, updates/patches, SBOM, architecture views, traceability, testing evidence, and finding disposition.
 - Taiwan's national cybersecurity context now treats AI security, critical-infrastructure resilience, key industries, and supply-chain resilience as connected work; medical AI SaMD is one concrete healthcare product case inside that larger frame.
 - AI SaMD security must separate three layers: model behavior, software stack, and clinical workflow.
 - Testing is decision support: each method should answer a release, repair, exposure, or retest question.
@@ -84,7 +85,7 @@ This generated strategy file turns the existing compact CYBERSEC talk into a reu
 | Category | Points | Design Goal | Observable Success | Tactics | Failure Pattern | Avoid | Slide Influence | Speaking Influence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Structure and Narrative Design | 20 | Make the talk feel inevitable from model to trust system. | Audience can restate the arc: product scale -> national/clinical continuity context -> evidence -> testing -> Patch SLA -> trust. | Use Slides 3, 5, 6, 12, and 14 as structural anchors. | Sections feel like independent lectures; national strategy becomes a second topic; closing introduces new content. | Agenda-first opening, framework dumping, and late-stage new ideas. | Every slide needs one governing message and a transition reason. | Name why the next section exists before moving. |
-| Content Depth and Value | 20 | Deliver technical substance without overwhelming the room. | Security, regulatory, product, and healthcare listeners each hear usable decisions. | Translate FDA 524B, FDA 2025, TFDA-facing AI/ML SaMD evidence, Taiwan AI/CI resilience context, testing, and Patch SLA into artifacts and decisions. | Tool-name dumping, regulation name-dropping, or shallow slogans. | Long legal quotes, exploit steps, and vendor-style claims. | Use evidence chains, stack diagrams, contrast panels, and decision flows. | Explain the artifact or decision each concept produces. |
+| Content Depth and Value | 20 | Deliver technical substance without overwhelming the room. | Security, regulatory, product, and healthcare listeners each hear usable decisions. | Translate FDA 524B, FDA 2026 cybersecurity guidance, TFDA-facing AI/ML SaMD evidence, Taiwan AI/CI resilience context, testing, and Patch SLA into artifacts and decisions. | Tool-name dumping, regulation name-dropping, or shallow slogans. | Long legal quotes, exploit steps, and vendor-style claims. | Use evidence chains, stack diagrams, contrast panels, and decision flows. | Explain the artifact or decision each concept produces. |
 | Stage Rhythm and Time Control | 15 | Vary pace and protect the ending. | Slide 7 ends near 14:00; Slide 14 begins by 27:40; content ends by 28:30. | Slow on memory slides, accelerate through labels, and use Slide 10 as recovery. | Regulatory middle expands; speaker compensates by rushing the close. | Trying to solve density by speaking faster. | Dense slides must use progressive reveal; memory slides must breathe. | Use cut markers before time pressure becomes visible. |
 | Delivery Quality | 15 | Sound precise, calm, and executive-technical. | The speaker uses short sentences, consistent terms, and no apologetic hedging. | Preserve the strong lines and deliver them with silence. | Reading slides, overexplaining acronyms, and adding examples after Slide 10. | Passive classroom phrasing and filler transitions. | Slides carry labels, not scripts. | Use Taiwan Traditional Chinese with English terms only where they are domain-standard. |
 | Visual Design | 10 | Make meaning visible in three seconds. | Audience sees a phrase, ladder, chain, stack, contrast, flow, or roadmap before explanation. | Use one dominant visual object per slide and semantic color only. | Text blocks, repeated template layout, decorative hacker imagery, or generic AI symbolism. | Stock visuals, random icons, and paragraph slides. | Apple-style restraint, high contrast, and diagram-led meaning. | Refer to the visual only when it advances the decision. |
@@ -189,7 +190,7 @@ Normal target: `28:30` content plus `1:30` buffer.
 | CYBERSEC session page | https://cybersec.ithome.com.tw/2026/session/4284 |
 | CYBERSEC speaker page | https://cybersec.ithome.com.tw/2026/speaker/2060 |
 | FDA cybersecurity page | https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity |
-| FDA 2025 cybersecurity guidance PDF | https://www.fda.gov/files/guidance%20documents/published/GUI00001825-final-PremarketCybersecurity-2025.pdf |
+| FDA 2026 cybersecurity guidance | https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cybersecurity-medical-devices-quality-management-system-considerations-and-content-premarket |
 | FDA medical device cybersecurity FAQ | https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity-medical-devices-frequently-asked-questions-faqs |
 | NIST AI RMF 1.0 PDF | https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf |
 | NIST Cybersecurity Framework 2.0 PDF | https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf |

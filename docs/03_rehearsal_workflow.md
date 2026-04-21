@@ -1,6 +1,6 @@
 # 03 Rehearsal Workflow
 
-Purpose: turn the compact deck, script, and evaluation system into a low-friction rehearsal loop.
+Purpose: turn the canonical deck PDF, speaker-prep notes, evaluation system, and generated fallback package into a low-friction rehearsal loop.
 
 First principle: rehearse to find the next constraint, not to keep polishing everything. Each run should produce one repair target.
 
@@ -8,27 +8,27 @@ First principle: rehearse to find the next constraint, not to keep polishing eve
 
 | Step | When | Action | Output |
 | ---: | --- | --- | --- |
-| 1 | Before slide edits | Read `docs/01_talk_design.md` and confirm the promise, memory anchors, timing, and public-safety boundary. | Talk spine locked. |
-| 2 | Before rebuilding outputs | Edit `data/presentation_os.json` only when generated reports or deck text need to change. | Single source updated. |
+| 1 | Before rehearsal | Use `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` as the current deck and read `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`. | Current deck path locked. |
+| 2 | Before changing fallback outputs | Edit `data/presentation_os.json` only when generated fallback reports or fallback deck text need to change. | Fallback source updated. |
 | 3 | After JSON edits | Run `python3 tools/generate_presentation_outputs.py`. | Reports and CSVs aligned. |
-| 4 | When the deck must change | Run `npm run build:deck`. | Editable `14`-slide PPTX plus PDF/preview outputs when local render tools are available. |
-| 5 | Before timed rehearsal | Apply `docs/02_evaluation_system.md` slide gates. | Redesign queue or pass. |
+| 4 | When fallback deck must change | Run `npm run build:deck`. | Editable `14`-slide fallback PPTX plus PDF/preview outputs when local render tools are available. |
+| 5 | Before timed rehearsal | Apply `docs/02_evaluation_system.md` to the current deck and use fallback reports only as repair references. | Rehearsal queue or pass. |
 | 6 | First timed run | Speak the deck with cut markers, record checkpoints. | Timing log and weak spots. |
 | 7 | After each run | Score using `docs/02_evaluation_system.md`. | One next repair target. |
 | 8 | Final pass | Confirm no public-safety issue, no rushed close, and no hard slide failures. | Go/no-go decision. |
 
-## First-Draft Gate
+## Message Gate
 
-Do this before visual polish:
+Do this before visual polish or extra content:
 
-- [ ] Slide 3 says `你賣的不是模型` and makes trust/patch/evidence explicit.
-- [ ] Slide 5 clearly shows four product scales.
-- [ ] Slide 6 uses `Risk -> Control -> Test -> Fix -> Evidence`.
-- [ ] Slide 7 connects model evidence, governance language, and AI stack.
-- [ ] Slide 10 remains a standalone patient-safety peak.
-- [ ] Slide 12 makes `Decision` visually and verbally central.
-- [ ] Slide 13 gives a credible `30 / 60 / 90` path.
-- [ ] Slide 14 contains no new framework or extra content.
+- [ ] The title, disclaimer, and table of contents move quickly into the thesis.
+- [ ] `You Are Not Selling a Model` makes trust, patchability, and evidence explicit.
+- [ ] `Risk Grows With Architecture` clearly shows product-scale growth.
+- [ ] `Evidence, Not Slogans` uses `Risk -> Control -> Test -> Fix -> Evidence`.
+- [ ] `Cyber Safety Is Patient Safety` remains a standalone patient-safety peak.
+- [ ] `Patch SLA` makes `Decision` visually and verbally central.
+- [ ] `Small Team: 30 / 60 / 90` gives a credible adoption path.
+- [ ] `Build Trust Before the Audit` contains no new framework or extra content.
 
 Gate: if any item fails, repair structure before improving visual style.
 
@@ -43,10 +43,10 @@ Gate: if any item fails, repair structure before improving visual style.
 - [ ] Slide 12's `Decision` node is visually dominant.
 - [ ] No decorative AI/security imagery competes with the message.
 - [ ] No public-safety boundary is violated.
-- [ ] Slide 6 says `Monitor / CVD / Patch / SBOM`, while the speaker explains FDA 524B as monitor, identify, address, coordinated vulnerability disclosure, updates/patches, and SBOM.
-- [ ] Slide 7 keeps AI RMF language separate from CSF 2.0 language; do not collapse both into an incomplete NIST function list.
+- [ ] The evidence-chain slide says `Monitor / CVD / Patch / SBOM`, while the speaker explains FDA 524B as monitor, identify, address, coordinated vulnerability disclosure, updates/patches, and SBOM.
+- [ ] The model/governance/stack slide keeps AI RMF language separate from CSF 2.0 language; do not collapse both into an incomplete NIST function list.
 - [ ] National cybersecurity strategy, critical-infrastructure, and financial-sector references stay as context and analogy; they do not become a second talk.
-- [ ] Slide 12 treats `Patch SLA` as this talk's operating model, not as a quoted FDA term.
+- [ ] The `Patch SLA` slide treats `Patch SLA` as this talk's operating model, not as a quoted FDA term.
 
 Gate: if any slide has a hard failure, redesign that slide before timed rehearsal. Do not solve slide-density problems by speaking faster.
 
@@ -54,12 +54,12 @@ Gate: if any slide has a hard failure, redesign that slide before timed rehearsa
 
 | Checkpoint | Target | Actual | Action If Late |
 | --- | ---: | ---: | --- |
-| Slide 3 starts | `0:30` |  | Cut title/disclaimer chatter. |
-| Slide 5 starts | `4:30` |  | Cut slide 4 detail. |
-| Slide 7 ends | `14:00` |  | Cut slide 7 to one sentence per column. |
-| Slide 10 starts | `19:20` |  | Compress slides 8-9. |
-| Slide 12 starts | `23:00` |  | Cut slide 11 examples. |
-| Slide 14 starts | `27:40` |  | Slide 13 becomes one output per bucket. |
+| Main thesis starts | `1:30` |  | Cut title/disclaimer/table-of-contents chatter. |
+| Product-scale map starts | `7:00` |  | Cut infrastructure/context detail. |
+| Evidence/governance block ends | `16:00` |  | Cut to one sentence per evidence or governance column. |
+| Patient-safety peak starts | `20:00` |  | Compress scale examples. |
+| Patch SLA starts | `24:00` |  | Cut testing examples. |
+| Closing roadmap starts | `27:00` |  | Small-team section becomes one output per bucket. |
 | Finish | `28:30` |  | Use safe version next run. |
 
 After the run, answer only five questions first:
@@ -142,20 +142,21 @@ The difference is control:
 
 | Version | Target | Rule |
 | --- | ---: | --- |
-| Normal | `28:30` | Full compact script with planned pauses. |
-| Safe | `27:30` | Cut secondary examples from slides 7, 8, 9, and 11. |
-| Rushed | `25:00` | Slide 6 evidence chain only; slide 13 one output per bucket. |
-| Emergency | `20:00` | Skip slides 4 and 11 as standalone sections. |
+| Normal | `28:30` | Full canonical delivery or compact fallback script with planned pauses. |
+| Safe | `27:30` | Cut secondary examples from evidence, scale, and testing sections. |
+| Rushed | `25:00` | Evidence chain only; small-team section becomes one output per bucket. |
+| Emergency | `20:00` | Keep thesis, scale map, evidence chain, patient-safety peak, Patch SLA, and close. |
 
 Rehearsal rule: practice the safe version at least twice before the final normal run.
 
 ## Final Readiness
 
-- [ ] The deck has exactly `14` slides.
+- [ ] The current deck is the canonical `v1.3` PDF and its page count matches the approved artifact, currently `15` pages.
+- [ ] If using the generated fallback instead, the fallback deck has exactly `14` slides.
 - [ ] Slide 2 is the required CYBERSEC disclaimer and is not treated as narrative content.
 - [ ] The deck has passed the slide gate with no hard failures.
 - [ ] The talk finishes by `28:30` in at least two consecutive runs.
-- [ ] The speaker can deliver slides 3, 6, 10, 12, and 14 without looking back.
+- [ ] The speaker can deliver the thesis, evidence chain, patient-safety peak, Patch SLA, and final trust-before-audit close without looking back.
 - [ ] Evaluator score is at least `85`.
 - [ ] No slide includes private hospital/client detail, student data, proprietary code, exploit recipe, or patent-sensitive implementation mechanics.
 - [ ] The final slide ends with the trust-before-audit principle and no new content.

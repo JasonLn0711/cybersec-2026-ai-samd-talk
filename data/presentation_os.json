@@ -3,11 +3,12 @@
     "package_name": "CYBERSEC 2026 Presentation Operating System",
     "version": "2026-04-21-decision-grade",
     "language_policy": "English for strategy and evaluation; Taiwan Traditional Chinese for stage-language examples.",
-    "active_slide_count": 14,
+    "generated_fallback_slide_count": 14,
     "content_seconds": 1710,
     "content_time": "28:30",
     "buffer_time": "1:30",
     "canonical_topic": "AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地",
+    "canonical_deck_pdf": "outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf",
     "disclaimer_image": "../planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/assets/cybersec-2026-disclaimer-slide.jpg"
   },
   "engines": [
@@ -46,7 +47,7 @@
       "AI SaMD Security Operations：Threat Modeling, Testing, Patch SLA"
     ],
     "recommended_title": "AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地",
-    "positioning": "A decision-grade operating model for AI SaMD teams that must turn product boundary, Taiwan AI/critical-infrastructure resilience context, FDA 524B lifecycle obligations, FDA 2025 cybersecurity evidence expectations, testing evidence, and Patch SLA governance into product, engineering, and management decisions.",
+    "positioning": "A decision-grade operating model for AI SaMD teams that must turn product boundary, Taiwan AI/critical-infrastructure resilience context, FDA 524B lifecycle obligations, FDA 2026 cybersecurity evidence expectations, testing evidence, and Patch SLA governance into product, engineering, and management decisions.",
     "audience_segments": [
       "Medical-device founders and product leaders who need a practical security scope model.",
       "Security engineers and consultants who need to convert findings into evidence and governance decisions.",
@@ -68,7 +69,7 @@
     ],
     "desired_takeaways": [
       "Product boundary determines attack surface, evidence burden, testing depth, and operating responsibility.",
-      "FDA 524B and FDA 2025 can be translated into concrete lifecycle evidence: monitor/identify/address, CVD, updates/patches, SBOM, architecture views, traceability, testing evidence, and finding disposition.",
+      "FDA 524B and FDA 2026 cybersecurity guidance can be translated into concrete lifecycle evidence: monitor/identify/address, CVD, updates/patches, SBOM, architecture views, traceability, testing evidence, and finding disposition.",
       "Taiwan's national cybersecurity context now treats AI security, critical-infrastructure resilience, key industries, and supply-chain resilience as connected work; medical AI SaMD is one concrete healthcare product case inside that larger frame.",
       "AI SaMD security must separate three layers: model behavior, software stack, and clinical workflow.",
       "Testing is decision support: each method should answer a release, repair, exposure, or retest question.",
@@ -109,8 +110,8 @@
       "url": "https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity"
     },
     {
-      "label": "FDA 2025 cybersecurity guidance PDF",
-      "url": "https://www.fda.gov/files/guidance%20documents/published/GUI00001825-final-PremarketCybersecurity-2025.pdf"
+      "label": "FDA 2026 cybersecurity guidance",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cybersecurity-medical-devices-quality-management-system-considerations-and-content-premarket"
     },
     {
       "label": "FDA medical device cybersecurity FAQ",
@@ -294,7 +295,7 @@
       "points": 20,
       "design_goal": "Deliver technical substance without overwhelming the room.",
       "observable_success": "Security, regulatory, product, and healthcare listeners each hear usable decisions.",
-      "tactics": "Translate FDA 524B, FDA 2025, TFDA-facing AI/ML SaMD evidence, Taiwan AI/CI resilience context, testing, and Patch SLA into artifacts and decisions.",
+      "tactics": "Translate FDA 524B, FDA 2026 cybersecurity guidance, TFDA-facing AI/ML SaMD evidence, Taiwan AI/CI resilience context, testing, and Patch SLA into artifacts and decisions.",
       "failure_patterns": "Tool-name dumping, regulation name-dropping, or shallow slogans.",
       "avoid": "Long legal quotes, exploit steps, and vendor-style claims.",
       "slide_influence": "Use evidence chains, stack diagrams, contrast panels, and decision flows.",
@@ -387,7 +388,7 @@
       "optimized_score": 19,
       "strengths": "Specific evidence chain, AI stack boundaries, Taiwan AI/CI resilience context, testing outputs, and Patch SLA decisions.",
       "weaknesses": "Baseline testing section can sound like a tool survey if not tied to findings and retest evidence; cross-sector examples can become scope creep if overexplained.",
-      "evidence": "FDA 524B verbs, FDA 2025 traceability, Taiwan national strategy, and financial resilience language are converted into artifacts and decisions."
+      "evidence": "FDA 524B verbs, FDA 2026 cybersecurity traceability, Taiwan national strategy, and financial resilience language are converted into artifacts and decisions."
     },
     {
       "category": "Stage Rhythm and Time Control",
@@ -754,7 +755,7 @@
         "Delivery Quality",
         "Stage Rhythm and Time Control"
       ],
-      "speaker_note": "FDA 524B 可以壓成幾個生命週期義務：上市後要 monitor、identify、address vulnerability；要有 coordinated vulnerability disclosure；要能提供 updates and patches；也要提供 SBOM。FDA 2025 guidance 往下要求的是安全架構視圖、邊界、角色、介面、threat model、testing evidence，以及 traceability。換成工程語言，就是一條證據鏈：架構怎麼畫、威脅怎麼判斷、控制怎麼設計、測試打到哪裡、finding 怎麼決定、修補和重測怎麼留下紀錄。",
+      "speaker_note": "FDA 524B 可以壓成幾個生命週期義務：上市後要 monitor、identify、address vulnerability；要有 coordinated vulnerability disclosure；要能提供 updates and patches；也要提供 SBOM。FDA 2026 cybersecurity guidance 往下要求的是安全架構視圖、邊界、角色、介面、threat model、testing evidence，以及 traceability。換成工程語言，就是一條證據鏈：架構怎麼畫、威脅怎麼判斷、控制怎麼設計、測試打到哪裡、finding 怎麼決定、修補和重測怎麼留下紀錄。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -1078,7 +1079,7 @@
       "Thesis: not model; trust, patch, evidence.",
       "Context: Taiwan AI, critical infrastructure, and supply-chain resilience converge in deployed medical AI.",
       "Map: four product scales determine evidence burden.",
-      "Evidence: FDA 524B and FDA 2025 become traceability.",
+      "Evidence: FDA 524B and FDA 2026 cybersecurity guidance become traceability.",
       "Application: risk grows from model to connected medical system.",
       "Peak: cyber safety is patient safety.",
       "Operation: testing creates findings; Patch SLA creates decisions.",

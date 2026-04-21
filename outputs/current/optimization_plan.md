@@ -23,7 +23,7 @@ The optimization loop targets the highest-leverage weak points first: density in
 1. Thesis: not model; trust, patch, evidence.
 2. Context: Taiwan AI, critical infrastructure, and supply-chain resilience converge in deployed medical AI.
 3. Map: four product scales determine evidence burden.
-4. Evidence: FDA 524B and FDA 2025 become traceability.
+4. Evidence: FDA 524B and FDA 2026 cybersecurity guidance become traceability.
 5. Application: risk grows from model to connected medical system.
 6. Peak: cyber safety is patient safety.
 7. Operation: testing creates findings; Patch SLA creates decisions.

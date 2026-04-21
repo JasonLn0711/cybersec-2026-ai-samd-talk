@@ -19,7 +19,7 @@ Do not merge these layers into one generic checklist.
 | Category | Points | Excellent Evidence | Deduct When |
 | --- | ---: | --- | --- |
 | Structure and Narrative Design | 20 | Arc is clear: product scale -> evidence -> governance -> testing -> Patch SLA -> implementation. | Sections feel interchangeable or the close introduces new content. |
-| Content Depth and Value | 20 | FDA 524B, FDA 2025, TFDA-facing SaMD thinking, AI stack, testing, and Patch SLA become usable decisions. | Regulations or tools are named without operational translation. |
+| Content Depth and Value | 20 | FDA 524B, FDA 2026 cybersecurity guidance, TFDA-facing SaMD thinking, AI stack, testing, and Patch SLA become usable decisions. | Regulations or tools are named without operational translation. |
 | Stage Rhythm and Time Control | 15 | Slide 7 ends near `14:00`, slide 14 starts by `27:40`, finish by `28:30`. | The regulatory middle expands and the ending gets rushed. |
 | Delivery Quality | 15 | Short sentences, precise terms, no apology for complexity, cut markers used under pressure. | Speaker reads, hedges, or adds examples after slide 10. |
 | Visual Design | 10 | Meaning is visible in three seconds; diagrams carry logic. | Slides require paragraph reading or decorative imagery. |
