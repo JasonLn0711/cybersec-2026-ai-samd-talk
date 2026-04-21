@@ -1,0 +1,23 @@
+{
+  "deckPath": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/cybersec-2026-ai-samd-compact-optimized.pptx",
+  "slideCount": 14,
+  "timingSeconds": 1710,
+  "timing": "28:30",
+  "editableTextSource": "All visible talk text except the organizer disclaimer image is created as editable PowerPoint text/shapes.",
+  "hardConstraintGate": "PASS",
+  "previewFiles": [
+    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-01.png",
+    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-03.png",
+    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-05.png",
+    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-10.png",
+    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-12.png",
+    "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/cybersec-2026-ai-samd-talk/outputs/deck/previews/slide-14.png"
+  ],
+  "keyText": [
+    "你賣的不是模型",
+    "Risk grows with architecture",
+    "Cyber Safety Is Patient Safety",
+    "Every finding needs a decision",
+    "Build trust before the audit"
+  ]
+}
