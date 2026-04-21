@@ -45,7 +45,7 @@ The planning repo may link to this repo for project context. This repo should no
 | talk design and stage script | `docs/01_talk_design.md` | Owns audience promise, slide spine, timing, script, and build path |
 | scoring and slide gates | `docs/02_evaluation_system.md` | Owns macro rubric, hard slide constraints, penalties, and generated evaluation outputs |
 | rehearsal workflow | `docs/03_rehearsal_workflow.md` | Owns dry-run checkpoints, repair order, and readiness |
-| tracked speaker prep notes | `docs/speaker-notes/` | Current `v1.3` slide-by-slide analysis, role Q&A, and retained deep-note companions; avoid duplicate same-language version copies |
+| tracked speaker prep notes | `docs/speaker-notes/` | Current `v1.3` slide-by-slide analysis, transcript/audience rehearsal readers, role Q&A, and retained deep-note companions; avoid duplicate same-language version copies |
 | structured source | `data/presentation_os.json` | Source of generated operating outputs and deck content |
 | generated reports | `outputs/current/` | Rebuildable from structured source |
 | canonical deck PDF | `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` | Owner-approved current deck artifact; no editable v1.3 source PPTX is currently present |

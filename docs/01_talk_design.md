@@ -7,6 +7,7 @@ This file combines the former strategy brief, generated `14`-slide deck spec, an
 First-principles split:
 
 - Use this file for the talk thesis, audience promise, and generated compact fallback script.
+- Use `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md` as the main Taiwan Mandarin slide-by-slide rehearsal reader.
 - Use `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` for current `v1.3` slide-by-slide rehearsal.
 - Use `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` for cross-slide audience Q&A.
 
@@ -109,6 +110,8 @@ No editable `v1.3` source PPTX is currently present in this repo. The files belo
 
 Speaker-prep companions for the canonical `v1.3` deck:
 
+- `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md` for the main Taiwan Mandarin rehearsal read: talk track, audience analysis, and deep-note companion content together slide by slide.
+- `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-plus-audience-analysis-zh-tw.md` for a lighter read that combines talk track and audience analysis.
 - `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` for per-slide audience questions, responses, trends, and the 8 hardest questions.
 - `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` for broader role-based Taiwanese Mandarin Q&A rehearsal.
 

@@ -8,7 +8,7 @@ First principle: rehearse to find the next constraint, not to keep polishing eve
 
 | Step | When | Action | Output |
 | ---: | --- | --- | --- |
-| 1 | Before rehearsal | Use `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` as the current deck and read `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`. | Current deck path locked. |
+| 1 | Before rehearsal | Use `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` as the current deck and read `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md`. | Current deck path and Taiwan Mandarin rehearsal reader locked. |
 | 2 | Before changing fallback outputs | Edit `data/presentation_os.json` only when generated fallback reports or fallback deck text need to change. | Fallback source updated. |
 | 3 | After JSON edits | Run `python3 tools/generate_presentation_outputs.py`. | Reports and CSVs aligned. |
 | 4 | When fallback deck must change | Run `npm run build:deck`. | Editable `14`-slide fallback PPTX plus PDF/preview outputs when local render tools are available. |
@@ -152,6 +152,7 @@ Rehearsal rule: practice the safe version at least twice before the final normal
 ## Final Readiness
 
 - [ ] The current deck is the canonical `v1.3` PDF and its page count matches the approved artifact, currently `15` pages.
+- [ ] The main Taiwan Mandarin rehearsal reader has been used for slide-by-slide talk track, audience response, and deep-note recall.
 - [ ] If using the generated fallback instead, the fallback deck has exactly `14` slides.
 - [ ] Slide 2 is the required CYBERSEC disclaimer and is not treated as narrative content.
 - [ ] The deck has passed the slide gate with no hard failures.
