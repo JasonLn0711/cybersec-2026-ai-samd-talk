@@ -1,4 +1,8 @@
-以下以你現在附件中的 **14 頁 active target** 為準來精修。這一版的核心不是「把所有資訊塞進投影片」，而是把每一頁背後的知識、案例、趨勢、工作流都準備好，讓你上台時可以講得有層次；投影片本身仍要維持一頁一重點、低文字量、強留白，否則會破壞你目前設計好的 keynote 節奏。你的 Talk Design 已經把這場定義成 30 分鐘、14 頁、28:30 spoken content + 1:30 buffer 的公開資安大會演講，主軸是「AI SaMD 團隊賣的不是模型，而是一個 trustable、patchable、auditable 的臨床產品系統」；Evaluation System 也提醒，投影片漂亮不能救弱敘事，真正評分會看產品尺度、證據鏈、測試策略、Patch SLA 和小團隊 roadmap 能不能被聽眾記住。  
+# CYBERSEC 2026 AI SaMD Slide Deep Notes v1 - Legacy zh-TW Baseline
+
+Status: preserved legacy zh-TW deep-note baseline for the generated compact/fallback storyline. The current canonical `v1.3` deck PDF has its slide-by-slide prep in `cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`.
+
+以下以當時的 **14 頁 generated compact fallback target** 為準來精修。這一版的核心不是「把所有資訊塞進投影片」，而是把每一頁背後的知識、案例、趨勢、工作流都準備好，讓你上台時可以講得有層次；投影片本身仍要維持一頁一重點、低文字量、強留白，否則會破壞你目前設計好的 keynote 節奏。你的 Talk Design 已經把這場定義成 30 分鐘、14 頁、28:30 spoken content + 1:30 buffer 的公開資安大會演講，主軸是「AI SaMD 團隊賣的不是模型，而是一個 trustable、patchable、auditable 的臨床產品系統」；Evaluation System 也提醒，投影片漂亮不能救弱敘事，真正評分會看產品尺度、證據鏈、測試策略、Patch SLA 和小團隊 roadmap 能不能被聽眾記住。
 
 先更新最重要的最新趨勢：你所有提到 FDA cybersecurity guidance 的地方，建議統一改成 **FDA 2026 Guidance**。FDA 在 2026 年 2 月 3 日發布新版 *Cybersecurity in Medical Devices: Quality Management System Considerations and Content of Premarket Submissions*，明確取代 2025 年 6 月 27 日版本；FDA 說這份文件提供醫療器材資安設計、標示與上市前送審文件建議，也處理 FD&C Act section 524B。產業評論普遍把 2026 版解讀為「主要是對齊 QMSR / ISO 13485 語言，而不是推翻原本技術要求」，所以你的演講可以講成：**資安不再是外掛文件，而是品質管理系統的一部分。** ([U.S. Food and Drug Administration][1])
 
