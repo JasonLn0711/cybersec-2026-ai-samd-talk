@@ -17,6 +17,8 @@ Purpose: provide a strict, auditable `100`-point evaluation framework for the CY
 
 Scoring rule: award points only for observed performance evidence. Do not score intention, preparation effort, or file completeness unless it is visible in the delivered talk.
 
+Slide-design rule: keep this `100`-point rubric as the macro speech score. Apply `06_slide_design_constraint_system.md` after scoring to produce slide penalties and, when justified, a slide quality multiplier. Do not replace the macro score with slide-level rules.
+
 ## 2. Category Subcriteria
 
 ### 2.1 Structure And Narrative Design - 20
@@ -120,7 +122,26 @@ Scoring rule: award points only for observed performance evidence. Do not score 
 
 Safety boundary rule: any actual private hospital/client detail, raw student record, proprietary code, exploit recipe, or patent-sensitive implementation mechanic shown in the public deck is at least a major deduction and may be critical depending on exposure.
 
-## 6. Reusable Scoring Sheet
+## 6. Slide Constraint Adjustment
+
+After the `100`-point speech score is assigned, run the slide constraint layer:
+
+```text
+Final Adjusted Score = Speech Score - Slide Penalties
+```
+
+Optional multiplier:
+
+```text
+Excellent slides: x1.05, capped at 100
+Adequate slides: x1.00
+Weak slides: x0.95
+Poor slides: x0.90
+```
+
+Use the multiplier only after penalties are applied. A deck with more than `4` hard slide failures is not conference-ready even if the macro speech score is high.
+
+## 7. Reusable Scoring Sheet
 
 | Category | Subcriterion | Max Points | Observed Evidence | Score | Deduction Reason | Severity | Evaluator Note | Fix Priority |
 | --- | --- | ---: | --- | ---: | --- | --- | --- | --- |
@@ -160,7 +181,7 @@ Safety boundary rule: any actual private hospital/client detail, raw student rec
 | Audience Impact | Practical usefulness | 2 |  |  |  |  |  |  |
 | Audience Impact | Final impression | 2 |  |  |  |  |  |  |
 
-## 7. Evaluator Notes Format
+## 8. Evaluator Notes Format
 
 Use this after every run:
 
@@ -189,4 +210,3 @@ Timing checkpoints:
 
 Next repair pass:
 ```
-

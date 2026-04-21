@@ -13,6 +13,10 @@ Purpose: build the recommended compact `14`-slide CYBERSEC deck. This file merge
 | Build for projection | Large type, high contrast, and enough empty space for a conference room. | Visual Design |
 | Preserve five memory anchors | Slides 3, 5, 10, 12, and 14 are the audience's mental anchors. | Audience Impact |
 
+Slide gate: after building these specs into actual slides, run `06_slide_design_constraint_system.md`. This deck spec defines intent and content; the slide gate decides whether the visual execution is production-ready.
+
+Strictness rule: do not force technical diagram labels into decorative minimalism. The hard `12`-word limit applies to headline/sentence text. Diagram labels are allowed only when they behave as labels and remain visually scannable.
+
 ## 2. 23-To-14 Consolidation Map
 
 | Compact Slide | New Title | Source Slides | Reason For Merge |
@@ -293,4 +297,3 @@ For a `20:00` delivery:
 | Slide 14 | `0:30` | Closing principle only. |
 
 Skip slides 4 and 11 as standalone sections in the emergency path.
-

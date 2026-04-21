@@ -4,7 +4,7 @@ Canonical repository for the CYBERSEC 2026 speech-delivery package:
 
 `AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地`
 
-This repo owns the presentation design system, compact slide specification, stage script, scoring rubric, and rehearsal process. It exists because CYBERSEC talk preparation is a standalone professional delivery project, not a TA grading artifact.
+This repo owns the presentation design system, compact slide specification, stage script, scoring rubric, slide constraint layer, and rehearsal process. It exists because CYBERSEC talk preparation is a standalone professional delivery project, not a TA grading artifact.
 
 ## First-Principles Boundary
 
@@ -32,16 +32,33 @@ Recommended working model:
 | [`docs/03_speaker_script_and_stage_rhythm.md`](docs/03_speaker_script_and_stage_rhythm.md) | Taiwan Traditional Chinese delivery script, rhythm map, cue cards, stage behavior | Rehearsal script |
 | [`docs/04_scoring_rubric.md`](docs/04_scoring_rubric.md) | Strict `100`-point evaluator framework and scoring sheet | Evaluation form |
 | [`docs/05_rehearsal_and_iteration_runbook.md`](docs/05_rehearsal_and_iteration_runbook.md) | Review passes, dry runs, fix-order by score band, final readiness | Iteration system |
+| [`docs/06_slide_design_constraint_system.md`](docs/06_slide_design_constraint_system.md) | Pass/fail slide design gates, penalties, multiplier, and redesign prompt | Slide quality firewall |
 
 ## Working Order
 
 1. Lock the audience promise and timing with [`docs/01_strategy_and_rubric_alignment.md`](docs/01_strategy_and_rubric_alignment.md).
 2. Build or revise the deck from [`docs/02_compact_14_slide_deck_spec.md`](docs/02_compact_14_slide_deck_spec.md).
-3. Rehearse from [`docs/03_speaker_script_and_stage_rhythm.md`](docs/03_speaker_script_and_stage_rhythm.md).
-4. Score each run with [`docs/04_scoring_rubric.md`](docs/04_scoring_rubric.md).
-5. Apply the next repair pass from [`docs/05_rehearsal_and_iteration_runbook.md`](docs/05_rehearsal_and_iteration_runbook.md).
+3. Run the slide gate in [`docs/06_slide_design_constraint_system.md`](docs/06_slide_design_constraint_system.md) before timed rehearsal.
+4. Rehearse from [`docs/03_speaker_script_and_stage_rhythm.md`](docs/03_speaker_script_and_stage_rhythm.md).
+5. Score each run with [`docs/04_scoring_rubric.md`](docs/04_scoring_rubric.md).
+6. Apply the next repair pass from [`docs/05_rehearsal_and_iteration_runbook.md`](docs/05_rehearsal_and_iteration_runbook.md).
 
 The recommended delivery surface is the compact `14`-slide version. Older `23`-slide materials are source context in the planning repo, not active working files here.
+
+## Evaluation Architecture
+
+```text
+Speech Evaluation System
+-> 100-point macro score for strategy, content, timing, delivery, visuals, presence, and impact
+
+Slide Design Constraint System
+-> pass/fail gates plus penalties for slide-level clarity, density, layout, and AI-feel risk
+
+Optimization Engine
+-> rewrite only the worst failed slides
+```
+
+Do not merge these layers into one generic checklist. The speech rubric evaluates the talk. The slide constraint system prevents the deck from becoming text-heavy, generic, or visually undisciplined.
 
 ## Planning Repo Connection
 
@@ -99,4 +116,3 @@ Stage-language anchors:
 - `Cyber Safety is Patient Safety`
 - `沒有 decision，就沒有治理；沒有證據，就沒有信任`
 - `先把安全做進產品，法規文件才會自然長出來`
-

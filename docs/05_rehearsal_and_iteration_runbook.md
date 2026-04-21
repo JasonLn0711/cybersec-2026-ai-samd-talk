@@ -7,7 +7,7 @@ Purpose: turn the scoring rubric into a practical rehearsal and repair system fo
 | Pass | When | Goal | Output |
 | --- | --- | --- | --- |
 | Draft structure review | Before editing slides | Confirm thesis, map, evidence chain, Patch SLA, close. | Structural repair list. |
-| Slide design review | After first compact deck build | Remove density and visual ambiguity. | Slide fix list. |
+| Slide constraint review | After first compact deck build | Enforce pass/fail slide constraints and penalties from `06_slide_design_constraint_system.md`. | Redesign queue. |
 | Script review | Before first timed rehearsal | Ensure each slide has a speakable point and cut marker. | Cue-card draft. |
 | Dry run | First timed run alone | Find timing and language failures. | Rubric score and timing log. |
 | Live rehearsal | With peer evaluator | Test audience comprehension and stage presence. | Evidence-based scoring sheet. |
@@ -28,18 +28,20 @@ Use this before polishing visual details:
 
 Rubric gate: if any of these fail, do not spend time on visual polish yet. Repair Structure and Narrative Design first.
 
-## 3. Slide Design Review Checklist
+## 3. Slide Constraint Review Checklist
 
-- [ ] Each slide has one dominant object: phrase, ladder, chain, stack, comparison, flow, or roadmap.
-- [ ] No slide uses paragraphs as main screen content.
-- [ ] Every label is readable from the back of a conference room.
-- [ ] Slides 8 and 9 use matching comparison structure.
-- [ ] Slide 12's `Decision` node is the most visually important object.
-- [ ] Color is semantic: risk, evidence, decision, or active layer.
+- [ ] Run every slide through `06_slide_design_constraint_system.md`.
+- [ ] Each slide has exactly one controlling message.
+- [ ] Headline/sentence text stays under `12` words unless the slide is the required disclaimer.
+- [ ] Technical labels are labels, not sentence explanations.
+- [ ] At least `70%` of each slide is visual structure or whitespace.
+- [ ] Each slide uses an allowed layout: big statement, full visual, contrast, diagram, or progressive build.
+- [ ] No layout pattern repeats more than `3` slides in a row.
+- [ ] Slide 12's `Decision` node is visually dominant.
 - [ ] No decorative AI/security imagery competes with the message.
 - [ ] No sensitive public-safety boundary is violated.
 
-Rubric gate: if the evaluator needs more than three seconds to understand a slide's headline meaning, Visual Design loses points.
+Gate: if any slide has a hard failure, redesign that slide before timed rehearsal. Do not try to solve slide-density problems by speaking faster.
 
 ## 4. Dry-Run Checklist
 
@@ -162,6 +164,7 @@ Rehearsal rule: practice the safe version at least twice before the final normal
 
 - [ ] The deck has exactly `14` slides.
 - [ ] Slide 2 is the required CYBERSEC disclaimer and is not treated as narrative content.
+- [ ] The deck has passed the slide constraint system with no hard failures.
 - [ ] The talk finishes by `28:30` in at least two consecutive runs.
 - [ ] The speaker can deliver slides 3, 6, 10, 12, and 14 without looking back.
 - [ ] The evaluator score is at least `85`.
@@ -175,4 +178,3 @@ Use this table after each scored run:
 | Date | Version | Score | Timing Issue | Lowest Category | Repair Made | Next Run Target |
 | --- | --- | ---: | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |
-
