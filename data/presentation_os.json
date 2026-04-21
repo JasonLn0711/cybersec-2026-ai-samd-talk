@@ -1,0 +1,1060 @@
+{
+  "metadata": {
+    "package_name": "CYBERSEC 2026 Presentation Operating System",
+    "version": "2026-04-21",
+    "language_policy": "English for strategy and evaluation; Taiwan Traditional Chinese for stage-language examples.",
+    "active_slide_count": 14,
+    "content_seconds": 1710,
+    "content_time": "28:30",
+    "buffer_time": "1:30",
+    "canonical_topic": "AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地",
+    "disclaimer_image": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/assets/cybersec-2026-disclaimer-slide.jpg"
+  },
+  "engines": [
+    {
+      "name": "Design Engine",
+      "function": "Convert the CYBERSEC topic into a professional 30-minute conference narrative with timing, authority, and audience cognition built in."
+    },
+    {
+      "name": "Slide Engine",
+      "function": "Produce a compact Apple-style 14-slide structure with one message, strong visual dominance, and no decorative security imagery."
+    },
+    {
+      "name": "Evaluation Engine",
+      "function": "Score the macro talk with the 100-point rubric before slide penalties are applied."
+    },
+    {
+      "name": "Constraint Engine",
+      "function": "Gate every slide with pass/fail slide constraints, anti-AI-feel checks, penalties, and public-safety boundaries."
+    },
+    {
+      "name": "Optimization Engine",
+      "function": "Repair the highest-leverage weak points, rewrite weak slides, and simulate a second-pass evaluation."
+    },
+    {
+      "name": "Report Engine",
+      "function": "Emit stable Markdown and CSV outputs for rehearsal, peer review, and spreadsheet scoring."
+    }
+  ],
+  "brief": {
+    "title_candidates": [
+      "AI 軟體醫材的資安實戰：從 FDA 524B 到 Threat Modeling 與 Patch SLA",
+      "你賣的不是模型：AI 醫材資安、證據鏈與 Patch SLA",
+      "Cyber Safety Is Patient Safety：AI SaMD 的資安治理落地",
+      "從模型到醫療系統：AI SaMD 的資安證據鏈",
+      "法規要的是證據，不是口號：AI 醫材資安實作路線圖",
+      "AI SaMD Security Operations：Threat Modeling, Testing, Patch SLA"
+    ],
+    "recommended_title": "AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地",
+    "positioning": "A conference-grade operating model for AI SaMD teams that must translate FDA 524B, FDA 2025 premarket cybersecurity expectations, TFDA-facing AI/ML SaMD evidence, testing, and Patch SLA into product decisions.",
+    "audience_segments": [
+      "Medical-device founders and product leaders who need a practical security scope model.",
+      "Security engineers and consultants who need to convert findings into evidence and governance decisions.",
+      "Regulatory, QA, and clinical-risk teams who need traceability from architecture to controls, tests, fixes, and records.",
+      "Hospital and healthcare IT leaders who evaluate vendor trust, service continuity, and patient-safety exposure.",
+      "Cross-functional managers who need a shared language for ownership, evidence, and repair timing."
+    ],
+    "audience_assumptions": [
+      "They know AI/ML and medical-device language at different depths, but not everyone has connected it to postmarket vulnerability operations.",
+      "They expect technical seriousness and practical takeaways, not a regulatory reading session.",
+      "They may underestimate how quickly a model demo becomes a product system with identity, data, update, logging, and support obligations."
+    ],
+    "pain_points": [
+      "AI security is mistakenly narrowed to model robustness.",
+      "Regulatory work is treated as submission paperwork instead of traceable engineering evidence.",
+      "Testing produces reports but not decisions, retest proof, or Patch SLA governance.",
+      "Small teams assume mature security programs are unreachable and delay minimum evidence work.",
+      "Healthcare stakeholders need a patient-safety explanation that avoids fear-heavy examples."
+    ],
+    "desired_takeaways": [
+      "Product scale determines cybersecurity evidence burden.",
+      "FDA 524B and FDA 2025 can be translated into monitor, patch, disclose, SBOM, and traceability work.",
+      "TFDA-facing AI/ML SaMD preparation needs model evidence, governance language, and stack-level security boundaries.",
+      "White-box and black-box testing are valuable when findings become decisions and retest evidence.",
+      "Patch SLA is the operating bridge between vulnerability discovery, product trust, and audit readiness."
+    ],
+    "core_thesis": "AI SaMD security is not a model-security checklist. It is a product trust system: scope the product, trace the evidence, test the exposure, govern findings, and prove repairability.",
+    "why_now": "AI medical products are moving from standalone model demonstrations into deployed systems: viewers, cloud runtimes, databases, update mechanisms, hospital integrations, and support workflows. That shift makes cybersecurity a product-continuity and patient-safety issue.",
+    "speaker_authority_angle": "The speaker translates regulatory expectations, AI-stack risk, testing practice, and product operations into one implementation model for teams preparing for real CYBERSEC-level scrutiny.",
+    "differentiator": "The talk does not list regulations or tools. It uses four product scales, one evidence chain, and one Patch SLA decision loop to make cybersecurity operational.",
+    "risk_factors": [
+      "Regulatory content can become dense and slow.",
+      "Technical examples can drift toward tool catalogs.",
+      "Slides 6 and 7 can overload the audience if they become control lists.",
+      "The ending can be weakened if the speaker spends too long on testing details.",
+      "Any private implementation detail would reduce trust and public-safety readiness."
+    ],
+    "risk_mitigations": [
+      "Compress regulation into evidence-chain logic: Risk -> Control -> Test -> Fix -> Evidence.",
+      "Use product-scale comparisons instead of vulnerability lists.",
+      "Make Slide 10 an intentional recovery beat after the dense middle.",
+      "Use cut markers before speaking faster.",
+      "Keep all examples public-safe and artifact-level."
+    ]
+  },
+  "source_anchors": [
+    {
+      "label": "CYBERSEC session page",
+      "url": "https://cybersec.ithome.com.tw/2026/session/4284"
+    },
+    {
+      "label": "CYBERSEC speaker page",
+      "url": "https://cybersec.ithome.com.tw/2026/speaker/2060"
+    },
+    {
+      "label": "FDA cybersecurity page",
+      "url": "https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity"
+    },
+    {
+      "label": "FDA 2025 cybersecurity guidance PDF",
+      "url": "https://www.fda.gov/files/guidance%20documents/published/GUI00001825-final-PremarketCybersecurity-2025.pdf"
+    },
+    {
+      "label": "Local CYBERSEC source bundle",
+      "path": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md"
+    },
+    {
+      "label": "v0.9 deck source",
+      "path": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-organizer-v0.9-20260422.pptx"
+    },
+    {
+      "label": "v0.9 speaker notes",
+      "path": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-ai-samd-cybersecurity-lin-jia-sheng-speaker-notes-v0.9-20260422.md"
+    },
+    {
+      "label": "v0.9 rehearsal runbook",
+      "path": "/Users/iKev/Desktop/02_Projects_and_Code/everything_on_git/planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-first-rehearsal-runbook-v0.9-20260422.md"
+    }
+  ],
+  "narrative": {
+    "mode": "myth -> reality -> operating framework -> implementation",
+    "why_this_mode": "The audience likely begins with the false simplification that AI SaMD security is model security or compliance paperwork. This structure breaks that myth, replaces it with product-scale reality, then gives a practical operating model.",
+    "opening_hook": "Start with the stage line `你賣的不是模型` after the required title and disclaimer beats. The line immediately shifts the audience from model performance to product trust.",
+    "problem_framing": "The security problem grows as AI moves from model artifact to viewer, platform, database, connected medical system, update chain, and support workflow.",
+    "tension": "Regulators, hospitals, and users do not only ask whether the model is accurate. They ask whether the product can be monitored, patched, disclosed, tested, explained, and repaired.",
+    "development_arc": [
+      "Slide 3 breaks the model-only myth.",
+      "Slides 4-5 establish urgency and product scale.",
+      "Slides 6-7 translate regulation and governance into an evidence chain.",
+      "Slides 8-9 apply the model to product-scale risk.",
+      "Slide 10 turns the technical argument into patient-safety significance.",
+      "Slides 11-12 convert testing into Patch SLA decisions.",
+      "Slides 13-14 give an executable path and closing principle."
+    ],
+    "climax": "Slide 12: every finding needs a decision. This is where testing, regulation, product ownership, and trust converge.",
+    "closing_structure": "Slide 13 gives the audience a 30 / 60 / 90 implementation path; Slide 14 closes with trust-before-audit and no new material.",
+    "final_takeaway": "先把安全做進產品，法規文件才會自然長出來。"
+  },
+  "time_architecture": {
+    "normal": {
+      "target": "28:30",
+      "buffer": "1:30",
+      "segments": [
+        {
+          "slides": "1-2",
+          "time": "0:30",
+          "function": "Formal opening and required compliance beat.",
+          "load": "Light"
+        },
+        {
+          "slides": "3",
+          "time": "1:50",
+          "function": "Thesis hook and mental-frame reset.",
+          "load": "Emotional and conceptual"
+        },
+        {
+          "slides": "4-5",
+          "time": "4:10",
+          "function": "Why-now and product-scale map.",
+          "load": "Moderate"
+        },
+        {
+          "slides": "6-7",
+          "time": "7:30",
+          "function": "Regulatory evidence and local governance bridge.",
+          "load": "Heavy"
+        },
+        {
+          "slides": "8-9",
+          "time": "5:20",
+          "function": "Concrete product-scale risk comparison.",
+          "load": "Moderate"
+        },
+        {
+          "slides": "10",
+          "time": "1:20",
+          "function": "Patient-safety peak and attention recovery.",
+          "load": "Emotional reset"
+        },
+        {
+          "slides": "11-12",
+          "time": "4:30",
+          "function": "Testing and Patch SLA operating model.",
+          "load": "Technical and operational"
+        },
+        {
+          "slides": "13-14",
+          "time": "3:20",
+          "function": "Practical roadmap and clean close.",
+          "load": "Action-oriented"
+        }
+      ]
+    },
+    "variants": [
+      {
+        "name": "safe",
+        "target": "27:30",
+        "rules": "Remove secondary labels from slides 7, 8, 9, and 11; preserve all memory lines."
+      },
+      {
+        "name": "rushed",
+        "target": "25:00",
+        "rules": "Slide 6 becomes evidence chain only; slide 7 one sentence per column; slide 13 one output per bucket."
+      },
+      {
+        "name": "emergency",
+        "target": "20:00",
+        "rules": "Skip slides 4 and 11 as standalone sections; mention AI infrastructure in slide 5 and testing output in slide 12."
+      }
+    ],
+    "attention_drops": [
+      {
+        "risk_point": "After Slide 7",
+        "why": "The regulatory/governance section is the heaviest cognitive load.",
+        "recovery": "Move into Slide 8 with the concrete question `第一層和第二層差在哪裡？`"
+      },
+      {
+        "risk_point": "Before Slide 12",
+        "why": "Testing can become a tool-list detour.",
+        "recovery": "Use `但 finding 出來以後，真正的治理才開始。` and make Decision the visual center."
+      },
+      {
+        "risk_point": "Final two minutes",
+        "why": "The speaker may rush if Slide 11 expands.",
+        "recovery": "Cut testing examples, keep 30 / 60 / 90, and start Slide 14 by 27:40."
+      }
+    ]
+  },
+  "rubric_translation": [
+    {
+      "category": "Structure and Narrative Design",
+      "points": 20,
+      "design_goal": "Make the talk feel inevitable from model to trust system.",
+      "observable_success": "Audience can restate the arc: product scale -> evidence -> testing -> Patch SLA -> trust.",
+      "tactics": "Use Slides 3, 5, 6, 12, and 14 as structural anchors.",
+      "failure_patterns": "Sections feel like independent lectures; closing introduces new content.",
+      "avoid": "Agenda-first opening, framework dumping, and late-stage new ideas.",
+      "slide_influence": "Every slide needs one governing message and a transition reason.",
+      "speaking_influence": "Name why the next section exists before moving."
+    },
+    {
+      "category": "Content Depth and Value",
+      "points": 20,
+      "design_goal": "Deliver technical substance without overwhelming the room.",
+      "observable_success": "Security, regulatory, product, and healthcare listeners each hear usable decisions.",
+      "tactics": "Translate FDA 524B, FDA 2025, TFDA-facing AI/ML SaMD evidence, testing, and Patch SLA into artifacts.",
+      "failure_patterns": "Tool-name dumping, regulation name-dropping, or shallow slogans.",
+      "avoid": "Long legal quotes, exploit steps, and vendor-style claims.",
+      "slide_influence": "Use evidence chains, stack diagrams, contrast panels, and decision flows.",
+      "speaking_influence": "Explain the artifact or decision each concept produces."
+    },
+    {
+      "category": "Stage Rhythm and Time Control",
+      "points": 15,
+      "design_goal": "Vary pace and protect the ending.",
+      "observable_success": "Slide 7 ends near 14:00; Slide 14 begins by 27:40; content ends by 28:30.",
+      "tactics": "Slow on memory slides, accelerate through labels, and use Slide 10 as recovery.",
+      "failure_patterns": "Regulatory middle expands; speaker compensates by rushing the close.",
+      "avoid": "Trying to solve density by speaking faster.",
+      "slide_influence": "Dense slides must use progressive reveal; memory slides must breathe.",
+      "speaking_influence": "Use cut markers before time pressure becomes visible."
+    },
+    {
+      "category": "Delivery Quality",
+      "points": 15,
+      "design_goal": "Sound precise, calm, and executive-technical.",
+      "observable_success": "The speaker uses short sentences, consistent terms, and no apologetic hedging.",
+      "tactics": "Preserve the strong lines and deliver them with silence.",
+      "failure_patterns": "Reading slides, overexplaining acronyms, and adding examples after Slide 10.",
+      "avoid": "Passive classroom phrasing and filler transitions.",
+      "slide_influence": "Slides carry labels, not scripts.",
+      "speaking_influence": "Use Taiwan Traditional Chinese with English terms only where they are domain-standard."
+    },
+    {
+      "category": "Visual Design",
+      "points": 10,
+      "design_goal": "Make meaning visible in three seconds.",
+      "observable_success": "Audience sees a phrase, ladder, chain, stack, contrast, flow, or roadmap before explanation.",
+      "tactics": "Use one dominant visual object per slide and semantic color only.",
+      "failure_patterns": "Text blocks, repeated template layout, decorative hacker imagery, or generic AI symbolism.",
+      "avoid": "Stock visuals, random icons, and paragraph slides.",
+      "slide_influence": "Apple-style restraint, high contrast, and diagram-led meaning.",
+      "speaking_influence": "Refer to the visual only when it advances the decision."
+    },
+    {
+      "category": "Stage Presence",
+      "points": 10,
+      "design_goal": "Project controlled authority.",
+      "observable_success": "Stillness and eye contact on Slides 3, 10, 12, and 14.",
+      "tactics": "Use posture changes only for structural transitions and gestures only for diagrams.",
+      "failure_patterns": "Looking back during strong lines, wandering, or visible time panic.",
+      "avoid": "Overmoving during patient-safety and closing moments.",
+      "slide_influence": "Minimize text that forces the speaker to read.",
+      "speaking_influence": "Pause after the strong lines and stop cleanly."
+    },
+    {
+      "category": "Audience Impact",
+      "points": 10,
+      "design_goal": "Make the talk memorable and useful after the conference.",
+      "observable_success": "Audience recalls `你賣的不是模型`, four product scales, Patch SLA, and `30 / 60 / 90`.",
+      "tactics": "Repeat memory anchors and convert them into action.",
+      "failure_patterns": "Interesting content with no operational next step.",
+      "avoid": "Broad best-practice endings and administrative closing clutter.",
+      "slide_influence": "Preserve visually distinctive memory slides.",
+      "speaking_influence": "End on principle and ownership, not logistics."
+    }
+  ],
+  "scoring_categories": [
+    {
+      "category": "Structure and Narrative Design",
+      "max_score": 20,
+      "subcriteria": [
+        "Opening hook effectiveness",
+        "Logical progression",
+        "Transition clarity",
+        "One-slide-one-message discipline",
+        "Conclusion strength"
+      ],
+      "baseline_score": 17,
+      "optimized_score": 19,
+      "strengths": "Strong myth-break opening, four-scale map, Patch SLA climax, and trust-before-audit close.",
+      "weaknesses": "Baseline version risks treating slides 6-7 as a middle lecture rather than one evidence bridge.",
+      "evidence": "Slides 3, 5, 6, 12, and 14 form a repeatable narrative spine."
+    },
+    {
+      "category": "Content Depth and Value",
+      "max_score": 20,
+      "subcriteria": [
+        "Technical substance",
+        "Regulatory translation",
+        "Relevance to target audience",
+        "Evidence/examples",
+        "Audience appropriateness"
+      ],
+      "baseline_score": 18,
+      "optimized_score": 19,
+      "strengths": "Specific evidence chain, AI stack boundaries, testing outputs, and Patch SLA decisions.",
+      "weaknesses": "Baseline testing section can sound like a tool survey if not tied to findings and retest evidence.",
+      "evidence": "FDA 524B verbs and FDA 2025 traceability are converted into artifacts and decisions."
+    },
+    {
+      "category": "Stage Rhythm and Time Control",
+      "max_score": 15,
+      "subcriteria": [
+        "Pacing variation",
+        "Segment timing discipline",
+        "Transition fluidity",
+        "Cognitive load balancing",
+        "Recovery beats"
+      ],
+      "baseline_score": 12,
+      "optimized_score": 14,
+      "strengths": "28:30 content target with 1:30 buffer; Slide 10 recovery beat protects attention.",
+      "weaknesses": "Baseline can run late if slides 6-7 or 11 expand.",
+      "evidence": "Slide-level seconds total 1710 and define cut markers at slide 7, slide 12, and slide 14."
+    },
+    {
+      "category": "Delivery Quality",
+      "max_score": 15,
+      "subcriteria": [
+        "Clarity",
+        "Wording precision",
+        "Vocal variation",
+        "Confidence",
+        "Verbal efficiency"
+      ],
+      "baseline_score": 13,
+      "optimized_score": 14,
+      "strengths": "Stage-language anchors are concise and credible.",
+      "weaknesses": "Baseline wording can become explanatory instead of decision-oriented in regulatory and testing sections.",
+      "evidence": "Strong lines: `你賣的不是模型`, `法規要的是證據，不是口號`, `Cyber Safety is Patient Safety`, `沒有 decision，就沒有治理；沒有證據，就沒有信任`."
+    },
+    {
+      "category": "Visual Design",
+      "max_score": 10,
+      "subcriteria": [
+        "Clarity",
+        "Consistency",
+        "Supportiveness to meaning",
+        "Premium appearance",
+        "Non-template layout choices"
+      ],
+      "baseline_score": 8,
+      "optimized_score": 9,
+      "strengths": "Deck uses statement, full visual, contrast, diagram, and progressive-build layouts.",
+      "weaknesses": "Baseline slides 6-7 require strict label control to avoid visual density.",
+      "evidence": "Memory slides 3, 5, 10, 12, and 14 are visually distinctive."
+    },
+    {
+      "category": "Stage Presence",
+      "max_score": 10,
+      "subcriteria": [
+        "Eye contact",
+        "Posture",
+        "Gesture control",
+        "Composure",
+        "Authority"
+      ],
+      "baseline_score": 8,
+      "optimized_score": 9,
+      "strengths": "Memory slides create obvious eye-contact and stillness moments.",
+      "weaknesses": "Time pressure can reduce composure if Slide 11 expands.",
+      "evidence": "Slides 3, 10, 12, and 14 are built for stillness and direct address."
+    },
+    {
+      "category": "Audience Impact",
+      "max_score": 10,
+      "subcriteria": [
+        "Memorability",
+        "Relevance felt by audience",
+        "Engagement maintenance",
+        "Practical usefulness",
+        "Final impression"
+      ],
+      "baseline_score": 8,
+      "optimized_score": 10,
+      "strengths": "The talk gives memorable phrases plus a concrete 30 / 60 / 90 path.",
+      "weaknesses": "Baseline impact weakens if the final minute is rushed.",
+      "evidence": "Four-scale map, Patch SLA, and 30 / 60 / 90 roadmap provide post-session utility."
+    }
+  ],
+  "score_summary": {
+    "baseline_macro_score": 84,
+    "baseline_slide_penalty": 4,
+    "baseline_multiplier": 1.0,
+    "baseline_adjusted_score": 80,
+    "optimized_macro_score": 94,
+    "optimized_slide_penalty": 1,
+    "optimized_multiplier": 1.05,
+    "optimized_adjusted_score": 98,
+    "improvement": 18
+  },
+  "constraint_system": {
+    "hard_rules": [
+      "Exactly one controlling idea per slide, except the required disclaimer.",
+      "Headline or sentence text stays below 12 words; technical labels are allowed only when they function as diagram labels.",
+      "At least 70% of each slide is visual structure or whitespace.",
+      "No more than two bullets; prefer zero.",
+      "Audience should understand the point in under three seconds.",
+      "No private hospital/client detail, proprietary code, raw student records, exploit recipes, or patent-sensitive implementation mechanics."
+    ],
+    "allowed_layouts": [
+      "Big statement",
+      "Full visual",
+      "Contrast",
+      "Diagram",
+      "Progressive build"
+    ],
+    "design_system": {
+      "style": "Dark, clean, high-contrast, diagram-led, and restrained.",
+      "fonts": "Modern sans: title and label styles only.",
+      "colors": "One primary accent for evidence/decision and one risk color for interruption or unresolved exposure.",
+      "imagery": "No hacker hoodies, AI brains, random circuit stock art, or dramatic hospital imagery.",
+      "density": "One dominant visual object per slide; technical detail belongs in labels, speech, or Q&A."
+    },
+    "penalties": [
+      {
+        "severity": "minor",
+        "penalty": "1-2",
+        "condition": "Small density, spacing, or consistency issue that does not block comprehension."
+      },
+      {
+        "severity": "major",
+        "penalty": "3-5",
+        "condition": "Hard-rule failure, AI-feel risk, or important slide losing visual hierarchy."
+      },
+      {
+        "severity": "critical",
+        "penalty": "10",
+        "condition": "Text-heavy, no structure, unreadable, or public-safety boundary failure."
+      }
+    ]
+  },
+  "baseline_constraint_results": [
+    {
+      "slide_id": 6,
+      "pass_fail": "FAIL",
+      "violations": "Risk of legal-text density if FDA evidence is shown as source quotes instead of a chain.",
+      "severity": "Major",
+      "penalty": 3,
+      "redesign": "Keep only Evidence, not slogans; Risk -> Control -> Test -> Fix -> Evidence; Monitor | Patch | Disclose | SBOM."
+    },
+    {
+      "slide_id": 7,
+      "pass_fail": "FAIL",
+      "violations": "Three-column bridge can become a control catalog.",
+      "severity": "Major",
+      "penalty": 3,
+      "redesign": "Reduce each column to one noun phrase plus three labels; speak the rest."
+    },
+    {
+      "slide_id": 11,
+      "pass_fail": "PASS",
+      "violations": "Minor tool-catalog risk if examples expand.",
+      "severity": "Minor",
+      "penalty": 1,
+      "redesign": "Keep contrast between early repair and external exposure; output strip must say finding list + retest evidence."
+    },
+    {
+      "slide_id": 12,
+      "pass_fail": "PASS",
+      "violations": "Minor risk that flow competes with Decision node.",
+      "severity": "Minor",
+      "penalty": 1,
+      "redesign": "Make Decision visually dominant and outcomes secondary."
+    }
+  ],
+  "slides": [
+    {
+      "id": 1,
+      "title": "AI 軟體醫材的資安實戰",
+      "message": "This is a product-trust and medical-device cybersecurity talk, not an AI hype talk.",
+      "audience_understanding": "The talk connects FDA 524B, threat modeling, and Patch SLA into one implementation path.",
+      "visual_concept": "Restrained title slide with a faint product-system outline and one calm accent line.",
+      "onscreen": [
+        "AI 軟體醫材的資安實戰",
+        "FDA 524B -> Threat Modeling -> Patch SLA",
+        "林家聖 | CYBERSEC 2026"
+      ],
+      "must_not_show": [
+        "Long biography",
+        "Credential stack",
+        "Decorative security imagery"
+      ],
+      "layout_type": "Big statement",
+      "speaking_seconds": 10,
+      "transition_in": "Walk on with calm posture; no biography expansion.",
+      "transition_out": "關鍵字很多，但今天我只想留下三件事：信任、修補、證據。",
+      "rubric_categories": [
+        "Stage Presence",
+        "Structure and Narrative Design"
+      ],
+      "speaker_note": "各位好，我是林家聖。今天的題目是 AI 軟體醫材的資安實戰。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Required CYBERSEC Disclaimer",
+      "message": "This compliance beat should be visible, brief, and separate from the narrative.",
+      "audience_understanding": "The speaker respects organizer rules and will move quickly into substance.",
+      "visual_concept": "Full-slide organizer-provided disclaimer image.",
+      "onscreen": [
+        "Official CYBERSEC disclaimer image"
+      ],
+      "must_not_show": [
+        "Speaker interpretation",
+        "Extra legal summary",
+        "Decorative frame"
+      ],
+      "layout_type": "Full visual",
+      "speaking_seconds": 20,
+      "transition_in": "After title, hold the slide without commentary overload.",
+      "transition_out": "接下來我們直接進入今天真正的問題。",
+      "rubric_categories": [
+        "Stage Rhythm and Time Control",
+        "Visual Design"
+      ],
+      "speaker_note": "這是大會必要的 disclaimer，我在這裡停一下，讓大家看見。接下來我們直接進入今天真正的問題。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 3,
+      "title": "你賣的不是模型",
+      "message": "AI SaMD teams sell a trustable, patchable, auditable system.",
+      "audience_understanding": "The talk is about accountability around the model, not model performance alone.",
+      "visual_concept": "Dominant phrase with three quiet anchors: Trust, Patch, Evidence.",
+      "onscreen": [
+        "你賣的不是模型",
+        "Trust",
+        "Patch",
+        "Evidence"
+      ],
+      "must_not_show": [
+        "SaMD taxonomy",
+        "Model-accuracy metrics",
+        "Architecture detail"
+      ],
+      "layout_type": "Big statement",
+      "speaking_seconds": 110,
+      "transition_in": "Begin after the disclaimer with a direct frame break.",
+      "transition_out": "如果這是真的，我們就要問：為什麼 2026 年這件事更急？",
+      "rubric_categories": [
+        "Structure and Narrative Design",
+        "Delivery Quality",
+        "Audience Impact"
+      ],
+      "speaker_note": "你賣的是一個在醫療情境中可被信任、可被修補、可被稽核的系統。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 4,
+      "title": "AI 變成基礎設施",
+      "message": "When AI becomes infrastructure, cyber incidents can become care disruption.",
+      "audience_understanding": "Medical AI security scope grows with deployment scope.",
+      "visual_concept": "Three-layer AI stack on the left; clinical continuity line with one interruption on the right.",
+      "onscreen": [
+        "AI is becoming infrastructure",
+        "Model",
+        "Runtime",
+        "Infrastructure",
+        "Care continuity"
+      ],
+      "must_not_show": [
+        "News screenshots",
+        "Vendor logos",
+        "Fear-heavy patient imagery"
+      ],
+      "layout_type": "Diagram",
+      "speaking_seconds": 130,
+      "transition_in": "Use the 2026 urgency question from Slide 3.",
+      "transition_out": "所以我們需要一張產品尺度地圖，先決定風險到底長在哪裡。",
+      "rubric_categories": [
+        "Content Depth and Value",
+        "Audience Impact",
+        "Stage Rhythm and Time Control"
+      ],
+      "speaker_note": "醫療資安也已經不只是 IT 後台問題；當 AI 進入醫療，cyber incident 很快就會變成 care disruption。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Risk grows with architecture",
+      "message": "Product architecture determines attack surface and evidence burden.",
+      "audience_understanding": "The same AI model creates different cybersecurity obligations depending on product scale.",
+      "visual_concept": "Four-step ladder with an evidence-growth line.",
+      "onscreen": [
+        "Risk grows with architecture",
+        "Model",
+        "Viewer",
+        "Platform / Database",
+        "Connected Medical System",
+        "Evidence grows"
+      ],
+      "must_not_show": [
+        "Threat lists under each layer",
+        "Dense sub-bullets",
+        "Framework citations"
+      ],
+      "layout_type": "Progressive build",
+      "speaking_seconds": 120,
+      "transition_in": "Move from infrastructure risk to the scoping map.",
+      "transition_out": "有了這張地圖，我們再看法規到底在要求什麼。",
+      "rubric_categories": [
+        "Structure and Narrative Design",
+        "Visual Design",
+        "Audience Impact"
+      ],
+      "speaker_note": "每加一層，產品能力變強，攻擊面也變大，證據需求也變大。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 6,
+      "title": "Evidence, not slogans",
+      "message": "Regulation asks for traceable evidence, not claims.",
+      "audience_understanding": "Monitor, patch, disclose, SBOM, architecture, threat model, controls, tests, and finding disposition must connect.",
+      "visual_concept": "Horizontal evidence chain with four FDA 524B verbs as a side rail.",
+      "onscreen": [
+        "Evidence, not slogans",
+        "Risk",
+        "Control",
+        "Test",
+        "Fix",
+        "Evidence",
+        "Monitor",
+        "Patch",
+        "Disclose",
+        "SBOM"
+      ],
+      "must_not_show": [
+        "Long legal quotes",
+        "Full guidance screenshots",
+        "Section-number clutter"
+      ],
+      "layout_type": "Progressive build",
+      "speaking_seconds": 250,
+      "transition_in": "Use the product-scale map to ask what regulation actually requires.",
+      "transition_out": "回到台灣和公司內部治理，這條證據鏈還需要兩種語言：模型語言和管理語言。",
+      "rubric_categories": [
+        "Content Depth and Value",
+        "Delivery Quality",
+        "Stage Rhythm and Time Control"
+      ],
+      "speaker_note": "法規要的是證據，不是口號。這條線接不起來，文件再多也只是資料夾。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Model, governance, stack",
+      "message": "A credible team can explain the model, govern risk, and secure the stack.",
+      "audience_understanding": "Model evidence alone is not enough; governance and stack boundaries must be clear.",
+      "visual_concept": "Three-column bridge: model evidence, governance language, AI stack security.",
+      "onscreen": [
+        "Model evidence",
+        "Intended use",
+        "Data",
+        "V&V",
+        "Governance language",
+        "Govern",
+        "Protect",
+        "Recover",
+        "AI stack",
+        "Provenance",
+        "Isolation",
+        "Updates"
+      ],
+      "must_not_show": [
+        "Full control catalog",
+        "Submission-form detail",
+        "Cloud architecture export"
+      ],
+      "layout_type": "Diagram",
+      "speaking_seconds": 200,
+      "transition_in": "Translate the evidence chain into Taiwan-team communication layers.",
+      "transition_out": "接下來回到剛才的四層產品尺度，看每一層到底多了什麼風險。",
+      "rubric_categories": [
+        "Content Depth and Value",
+        "Audience Impact",
+        "Visual Design"
+      ],
+      "speaker_note": "這三件事接起來，才是醫療 AI team 真正能拿去討論、治理、送審、跟客戶溝通的 security language。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 8,
+      "title": "Scale 1-2",
+      "message": "A wrapper turns a model artifact into an attackable user-facing system.",
+      "audience_understanding": "Scale 1 needs artifact/data/dependency/update evidence; Scale 2 adds parser, upload, cache, and output risk.",
+      "visual_concept": "Two-panel comparison with the same label grammar.",
+      "onscreen": [
+        "Model",
+        "Artifact",
+        "Data lineage",
+        "SBOM",
+        "Update boundary",
+        "Viewer",
+        "Parser",
+        "Upload",
+        "Cache",
+        "Output limits"
+      ],
+      "must_not_show": [
+        "Real UI screenshots",
+        "Private file formats",
+        "Exploit steps"
+      ],
+      "layout_type": "Contrast",
+      "speaking_seconds": 160,
+      "transition_in": "Recover attention with a concrete scale question.",
+      "transition_out": "如果再往上長成平台，資安就不只是產品問題，而是公司營運和臨床連續性問題。",
+      "rubric_categories": [
+        "Content Depth and Value",
+        "Stage Rhythm and Time Control"
+      ],
+      "speaker_note": "Model 到 viewer 的差別，是產品從一個 artifact 變成一個使用情境。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 9,
+      "title": "Scale 3-4",
+      "message": "Platform and hospital integration make cybersecurity a business and patient-safety issue.",
+      "audience_understanding": "Scale 3 introduces identity/API/database/log/backup; Scale 4 introduces hospital network and service continuity.",
+      "visual_concept": "Two-panel system map: product platform to connected clinical environment.",
+      "onscreen": [
+        "Platform / Database",
+        "Identity",
+        "RBAC",
+        "API",
+        "Database",
+        "Audit log",
+        "Connected Medical System",
+        "PACS / HIS",
+        "Hospital network",
+        "Update server",
+        "Remote service"
+      ],
+      "must_not_show": [
+        "Specific hospital topology",
+        "Customer architecture",
+        "Internal network detail"
+      ],
+      "layout_type": "Contrast",
+      "speaking_seconds": 160,
+      "transition_in": "Escalate from user-facing risk to operating and continuity risk.",
+      "transition_out": "所以醫療 AI 的資安，最後不是一句 IT 口號，而是一句病人安全的話。",
+      "rubric_categories": [
+        "Content Depth and Value",
+        "Audience Impact"
+      ],
+      "speaker_note": "這時候 cyber risk 不只是產品保護，而是 clinical continuity risk。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 10,
+      "title": "Cyber Safety Is Patient Safety",
+      "message": "Medical-device cybersecurity is part of patient safety.",
+      "audience_understanding": "Security failures can affect patients, hospital operations, supplier responsibility, and clinical workflow.",
+      "visual_concept": "Full-screen phrase with strong negative space and no framework text.",
+      "onscreen": [
+        "Cyber Safety Is Patient Safety"
+      ],
+      "must_not_show": [
+        "Framework",
+        "Checklist",
+        "Stock hospital drama"
+      ],
+      "layout_type": "Big statement",
+      "speaking_seconds": 80,
+      "transition_in": "Step into the ethical peak after the scale 4 continuity point.",
+      "transition_out": "接下來進入最實作的部分：怎麼測，怎麼修，怎麼留下證據。",
+      "rubric_categories": [
+        "Audience Impact",
+        "Stage Presence",
+        "Delivery Quality"
+      ],
+      "speaker_note": "Cyber Safety is Patient Safety. Pause.",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 11,
+      "title": "White-box + Black-box",
+      "message": "White-box finds repairable problems early; black-box validates external exposure.",
+      "audience_understanding": "Both testing modes must produce findings and retest evidence.",
+      "visual_concept": "Inside-out versus outside-in contrast with one output strip.",
+      "onscreen": [
+        "White-box",
+        "Repair before release",
+        "Black-box",
+        "Validate external exposure",
+        "Finding list + retest evidence"
+      ],
+      "must_not_show": [
+        "Tool logos",
+        "Vulnerability screenshots",
+        "Exploit recipes"
+      ],
+      "layout_type": "Contrast",
+      "speaking_seconds": 140,
+      "transition_in": "Move from patient safety to how risks become actionable findings.",
+      "transition_out": "但 finding 出來以後，真正的治理才開始。",
+      "rubric_categories": [
+        "Content Depth and Value",
+        "Delivery Quality",
+        "Stage Rhythm and Time Control"
+      ],
+      "speaker_note": "Testing 的價值，是讓風險變成可以修、可以驗證、可以追蹤的 finding。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 12,
+      "title": "Patch SLA",
+      "message": "Every security finding needs ownership, a decision, repair path, retest, and archived evidence.",
+      "audience_understanding": "Patch SLA is governance, not ticket hygiene.",
+      "visual_concept": "Finding journey with Decision as the dominant node.",
+      "onscreen": [
+        "Patch SLA",
+        "Every finding needs a decision",
+        "Intake",
+        "Triage",
+        "Decision",
+        "Patch",
+        "Retest",
+        "Archive",
+        "Fix now",
+        "Compensate",
+        "Defer",
+        "Not applicable"
+      ],
+      "must_not_show": [
+        "Ticket-system screenshot",
+        "Long SLA table",
+        "Customer-specific example"
+      ],
+      "layout_type": "Progressive build",
+      "speaking_seconds": 130,
+      "transition_in": "Use the testing output strip to ask what happens after findings appear.",
+      "transition_out": "我知道很多小團隊會覺得這很大，所以最後把它壓成 30、60、90 天。",
+      "rubric_categories": [
+        "Content Depth and Value",
+        "Structure and Narrative Design",
+        "Audience Impact"
+      ],
+      "speaker_note": "沒有 decision，就沒有治理；沒有證據，就沒有信任。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 13,
+      "title": "Small Team 30 / 60 / 90",
+      "message": "Start with minimum evidence, then repeatable workflow, then external validation.",
+      "audience_understanding": "A small team can start without pretending to have a large enterprise program.",
+      "visual_concept": "Three-step timeline with equal visual weight.",
+      "onscreen": [
+        "30",
+        "Inventory / SBOM / data flow",
+        "60",
+        "Threat model / CI gates / finding workflow",
+        "90",
+        "Pen test / Patch SLA / retest evidence"
+      ],
+      "must_not_show": [
+        "More than three deliverables per bucket",
+        "Large enterprise framework",
+        "A new governance model"
+      ],
+      "layout_type": "Progressive build",
+      "speaking_seconds": 150,
+      "transition_in": "Lower the barrier after the Patch SLA climax.",
+      "transition_out": "最後，我們回到今天的第一個問題：怎麼在稽核之前先建立信任。",
+      "rubric_categories": [
+        "Audience Impact",
+        "Stage Rhythm and Time Control"
+      ],
+      "speaker_note": "重點不是三個月變完美，而是三個月後，公司開始自動留下可信證據。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    },
+    {
+      "id": 14,
+      "title": "先建立信任，再面對稽核",
+      "message": "Build security into the product so regulatory documents become evidence, not theater.",
+      "audience_understanding": "Mature teams prove, repair, and track risk before audit pressure.",
+      "visual_concept": "Large closing phrase with quiet space and no new content.",
+      "onscreen": [
+        "先把安全做進產品",
+        "法規文件才會自然長出來",
+        "Build trust before the audit"
+      ],
+      "must_not_show": [
+        "New framework",
+        "Contact-heavy content",
+        "Extra roadmap"
+      ],
+      "layout_type": "Big statement",
+      "speaking_seconds": 50,
+      "transition_in": "Return to the opening thesis and close the loop.",
+      "transition_out": "Stop cleanly.",
+      "rubric_categories": [
+        "Audience Impact",
+        "Stage Presence",
+        "Delivery Quality"
+      ],
+      "speaker_note": "真正成熟的團隊，不是文件最多的團隊，而是每一個風險都知道怎麼證明、怎麼修、怎麼追的團隊。謝謝大家。",
+      "constraint": {
+        "pass_fail": "PASS",
+        "violations": "None",
+        "severity": "None"
+      }
+    }
+  ],
+  "optimization": {
+    "top_failure_points": [
+      "Slides 6-7 can become dense if they carry regulatory detail that belongs in speech.",
+      "Slide 11 can drift into a testing-tool catalog instead of finding governance.",
+      "If Slide 7 ends after 14:30, the close becomes vulnerable.",
+      "Visual repetition can occur if comparison slides and process slides share the same generic grid.",
+      "Audience impact drops if the final principle is delivered after time pressure appears."
+    ],
+    "top_improvements": [
+      "Rewrite Slide 6 as an evidence chain, not a legal text block.",
+      "Reduce Slide 7 to three columns with three labels each and move explanation to speech.",
+      "Make Slide 12's Decision node the largest object in the flow.",
+      "Use Slide 10 as silence, not content expansion.",
+      "Rehearse the safe version until Slide 14 reliably starts by 27:40."
+    ],
+    "improved_outline": [
+      "Thesis: not model; trust, patch, evidence.",
+      "Map: four product scales determine evidence burden.",
+      "Evidence: FDA 524B and FDA 2025 become traceability.",
+      "Application: risk grows from model to connected medical system.",
+      "Peak: cyber safety is patient safety.",
+      "Operation: testing creates findings; Patch SLA creates decisions.",
+      "Action: 30 / 60 / 90; trust before audit."
+    ],
+    "improved_opening": "各位好，我是林家聖。今天有很多關鍵字：FDA 524B、Threat Modeling、Patch SLA。但我想先用一句話把它們接起來：你賣的不是模型。",
+    "improved_closing": "真正成熟的團隊，不是文件最多的團隊，而是每一個風險都知道怎麼證明、怎麼修、怎麼追的團隊。先把安全做進產品，法規文件才會自然長出來。",
+    "improved_transitions": [
+      "Slide 5 to 6: 有了產品尺度，法規就不是抽象要求，而是這一層產品要留下哪些證據。",
+      "Slide 7 to 8: 現在把治理語言放回產品尺度，看看每一層多了什麼攻擊面。",
+      "Slide 10 to 11: 如果 cyber safety 是 patient safety，testing 就不是工具展示，而是把風險變成可修補的 finding。",
+      "Slide 11 to 12: 但 finding 出來以後，真正的治理才開始。",
+      "Slide 13 to 14: Roadmap 的目的不是做更多文件，而是在稽核之前先建立信任。"
+    ],
+    "memorable_moments": [
+      {
+        "slide": 3,
+        "line": "你賣的不是模型。",
+        "purpose": "Break the model-only mental frame."
+      },
+      {
+        "slide": 10,
+        "line": "Cyber Safety is Patient Safety.",
+        "purpose": "Turn technical risk into healthcare consequence."
+      },
+      {
+        "slide": 12,
+        "line": "沒有 decision，就沒有治理；沒有證據，就沒有信任。",
+        "purpose": "Make Patch SLA the operational climax."
+      }
+    ]
+  }
+}

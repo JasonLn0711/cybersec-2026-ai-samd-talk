@@ -1,4 +1,8 @@
 .DS_Store
+node_modules
+node_modules/
+tools/node_modules
+outputs/deck/previews/
 *.tmp
 *.bak
 ~$*

@@ -17,6 +17,28 @@ Slide gate: after building these specs into actual slides, run `06_slide_design_
 
 Strictness rule: do not force technical diagram labels into decorative minimalism. The hard `12`-word limit applies to headline/sentence text. Diagram labels are allowed only when they behave as labels and remain visually scannable.
 
+## 1.1 Generated Deck Build Path
+
+The active build source is `data/presentation_os.json`. It preserves the compact `14`-slide structure, slide timing, on-screen text, constraint status, and speaker notes in one machine-readable file.
+
+Regenerate the report artifacts first:
+
+```bash
+python3 tools/generate_presentation_outputs.py
+```
+
+Then build the editable optimized deck:
+
+```bash
+/Users/iKev/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node tools/build_optimized_deck.mjs
+```
+
+Output deck:
+
+`outputs/deck/cybersec-2026-ai-samd-compact-optimized.pptx`
+
+Build rule: the PPTX must remain editable PowerPoint text/shapes/diagrams. Slide 2 may use the official CYBERSEC disclaimer image because it is a required organizer source artifact; all other major talk text must remain editable.
+
 ## 2. 23-To-14 Consolidation Map
 
 | Compact Slide | New Title | Source Slides | Reason For Merge |

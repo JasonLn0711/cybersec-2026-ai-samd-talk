@@ -34,14 +34,56 @@ Recommended working model:
 | [`docs/05_rehearsal_and_iteration_runbook.md`](docs/05_rehearsal_and_iteration_runbook.md) | Review passes, dry runs, fix-order by score band, final readiness | Iteration system |
 | [`docs/06_slide_design_constraint_system.md`](docs/06_slide_design_constraint_system.md) | Pass/fail slide design gates, penalties, multiplier, and redesign prompt | Slide quality firewall |
 
+## Generated Operating-System Outputs
+
+The canonical docs stay in `docs/`. The reusable generated artifacts live under `outputs/current/` and are rebuilt from the single structured source file:
+
+`data/presentation_os.json`
+
+Run:
+
+```bash
+python3 tools/generate_presentation_outputs.py
+```
+
+Generated files:
+
+| File | Use It For |
+| --- | --- |
+| `outputs/current/main_strategy.md` | Design brief, narrative architecture, timing, rubric translation, visual strategy, and source anchors |
+| `outputs/current/slide_blueprint.md` | Slide-by-slide Apple-style blueprint for the compact `14`-slide talk |
+| `outputs/current/evaluation_report.md` | Baseline and optimized macro scoring with slide-adjusted readiness score |
+| `outputs/current/slide_constraint_report.md` | Hard-gate slide review, baseline violations, and optimized pass/fail status |
+| `outputs/current/optimization_plan.md` | Top failure points, high-leverage improvements, transitions, and simulated second pass |
+| `outputs/current/scoring_report.csv` | Spreadsheet-ready score report with `Category,Score,MaxScore,Strengths,Weaknesses,Evidence` |
+| `outputs/current/slide_validation.csv` | Spreadsheet-ready slide gate report with `SlideID,PassFail,Violations,Severity` |
+
+The generator enforces exactly `14` slides, exactly `1710` seconds / `28:30` content time, and exactly `100` rubric points.
+
+## Editable PPTX Build
+
+Build the optimized compact deck from the same JSON source:
+
+```bash
+/Users/iKev/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node tools/build_optimized_deck.mjs
+```
+
+Deck artifact:
+
+`outputs/deck/cybersec-2026-ai-samd-compact-optimized.pptx`
+
+The deck uses editable PowerPoint text, shapes, diagrams, and speaker notes. Slide 2 uses the official CYBERSEC disclaimer image from the planning source bundle when that image is available.
+
 ## Working Order
 
 1. Lock the audience promise and timing with [`docs/01_strategy_and_rubric_alignment.md`](docs/01_strategy_and_rubric_alignment.md).
 2. Build or revise the deck from [`docs/02_compact_14_slide_deck_spec.md`](docs/02_compact_14_slide_deck_spec.md).
 3. Run the slide gate in [`docs/06_slide_design_constraint_system.md`](docs/06_slide_design_constraint_system.md) before timed rehearsal.
-4. Rehearse from [`docs/03_speaker_script_and_stage_rhythm.md`](docs/03_speaker_script_and_stage_rhythm.md).
-5. Score each run with [`docs/04_scoring_rubric.md`](docs/04_scoring_rubric.md).
-6. Apply the next repair pass from [`docs/05_rehearsal_and_iteration_runbook.md`](docs/05_rehearsal_and_iteration_runbook.md).
+4. Regenerate `outputs/current/` so the reports and CSVs match the current structured source.
+5. Build the editable deck only after reports pass.
+6. Rehearse from [`docs/03_speaker_script_and_stage_rhythm.md`](docs/03_speaker_script_and_stage_rhythm.md).
+7. Score each run with [`docs/04_scoring_rubric.md`](docs/04_scoring_rubric.md).
+8. Apply the next repair pass from [`docs/05_rehearsal_and_iteration_runbook.md`](docs/05_rehearsal_and_iteration_runbook.md).
 
 The recommended delivery surface is the compact `14`-slide version. Older `23`-slide materials are source context in the planning repo, not active working files here.
 

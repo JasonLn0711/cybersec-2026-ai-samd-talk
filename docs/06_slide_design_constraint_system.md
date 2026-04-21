@@ -177,6 +177,23 @@ Per-slide record:
 | 13 |  |  |  |  |  |
 | 14 |  |  |  |  |  |
 
+## 9.1 Deterministic Constraint Report
+
+The reusable operating-system generator emits the current slide-gate result from `data/presentation_os.json`:
+
+```bash
+python3 tools/generate_presentation_outputs.py
+```
+
+Generated constraint artifacts:
+
+| File | Purpose |
+| --- | --- |
+| `outputs/current/slide_constraint_report.md` | Human-readable hard rules, baseline violations, optimized gate status, and redesign priority |
+| `outputs/current/slide_validation.csv` | Spreadsheet-ready validation rows using `SlideID,PassFail,Violations,Severity` |
+
+The CSV is intentionally compact. Detailed redesign logic stays in the Markdown report so the spreadsheet remains stable for repeated rehearsal review.
+
 ## 10. Optimization Engine Prompt
 
 Use this prompt when reviewing generated or edited slides:
@@ -218,4 +235,3 @@ Then rewrite only the worst failed slides:
 - visual concept
 - what to remove
 ```
-

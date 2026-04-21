@@ -141,6 +141,25 @@ Poor slides: x0.90
 
 Use the multiplier only after penalties are applied. A deck with more than `4` hard slide failures is not conference-ready even if the macro speech score is high.
 
+## 6.1 Generated Evaluation Reports
+
+For spreadsheet review, regenerate the current operating-system outputs:
+
+```bash
+python3 tools/generate_presentation_outputs.py
+```
+
+The generated evaluation artifacts are:
+
+| File | Role |
+| --- | --- |
+| `outputs/current/evaluation_report.md` | Baseline and optimized macro scoring, evidence, strengths, weaknesses, and second-pass improvement |
+| `outputs/current/scoring_report.csv` | Reusable score CSV with `Category,Score,MaxScore,Strengths,Weaknesses,Evidence` |
+| `outputs/current/slide_constraint_report.md` | Slide gate report and optimization queue |
+| `outputs/current/slide_validation.csv` | Slide gate CSV with `SlideID,PassFail,Violations,Severity` |
+
+Interpretation rule: `scoring_report.csv` records the optimized second-pass category scores for the active compact deck. The baseline score and adjusted readiness score remain in `evaluation_report.md` so reviewers can see the before/after delta without overloading the CSV schema.
+
 ## 7. Reusable Scoring Sheet
 
 | Category | Subcriterion | Max Points | Observed Evidence | Score | Deduction Reason | Severity | Evaluator Note | Fix Priority |
