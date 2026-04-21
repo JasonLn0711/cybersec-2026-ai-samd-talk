@@ -45,6 +45,7 @@ The planning repo may link to this repo for project context. This repo should no
 | talk design and stage script | `docs/01_talk_design.md` | Owns audience promise, slide spine, timing, script, and build path |
 | scoring and slide gates | `docs/02_evaluation_system.md` | Owns macro rubric, hard slide constraints, penalties, and generated evaluation outputs |
 | rehearsal workflow | `docs/03_rehearsal_workflow.md` | Owns dry-run checkpoints, repair order, and readiness |
+| tracked speaker prep notes | `docs/speaker-notes/` | Owner-approved versioned rehearsal notes and transcript working copies |
 | structured source | `data/presentation_os.json` | Source of generated operating outputs and deck content |
 | generated reports | `outputs/current/` | Rebuildable from structured source |
 | generated deck | `outputs/deck/` | Rebuildable presentation artifact |
@@ -90,10 +91,10 @@ python3 tools/generate_presentation_outputs.py
 5. Build the editable deck when needed with:
 
 ```bash
-node tools/build_optimized_deck.mjs
+npm run build:deck
 ```
 
-This requires `@oai/artifact-tool` in the active Node environment.
+Run `npm install` first if `node_modules/` is absent. The builder uses the public `pptxgenjs` dependency; PDF export and preview rendering use local LibreOffice and Poppler when available.
 
 6. Use `docs/02_evaluation_system.md` before timed rehearsal.
 7. Use `docs/03_rehearsal_workflow.md` to score, repair, and decide readiness.
