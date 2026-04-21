@@ -50,24 +50,24 @@ This report is the slide-level quality firewall. It does not replace the macro `
 
 | Slide | Title | Pass/Fail | Violations | Severity |
 | --- | --- | --- | --- | --- |
-| 1 | AI 軟體醫材的資安實戰 | PASS | None | None |
+| 1 | AI SaMD Cybersecurity: From Model Demo to Product Trust | PASS | None | None |
 | 2 | Required CYBERSEC Disclaimer | PASS | None | None |
-| 3 | 你賣的不是模型 | PASS | None | None |
-| 4 | AI 變成基礎設施 | PASS | None | None |
-| 5 | Risk grows with architecture | PASS | None | None |
-| 6 | Evidence, not slogans | PASS | None | None |
-| 7 | Model, governance, stack | PASS | None | None |
-| 8 | Scale 1-2 | PASS | None | None |
-| 9 | Scale 3-4 | PASS | None | None |
-| 10 | Cyber Safety Is Patient Safety | PASS | None | None |
-| 11 | White-box + Black-box | PASS | None | None |
-| 12 | Patch SLA | PASS | None | None |
+| 3 | 你賣的不是模型，是臨床產品責任 | PASS | None | None |
+| 4 | Why Now: AI Is Becoming Care Infrastructure | PASS | None | None |
+| 5 | Product Boundary Decides Risk | PASS | None | None |
+| 6 | From Obligation to Evidence Chain | PASS | None | None |
+| 7 | Three Risk Layers, One Governance Language | PASS | None | None |
+| 8 | Scale 1-2: Artifact to User-Facing System | PASS | None | None |
+| 9 | Scale 3-4: Platform to Clinical Continuity | PASS | None | None |
+| 10 | Security Failure Becomes Safety Risk | PASS | None | None |
+| 11 | Testing Portfolio: What Question Does Each Test Answer? | PASS | None | None |
+| 12 | Finding Governance: Patch SLA | PASS | None | None |
 | 13 | Small Team 30 / 60 / 90 | PASS | None | None |
 | 14 | 先建立信任，再面對稽核 | PASS | None | None |
 
 ## Redesign Priority
 
-1. Rewrite Slide 6 as an evidence chain, not a legal text block.
+1. Keep Taiwan national strategy and financial resilience as contextual bridges, not standalone sections; rewrite Slide 6 as an evidence chain, not a legal text block.
 2. Reduce Slide 7 to three columns with three labels each and move explanation to speech.
 3. Make Slide 12's Decision node the largest object in the flow.
 4. Use Slide 10 as silence, not content expansion.

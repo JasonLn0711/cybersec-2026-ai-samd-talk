@@ -1,11 +1,13 @@
 {
   "deckPath": "outputs/deck/cybersec-2026-ai-samd-compact-optimized.pptx",
+  "pdfPath": "outputs/deck/cybersec-2026-ai-samd-compact-optimized.pdf",
   "slideCount": 14,
   "timingSeconds": 1710,
   "timing": "28:30",
   "editableTextSource": "All visible talk text except the organizer disclaimer image is created as editable PowerPoint text/shapes.",
+  "buildEngine": "pptxgenjs with LibreOffice PDF export and Poppler preview rendering",
   "hardConstraintGate": "PASS",
-  "manualPatchNote": "2026-04-21 source-audit label patch applied directly to PPTX XML because @oai/artifact-tool was unavailable in the active Node environment. Updated slides 4, 6, 7, and 9 plus notes for slides 4 and 7.",
+  "pdfExport": "PASS",
   "previewFiles": [
     "outputs/deck/previews/slide-01.png",
     "outputs/deck/previews/slide-03.png",
@@ -16,7 +18,7 @@
   ],
   "keyText": [
     "你賣的不是模型",
-    "Risk grows with architecture",
+    "Product boundary decides risk",
     "Cyber Safety Is Patient Safety",
     "Every finding needs a decision",
     "Build trust before the audit"

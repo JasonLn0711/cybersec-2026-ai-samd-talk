@@ -4,7 +4,7 @@ The optimization loop targets the highest-leverage weak points first: density in
 
 ## Top 5 Failure Points
 
-1. Slides 6-7 can become dense if they carry regulatory detail that belongs in speech.
+1. Slides 6-7 can become dense if they carry regulatory detail that belongs in speech, and cross-sector context can become scope creep if it does not return to medical AI continuity.
 2. Slide 11 can drift into a testing-tool catalog instead of finding governance.
 3. If Slide 7 ends after 14:30, the close becomes vulnerable.
 4. Visual repetition can occur if comparison slides and process slides share the same generic grid.
@@ -12,7 +12,7 @@ The optimization loop targets the highest-leverage weak points first: density in
 
 ## Top 5 High-Leverage Improvements
 
-1. Rewrite Slide 6 as an evidence chain, not a legal text block.
+1. Keep Taiwan national strategy and financial resilience as contextual bridges, not standalone sections; rewrite Slide 6 as an evidence chain, not a legal text block.
 2. Reduce Slide 7 to three columns with three labels each and move explanation to speech.
 3. Make Slide 12's Decision node the largest object in the flow.
 4. Use Slide 10 as silence, not content expansion.
@@ -21,12 +21,13 @@ The optimization loop targets the highest-leverage weak points first: density in
 ## Improved Outline
 
 1. Thesis: not model; trust, patch, evidence.
-2. Map: four product scales determine evidence burden.
-3. Evidence: FDA 524B and FDA 2025 become traceability.
-4. Application: risk grows from model to connected medical system.
-5. Peak: cyber safety is patient safety.
-6. Operation: testing creates findings; Patch SLA creates decisions.
-7. Action: 30 / 60 / 90; trust before audit.
+2. Context: Taiwan AI, critical infrastructure, and supply-chain resilience converge in deployed medical AI.
+3. Map: four product scales determine evidence burden.
+4. Evidence: FDA 524B and FDA 2025 become traceability.
+5. Application: risk grows from model to connected medical system.
+6. Peak: cyber safety is patient safety.
+7. Operation: testing creates findings; Patch SLA creates decisions.
+8. Action: 30 / 60 / 90 as the first evidence loop; trust before audit.
 
 ## Improved Opening
 
@@ -40,9 +41,10 @@ The optimization loop targets the highest-leverage weak points first: density in
 
 1. Slide 5 to 6: 有了產品尺度，法規就不是抽象要求，而是這一層產品要留下哪些證據。
 2. Slide 7 to 8: 現在把治理語言放回產品尺度，看看每一層多了什麼攻擊面。
-3. Slide 10 to 11: 如果 cyber safety 是 patient safety，testing 就不是工具展示，而是把風險變成可修補的 finding。
-4. Slide 11 to 12: 但 finding 出來以後，真正的治理才開始。
-5. Slide 13 to 14: Roadmap 的目的不是做更多文件，而是在稽核之前先建立信任。
+3. Slide 9 continuity bridge: 金融業談交易不中斷，醫療這裡談 clinical continuity，然後立刻回到 PACS/HIS、更新和 downtime fallback。
+4. Slide 10 to 11: 如果 cyber safety 是 patient safety，testing 就不是工具展示，而是把風險變成可修補的 finding。
+5. Slide 11 to 12: 但 finding 出來以後，真正的治理才開始。
+6. Slide 13 to 14: Roadmap 的目的不是做更多文件，而是在稽核之前先建立信任。
 
 ## Three Memorable Moments
 

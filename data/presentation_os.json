@@ -1,7 +1,7 @@
 {
   "metadata": {
     "package_name": "CYBERSEC 2026 Presentation Operating System",
-    "version": "2026-04-21",
+    "version": "2026-04-21-decision-grade",
     "language_policy": "English for strategy and evaluation; Taiwan Traditional Chinese for stage-language examples.",
     "active_slide_count": 14,
     "content_seconds": 1710,
@@ -46,7 +46,7 @@
       "AI SaMD Security Operations：Threat Modeling, Testing, Patch SLA"
     ],
     "recommended_title": "AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地",
-    "positioning": "A conference-grade operating model for AI SaMD teams that must translate FDA 524B, FDA 2025 premarket cybersecurity expectations, TFDA-facing AI/ML SaMD evidence, testing, and Patch SLA into product decisions.",
+    "positioning": "A decision-grade operating model for AI SaMD teams that must turn product boundary, Taiwan AI/critical-infrastructure resilience context, FDA 524B lifecycle obligations, FDA 2025 cybersecurity evidence expectations, testing evidence, and Patch SLA governance into product, engineering, and management decisions.",
     "audience_segments": [
       "Medical-device founders and product leaders who need a practical security scope model.",
       "Security engineers and consultants who need to convert findings into evidence and governance decisions.",
@@ -67,29 +67,32 @@
       "Healthcare stakeholders need a patient-safety explanation that avoids fear-heavy examples."
     ],
     "desired_takeaways": [
-      "Product scale determines cybersecurity evidence burden.",
-      "FDA 524B and FDA 2025 can be translated into monitor/identify/address, CVD, updates/patches, SBOM, and traceability work.",
-      "TFDA-facing AI/ML SaMD preparation needs model evidence, governance language, and stack-level security boundaries.",
-      "White-box and black-box testing are valuable when findings become decisions and retest evidence.",
-      "Patch SLA is the operating bridge between vulnerability discovery, product trust, and audit readiness."
+      "Product boundary determines attack surface, evidence burden, testing depth, and operating responsibility.",
+      "FDA 524B and FDA 2025 can be translated into concrete lifecycle evidence: monitor/identify/address, CVD, updates/patches, SBOM, architecture views, traceability, testing evidence, and finding disposition.",
+      "Taiwan's national cybersecurity context now treats AI security, critical-infrastructure resilience, key industries, and supply-chain resilience as connected work; medical AI SaMD is one concrete healthcare product case inside that larger frame.",
+      "AI SaMD security must separate three layers: model behavior, software stack, and clinical workflow.",
+      "Testing is decision support: each method should answer a release, repair, exposure, or retest question.",
+      "Patch SLA is the governance bridge between vulnerability discovery, product trust, patient-safety continuity, and audit readiness."
     ],
-    "core_thesis": "AI SaMD security is not a model-security checklist. It is a product trust system: scope the product, trace the evidence, test the exposure, govern findings, and prove repairability.",
-    "why_now": "AI medical products are moving from standalone model demonstrations into deployed systems: viewers, cloud runtimes, databases, update mechanisms, hospital integrations, and support workflows. That shift makes cybersecurity a product-continuity and patient-safety issue.",
+    "core_thesis": "AI SaMD cybersecurity is not a model-security checklist. It is a clinical product-risk operating system: define the product boundary, generate traceable evidence, test real exposure, govern findings, and prove repairability.",
+    "why_now": "AI medical products are moving from standalone model demonstrations into deployed systems with viewers, runtimes, data stores, identity, update mechanisms, hospital integrations, and support workflows. Taiwan's 2025 national cybersecurity frame also links AI security, critical infrastructure, key industries, and supply-chain resilience. For medical AI, that shift turns cybersecurity into product-continuity, vendor-risk, and patient-safety risk.",
     "speaker_authority_angle": "The speaker translates regulatory expectations, AI-stack risk, testing practice, and product operations into one implementation model for teams preparing for real CYBERSEC-level scrutiny.",
-    "differentiator": "The talk does not list regulations or tools. It uses four product scales, one evidence chain, and one Patch SLA decision loop to make cybersecurity operational.",
+    "differentiator": "The talk does not list regulations or tools. It uses product-boundary reasoning, one evidence chain, a testing-question portfolio, and one Patch SLA decision loop to make cybersecurity operational for engineers and decision-makers.",
     "risk_factors": [
-      "Regulatory content can become dense and slow.",
-      "Technical examples can drift toward tool catalogs.",
-      "Slides 6 and 7 can overload the audience if they become control lists.",
+      "Regulatory content can become dense and slow if it sounds like paperwork instead of evidence.",
+      "Technical examples can drift toward tool catalogs instead of decision questions.",
+      "Slides 6 and 7 can overload the audience if they become framework/control lists instead of evidence and risk-layer logic.",
+      "National strategy or financial-sector references can become scope creep if they are presented as a second topic.",
       "The ending can be weakened if the speaker spends too long on testing details.",
       "Any private implementation detail would reduce trust and public-safety readiness."
     ],
     "risk_mitigations": [
-      "Compress regulation into evidence-chain logic: Risk -> Control -> Test -> Fix -> Evidence.",
-      "Use product-scale comparisons instead of vulnerability lists.",
+      "Compress regulation into evidence-chain logic: architecture -> threat model -> control -> test -> finding decision -> patch/retest record.",
+      "Use product-boundary comparisons instead of vulnerability lists.",
+      "Keep national strategy as altitude and financial resilience as analogy; return immediately to medical AI clinical continuity.",
       "Make Slide 10 an intentional recovery beat after the dense middle.",
       "Use cut markers before speaking faster.",
-      "Keep all examples public-safe and artifact-level."
+      "Keep all examples public-safe, source-anchored, and artifact-level."
     ]
   },
   "source_anchors": [
@@ -110,6 +113,42 @@
       "url": "https://www.fda.gov/files/guidance%20documents/published/GUI00001825-final-PremarketCybersecurity-2025.pdf"
     },
     {
+      "label": "FDA medical device cybersecurity FAQ",
+      "url": "https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity-medical-devices-frequently-asked-questions-faqs"
+    },
+    {
+      "label": "NIST AI RMF 1.0 PDF",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf"
+    },
+    {
+      "label": "NIST Cybersecurity Framework 2.0 PDF",
+      "url": "https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf"
+    },
+    {
+      "label": "ROC National Cybersecurity Strategy 2025",
+      "url": "https://www.president.gov.tw/File/Doc/9d056651-e4a0-4d51-adeb-5fee5ee71299"
+    },
+    {
+      "label": "Executive Yuan National Cybersecurity Development Program 114-117",
+      "url": "https://www.ey.gov.tw/Page/448DE008087A1971/a954ca38-9dfb-446b-879a-9e7ed88495a4"
+    },
+    {
+      "label": "Executive Yuan critical-infrastructure domain reference",
+      "url": "https://digi.nstc.gov.tw/Page/1538F8CF7474AB4E/e262d09b-a434-4f0f-bb89-8015ab70e459"
+    },
+    {
+      "label": "FSC Financial Cybersecurity Resilience Blueprint news page",
+      "url": "https://www.fsc.gov.tw/ch/home.jsp?id=96&parentpath=0,2&mcustomize=news_view.jsp&dataserno=202512300002&dtable=News"
+    },
+    {
+      "label": "FSC Financial Cybersecurity Resilience Blueprint PDF mirror",
+      "url": "https://www.twsa.org.tw/save/doc/%E9%87%91%E8%9E%8D%E8%B3%87%E5%AE%89%E9%9F%8C%E6%80%A7%E7%99%BC%E5%B1%95%E8%97%8D%E5%9C%96.pdf"
+    },
+    {
+      "label": "FDA Contec and Epsimed patient monitor safety communication",
+      "url": "https://www.fda.gov/medical-devices/safety-communications/cybersecurity-vulnerabilities-certain-patient-monitors-contec-and-epsimed-fda-safety-communication"
+    },
+    {
       "label": "Local CYBERSEC source bundle",
       "path": "../planning-everything-track/data/knowledge/personal/sources/2026-04-09-cybersec-2026-speaker-pre-event-notice/source.md"
     },
@@ -127,22 +166,25 @@
     }
   ],
   "narrative": {
-    "mode": "myth -> reality -> operating framework -> implementation",
-    "why_this_mode": "The audience likely begins with the false simplification that AI SaMD security is model security or compliance paperwork. This structure breaks that myth, replaces it with product-scale reality, then gives a practical operating model.",
+    "mode": "myth -> consequence -> boundary -> evidence -> governance -> implementation",
+    "why_this_mode": "The audience likely begins with the false simplification that AI SaMD security is model security or compliance paperwork. This structure breaks that myth, shows real clinical and operating consequence, then gives a decision-grade model for product boundary, evidence, testing, findings, and repairability.",
     "opening_hook": "Start with the stage line `你賣的不是模型` after the required title and disclaimer beats. The line immediately shifts the audience from model performance to product trust.",
-    "problem_framing": "The security problem grows as AI moves from model artifact to viewer, platform, database, connected medical system, update chain, and support workflow.",
-    "tension": "Regulators, hospitals, and users do not only ask whether the model is accurate. They ask whether the product can be monitored, patched, disclosed, tested, explained, and repaired.",
+    "problem_framing": "The security problem grows as AI moves from model artifact to viewer, platform, database, connected medical system, update chain, and support workflow. Taiwan's national cybersecurity context puts AI security, critical infrastructure, key industries, and supply-chain resilience in one frame; this talk uses medical AI SaMD as the concrete healthcare case. Each boundary crossing adds attack surface, evidence burden, and management decisions.",
+    "tension": "Regulators, hospitals, and users do not only ask whether the model is accurate. They ask whether the product can be monitored, patched, disclosed, tested, explained, repaired, and kept available enough for clinical workflow.",
     "development_arc": [
       "Slide 3 breaks the model-only myth.",
-      "Slides 4-5 establish urgency and product scale.",
-      "Slides 6-7 translate regulation and governance into an evidence chain.",
-      "Slides 8-9 apply the model to product-scale risk.",
+      "Slide 4 turns AI infrastructure and Taiwan's AI/critical-infrastructure resilience context into clinical-continuity consequence.",
+      "Slide 5 installs product boundary as the master decision variable.",
+      "Slide 6 translates official obligations into traceable evidence artifacts.",
+      "Slide 7 separates model behavior, software stack, and clinical workflow while using NIST as shared language.",
+      "Slides 8-9 apply the boundary model to concrete product scales, with finance and other critical sectors used only as continuity analogies.",
       "Slide 10 turns the technical argument into patient-safety significance.",
-      "Slides 11-12 convert testing into Patch SLA decisions.",
-      "Slides 13-14 give an executable path and closing principle."
+      "Slide 11 makes testing a portfolio of decision questions.",
+      "Slide 12 converts findings into Patch SLA governance and borrows resilience language from mature regulated sectors without changing the healthcare focus.",
+      "Slides 13-14 give an executable first 90-day evidence loop and final readiness checklist."
     ],
-    "climax": "Slide 12: every finding needs a decision. This is where testing, regulation, product ownership, and trust converge.",
-    "closing_structure": "Slide 13 gives the audience a 30 / 60 / 90 implementation path; Slide 14 closes with trust-before-audit and no new material.",
+    "climax": "Slide 12: every finding needs ownership, severity, a decision, a repair path, retest, and archived evidence. This is where testing, regulation, product ownership, and trust converge.",
+    "closing_structure": "Slide 13 gives the audience a measurable 30 / 60 / 90 evidence loop; this is an adoption scaffold, not a mandatory legal or SLA format. Slide 14 closes with trust-before-audit and three readiness questions.",
     "final_takeaway": "先把安全做進產品，法規文件才會自然長出來。"
   },
   "time_architecture": {
@@ -240,9 +282,9 @@
       "category": "Structure and Narrative Design",
       "points": 20,
       "design_goal": "Make the talk feel inevitable from model to trust system.",
-      "observable_success": "Audience can restate the arc: product scale -> evidence -> testing -> Patch SLA -> trust.",
+      "observable_success": "Audience can restate the arc: product scale -> national/clinical continuity context -> evidence -> testing -> Patch SLA -> trust.",
       "tactics": "Use Slides 3, 5, 6, 12, and 14 as structural anchors.",
-      "failure_patterns": "Sections feel like independent lectures; closing introduces new content.",
+      "failure_patterns": "Sections feel like independent lectures; national strategy becomes a second topic; closing introduces new content.",
       "avoid": "Agenda-first opening, framework dumping, and late-stage new ideas.",
       "slide_influence": "Every slide needs one governing message and a transition reason.",
       "speaking_influence": "Name why the next section exists before moving."
@@ -252,7 +294,7 @@
       "points": 20,
       "design_goal": "Deliver technical substance without overwhelming the room.",
       "observable_success": "Security, regulatory, product, and healthcare listeners each hear usable decisions.",
-      "tactics": "Translate FDA 524B, FDA 2025, TFDA-facing AI/ML SaMD evidence, testing, and Patch SLA into artifacts.",
+      "tactics": "Translate FDA 524B, FDA 2025, TFDA-facing AI/ML SaMD evidence, Taiwan AI/CI resilience context, testing, and Patch SLA into artifacts and decisions.",
       "failure_patterns": "Tool-name dumping, regulation name-dropping, or shallow slogans.",
       "avoid": "Long legal quotes, exploit steps, and vendor-style claims.",
       "slide_influence": "Use evidence chains, stack diagrams, contrast panels, and decision flows.",
@@ -306,7 +348,7 @@
       "category": "Audience Impact",
       "points": 10,
       "design_goal": "Make the talk memorable and useful after the conference.",
-      "observable_success": "Audience recalls `你賣的不是模型`, four product scales, Patch SLA, and `30 / 60 / 90`.",
+      "observable_success": "Audience recalls `你賣的不是模型`, four product scales, medical AI as AI/critical-infrastructure continuity case, Patch SLA, and `30 / 60 / 90`.",
       "tactics": "Repeat memory anchors and convert them into action.",
       "failure_patterns": "Interesting content with no operational next step.",
       "avoid": "Broad best-practice endings and administrative closing clutter.",
@@ -327,9 +369,9 @@
       ],
       "baseline_score": 17,
       "optimized_score": 19,
-      "strengths": "Strong myth-break opening, four-scale map, Patch SLA climax, and trust-before-audit close.",
-      "weaknesses": "Baseline version risks treating slides 6-7 as a middle lecture rather than one evidence bridge.",
-      "evidence": "Slides 3, 5, 6, 12, and 14 form a repeatable narrative spine."
+      "strengths": "Strong myth-break opening, four-scale map, national-context bridge, Patch SLA climax, and trust-before-audit close.",
+      "weaknesses": "Baseline version risks treating slides 6-7 as a middle lecture, or treating national strategy as a second topic, rather than one evidence bridge.",
+      "evidence": "Slides 3, 4, 5, 6, 12, and 14 form a repeatable narrative spine."
     },
     {
       "category": "Content Depth and Value",
@@ -343,9 +385,9 @@
       ],
       "baseline_score": 18,
       "optimized_score": 19,
-      "strengths": "Specific evidence chain, AI stack boundaries, testing outputs, and Patch SLA decisions.",
-      "weaknesses": "Baseline testing section can sound like a tool survey if not tied to findings and retest evidence.",
-      "evidence": "FDA 524B verbs and FDA 2025 traceability are converted into artifacts and decisions."
+      "strengths": "Specific evidence chain, AI stack boundaries, Taiwan AI/CI resilience context, testing outputs, and Patch SLA decisions.",
+      "weaknesses": "Baseline testing section can sound like a tool survey if not tied to findings and retest evidence; cross-sector examples can become scope creep if overexplained.",
+      "evidence": "FDA 524B verbs, FDA 2025 traceability, Taiwan national strategy, and financial resilience language are converted into artifacts and decisions."
     },
     {
       "category": "Stage Rhythm and Time Control",
@@ -423,9 +465,9 @@
       ],
       "baseline_score": 8,
       "optimized_score": 10,
-      "strengths": "The talk gives memorable phrases plus a concrete 30 / 60 / 90 path.",
+      "strengths": "The talk gives memorable phrases plus a concrete 30 / 60 / 90 evidence loop.",
       "weaknesses": "Baseline impact weakens if the final minute is rushed.",
-      "evidence": "Four-scale map, Patch SLA, and 30 / 60 / 90 roadmap provide post-session utility."
+      "evidence": "Four-scale map, medical AI as an AI/critical-infrastructure continuity case, Patch SLA, and 30 / 60 / 90 roadmap provide post-session utility."
     }
   ],
   "score_summary": {
@@ -517,13 +559,13 @@
   "slides": [
     {
       "id": 1,
-      "title": "AI 軟體醫材的資安實戰",
-      "message": "This is a product-trust and medical-device cybersecurity talk, not an AI hype talk.",
-      "audience_understanding": "The talk connects FDA 524B, threat modeling, and Patch SLA into one implementation path.",
-      "visual_concept": "Restrained title slide with a faint product-system outline and one calm accent line.",
+      "title": "AI SaMD Cybersecurity: From Model Demo to Product Trust",
+      "message": "This is a product-trust and decision-support talk, not an AI hype talk or a compliance reading session.",
+      "audience_understanding": "The talk connects product boundary, evidence chain, testing decisions, and Patch SLA governance into one implementation path.",
+      "visual_concept": "Restrained title slide with a four-step operating path: boundary, evidence, decision, repair proof.",
       "onscreen": [
         "AI 軟體醫材的資安實戰",
-        "FDA 524B -> Threat Modeling -> Patch SLA",
+        "Boundary -> Evidence -> Decision -> Repair proof",
         "林家聖 | CYBERSEC 2026"
       ],
       "must_not_show": [
@@ -534,12 +576,12 @@
       "layout_type": "Big statement",
       "speaking_seconds": 10,
       "transition_in": "Walk on with calm posture; no biography expansion.",
-      "transition_out": "關鍵字很多，但今天我只想留下三件事：信任、修補、證據。",
+      "transition_out": "今天不是背法規，也不是工具清單；我們要回答一個問題：AI model 要變成可信任的醫療產品，需要留下哪些證據和決策？",
       "rubric_categories": [
         "Stage Presence",
         "Structure and Narrative Design"
       ],
-      "speaker_note": "各位好，我是林家聖。今天的題目是 AI 軟體醫材的資安實戰。",
+      "speaker_note": "各位好，我是林家聖。今天不是要背法規，也不是展示工具清單。我想用一個問題串起來：一個 AI model 要變成可信任的醫療產品，中間需要留下哪些證據和決策？",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -577,14 +619,14 @@
     },
     {
       "id": 3,
-      "title": "你賣的不是模型",
-      "message": "AI SaMD teams sell a trustable, patchable, auditable system.",
+      "title": "你賣的不是模型，是臨床產品責任",
+      "message": "AI SaMD teams sell a clinical product responsibility: workflow trust, repairability, and auditability.",
       "audience_understanding": "The talk is about accountability around the model, not model performance alone.",
-      "visual_concept": "Dominant phrase with three quiet anchors: Trust, Patch, Evidence.",
+      "visual_concept": "Dominant phrase with three quiet anchors: Workflow, Repair, Evidence.",
       "onscreen": [
         "你賣的不是模型",
-        "Trust",
-        "Patch",
+        "Workflow",
+        "Repair",
         "Evidence"
       ],
       "must_not_show": [
@@ -595,13 +637,13 @@
       "layout_type": "Big statement",
       "speaking_seconds": 110,
       "transition_in": "Begin after the disclaimer with a direct frame break.",
-      "transition_out": "如果這是真的，我們就要問：為什麼 2026 年這件事更急？",
+      "transition_out": "如果產品責任不只在模型，下一個問題就是：為什麼 2026 年這件事變得更急？",
       "rubric_categories": [
         "Structure and Narrative Design",
         "Delivery Quality",
         "Audience Impact"
       ],
-      "speaker_note": "你賣的是一個在醫療情境中可被信任、可被修補、可被稽核的系統。",
+      "speaker_note": "醫師看到的是結果，病人承受的是後果，公司要負責的是整個使用情境。模型準不準只是其中一件事。只要它進入臨床流程，團隊就要能說清楚：誰用、在哪裡用、出問題怎麼修、修完怎麼證明。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -610,16 +652,18 @@
     },
     {
       "id": 4,
-      "title": "AI 變成基礎設施",
-      "message": "When AI becomes infrastructure, cyber incidents can disrupt clinical care.",
-      "audience_understanding": "Medical AI security scope grows with deployment scope.",
-      "visual_concept": "Three-layer AI stack on the left; clinical continuity line with one interruption on the right.",
+      "title": "Why Now: AI Is Becoming Care Infrastructure",
+      "message": "When AI enters runtime, data, update, identity, and support paths, cyber incidents can interrupt clinical workflow.",
+      "audience_understanding": "Medical AI security scope grows with deployment scope and sits inside a broader Taiwan AI, critical-infrastructure, and supply-chain resilience context.",
+      "visual_concept": "AI deployment stack on the left; clinical-continuity failure path with one interruption on the right.",
       "onscreen": [
-        "AI is becoming infrastructure",
+        "AI is becoming care infrastructure",
         "Model",
         "Runtime",
-        "Infrastructure",
-        "Clinical continuity"
+        "Data / Identity",
+        "Update / Support",
+        "Clinical continuity",
+        "Service interruption -> care workflow delay"
       ],
       "must_not_show": [
         "News screenshots",
@@ -629,13 +673,13 @@
       "layout_type": "Diagram",
       "speaking_seconds": 130,
       "transition_in": "Use the 2026 urgency question from Slide 3.",
-      "transition_out": "所以我們需要一張產品尺度地圖，先決定風險到底長在哪裡。",
+      "transition_out": "所以我們需要一張產品邊界地圖，先決定風險到底長在哪裡。",
       "rubric_categories": [
         "Content Depth and Value",
         "Audience Impact",
         "Stage Rhythm and Time Control"
       ],
-      "speaker_note": "醫療資安也已經不只是 IT 後台問題；當 AI 進入醫療，cyber incident 可能直接干擾 clinical care。",
+      "speaker_note": "2026 年的醫療 AI 不只是模型檔。它會接 runtime、資料、帳號、更新鏈、客服支援，最後接到臨床流程。台灣國家資安脈絡也在提醒我們，AI 安全、關鍵基礎設施、關鍵產業和供應鏈韌性正在合流；醫療 AI SaMD 是這個合流裡很具體的一種產品場景。這裡不是多講國家戰略，而是把醫療 AI 放回臨床連續性和供應商責任。只要更新路徑、登入、viewer、資料庫或支援服務中斷，就可能讓臨床流程延遲或改走人工 fallback。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -644,17 +688,17 @@
     },
     {
       "id": 5,
-      "title": "Risk grows with architecture",
-      "message": "Product architecture determines attack surface and evidence burden.",
-      "audience_understanding": "The same AI model creates different cybersecurity obligations depending on product scale.",
-      "visual_concept": "Four-step ladder with an evidence-growth line.",
+      "title": "Product Boundary Decides Risk",
+      "message": "Product boundary determines attack surface, evidence burden, testing depth, and operating responsibility.",
+      "audience_understanding": "The same AI model creates different cybersecurity obligations depending on which product boundary it crosses.",
+      "visual_concept": "Four-step ladder with an evidence/testing/operations growth line.",
       "onscreen": [
-        "Risk grows with architecture",
+        "Product boundary decides risk",
         "Model",
         "Viewer",
         "Platform / Database",
         "Connected Medical System",
-        "Evidence grows"
+        "Evidence / testing / operations grow"
       ],
       "must_not_show": [
         "Threat lists under each layer",
@@ -664,13 +708,13 @@
       "layout_type": "Progressive build",
       "speaking_seconds": 120,
       "transition_in": "Move from infrastructure risk to the scoping map.",
-      "transition_out": "有了這張地圖，我們再看法規到底在要求什麼。",
+      "transition_out": "有了這張地圖，我們再看官方要求到底要我們留下什麼證據。",
       "rubric_categories": [
         "Structure and Narrative Design",
         "Visual Design",
         "Audience Impact"
       ],
-      "speaker_note": "每加一層，產品能力變強，攻擊面也變大，證據需求也變大。",
+      "speaker_note": "同一個模型，放在不同產品邊界裡，資安責任完全不同。每加一層，產品能力變強，攻擊面、測試深度、證據需求和營運責任也一起變大。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -679,17 +723,18 @@
     },
     {
       "id": 6,
-      "title": "Evidence, not slogans",
-      "message": "Regulation asks for traceable evidence, not claims.",
-      "audience_understanding": "Monitor/identify/address, CVD, updates/patches, SBOM, architecture, threat model, controls, tests, and finding disposition must connect.",
-      "visual_concept": "Horizontal evidence chain with four FDA 524B verbs as a side rail.",
+      "title": "From Obligation to Evidence Chain",
+      "message": "Official requirements become credible only when they are connected to traceable engineering and postmarket evidence.",
+      "audience_understanding": "Monitor/identify/address, CVD, updates/patches, SBOM, architecture views, threat model, controls, tests, finding decisions, and patch/retest records must connect.",
+      "visual_concept": "Horizontal evidence chain with FDA 524B lifecycle obligations as a side rail.",
       "onscreen": [
-        "Evidence, not slogans",
-        "Risk",
+        "From obligation to evidence chain",
+        "Architecture",
+        "Threat model",
         "Control",
         "Test",
-        "Fix",
-        "Evidence",
+        "Finding decision",
+        "Patch / retest record",
         "Monitor",
         "CVD",
         "Patch",
@@ -703,13 +748,13 @@
       "layout_type": "Progressive build",
       "speaking_seconds": 250,
       "transition_in": "Use the product-scale map to ask what regulation actually requires.",
-      "transition_out": "回到台灣和公司內部治理，這條證據鏈還需要兩種語言：模型語言和管理語言。",
+      "transition_out": "回到公司內部治理，這條證據鏈還需要把模型、軟體堆疊和臨床流程分清楚。",
       "rubric_categories": [
         "Content Depth and Value",
         "Delivery Quality",
         "Stage Rhythm and Time Control"
       ],
-      "speaker_note": "法規要的是證據，不是口號。這條線接不起來，文件再多也只是資料夾。",
+      "speaker_note": "FDA 524B 可以壓成幾個生命週期義務：上市後要 monitor、identify、address vulnerability；要有 coordinated vulnerability disclosure；要能提供 updates and patches；也要提供 SBOM。FDA 2025 guidance 往下要求的是安全架構視圖、邊界、角色、介面、threat model、testing evidence，以及 traceability。換成工程語言，就是一條證據鏈：架構怎麼畫、威脅怎麼判斷、控制怎麼設計、測試打到哪裡、finding 怎麼決定、修補和重測怎麼留下紀錄。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -718,24 +763,23 @@
     },
     {
       "id": 7,
-      "title": "Model, governance, stack",
-      "message": "A credible team can explain the model, govern risk, and secure the stack.",
-      "audience_understanding": "Model evidence alone is not enough; governance and stack boundaries must be clear.",
-      "visual_concept": "Three-column bridge: model evidence, governance language, AI stack security.",
+      "title": "Three Risk Layers, One Governance Language",
+      "message": "A credible team separates model behavior, software stack, and clinical workflow, then uses governance language to make decisions across roles.",
+      "audience_understanding": "Model evidence alone is not enough; software and workflow boundaries must be explicit.",
+      "visual_concept": "Three-column bridge: model behavior, software stack, clinical workflow; NIST appears as shared language, not a checklist.",
       "onscreen": [
-        "Model evidence",
+        "Model behavior",
         "Intended use",
-        "Data",
-        "V&V",
-        "AI RMF language",
-        "Govern",
-        "Map",
-        "Measure",
-        "Manage",
-        "AI stack",
+        "Data / V&V",
+        "Limits",
+        "Software stack",
         "Provenance",
         "Isolation",
-        "Updates"
+        "Updates",
+        "Clinical workflow",
+        "User roles",
+        "Continuity",
+        "Residual risk"
       ],
       "must_not_show": [
         "Full control catalog",
@@ -744,14 +788,14 @@
       ],
       "layout_type": "Diagram",
       "speaking_seconds": 200,
-      "transition_in": "Translate the evidence chain into Taiwan-team communication layers.",
+      "transition_in": "Translate the evidence chain into internal communication layers.",
       "transition_out": "接下來回到剛才的四層產品尺度，看每一層到底多了什麼風險。",
       "rubric_categories": [
         "Content Depth and Value",
         "Audience Impact",
         "Visual Design"
       ],
-      "speaker_note": "NIST 在這裡是共同語言，不是控制清單；AI RMF 講 Govern, Map, Measure, Manage，CSF 可補上資安營運語言。",
+      "speaker_note": "我建議不要把 NIST 當成要背的控制項。它比較像共同語言。AI RMF 幫我們問 Govern、Map、Measure、Manage：誰決策、情境是什麼、怎麼量測、怎麼管理。CSF 2.0 幫資安營運補上 Govern、Identify、Protect、Detect、Respond、Recover。真正要講清楚的是三層：模型行為、軟體堆疊、臨床流程。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -760,10 +804,10 @@
     },
     {
       "id": 8,
-      "title": "Scale 1-2",
-      "message": "A wrapper turns a model artifact into an attackable user-facing system.",
+      "title": "Scale 1-2: Artifact to User-Facing System",
+      "message": "A viewer turns a model artifact into an attackable user-facing workflow.",
       "audience_understanding": "Scale 1 needs artifact/data/dependency/update evidence; Scale 2 adds parser, upload, cache, and output risk.",
-      "visual_concept": "Two-panel comparison with the same label grammar.",
+      "visual_concept": "Two-panel comparison with a visible boundary-crossing marker.",
       "onscreen": [
         "Model",
         "Artifact",
@@ -774,7 +818,7 @@
         "Parser",
         "Upload",
         "Cache",
-        "Output limits"
+        "Output interpretation"
       ],
       "must_not_show": [
         "Real UI screenshots",
@@ -789,7 +833,7 @@
         "Content Depth and Value",
         "Stage Rhythm and Time Control"
       ],
-      "speaker_note": "Model 到 viewer 的差別，是產品從一個 artifact 變成一個使用情境。",
+      "speaker_note": "第一層的風險重點是 artifact：模型從哪裡來，資料怎麼追，依賴怎麼列，更新邊界在哪裡。第二層加了 viewer，就變成使用情境。攻擊者不一定碰模型；他可以碰檔案解析、上傳流程、暫存、輸出呈現，甚至影響使用者怎麼解讀結果。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -798,10 +842,10 @@
     },
     {
       "id": 9,
-      "title": "Scale 3-4",
-      "message": "Platform and hospital integration make cybersecurity a business and patient-safety issue.",
-      "audience_understanding": "Scale 3 introduces identity/API/database/audit log/backup; Scale 4 introduces hospital network and service continuity.",
-      "visual_concept": "Two-panel system map: product platform to connected clinical environment.",
+      "title": "Scale 3-4: Platform to Clinical Continuity",
+      "message": "Platform and hospital integration make cybersecurity a business, continuity, and patient-safety issue.",
+      "audience_understanding": "Scale 3 introduces identity/API/database/audit log/backup; Scale 4 introduces hospital network, update/support paths, downtime fallback, and service continuity. Finance, telecommunications, and energy are useful one-line analogies, but healthcare remains the case.",
+      "visual_concept": "Two-panel system map with vendor-owned, shared, and hospital-owned risk zones.",
       "onscreen": [
         "Platform / Database",
         "Identity",
@@ -813,7 +857,8 @@
         "PACS / HIS",
         "Hospital network",
         "Update server",
-        "Remote service"
+        "Remote service",
+        "Downtime fallback"
       ],
       "must_not_show": [
         "Specific hospital topology",
@@ -828,7 +873,7 @@
         "Content Depth and Value",
         "Audience Impact"
       ],
-      "speaker_note": "這時候 cyber risk 不只是產品保護，而是 clinical continuity risk。",
+      "speaker_note": "第三層開始，資安就是公司風險：帳號、權限、API、資料庫、audit log、backup 都會進來。第四層進到醫院環境，問題就不只是產品保護，而是 clinical continuity。金融業談交易不中斷，通訊業談連線不中斷，能源談供應不中斷；醫療這裡談的是照護流程不能被資安事件輕易打斷。你的更新伺服器、遠端支援、PACS/HIS 連接、醫院網路邊界和 downtime fallback，都會影響醫院怎麼信任你這個供應商。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -837,12 +882,15 @@
     },
     {
       "id": 10,
-      "title": "Cyber Safety Is Patient Safety",
-      "message": "Medical-device cybersecurity is part of patient safety.",
-      "audience_understanding": "Security failures can affect patients, hospital operations, supplier responsibility, and clinical workflow.",
-      "visual_concept": "Full-screen phrase with strong negative space and no framework text.",
+      "title": "Security Failure Becomes Safety Risk",
+      "message": "Medical-device cybersecurity becomes patient safety when availability, integrity, or repairability affects care workflow.",
+      "audience_understanding": "Security failures can affect patients, hospital operations, supplier responsibility, and clinical workflow continuity.",
+      "visual_concept": "Full-screen phrase with three small anchors: availability, integrity, repairability.",
       "onscreen": [
-        "Cyber Safety Is Patient Safety"
+        "Cyber Safety Is Patient Safety",
+        "Availability",
+        "Integrity",
+        "Repairability"
       ],
       "must_not_show": [
         "Framework",
@@ -858,7 +906,7 @@
         "Stage Presence",
         "Delivery Quality"
       ],
-      "speaker_note": "Cyber Safety is Patient Safety. Pause.",
+      "speaker_note": "Cyber Safety is Patient Safety. 這句話不是口號。當資安問題讓結果不可用、資料不可信、服務無法更新、finding 沒有人決定，最後影響的就是臨床流程和病人照護的連續性。Pause.",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -867,16 +915,17 @@
     },
     {
       "id": 11,
-      "title": "White-box + Black-box",
-      "message": "White-box finds repairable problems early; black-box validates external exposure.",
-      "audience_understanding": "Both testing modes must produce findings and retest evidence.",
-      "visual_concept": "Inside-out versus outside-in contrast with one output strip.",
+      "title": "Testing Portfolio: What Question Does Each Test Answer?",
+      "message": "Testing is decision support: each method should answer a release, exposure, repair, or retest question.",
+      "audience_understanding": "Testing methods matter when they produce findings, decisions, and retest evidence.",
+      "visual_concept": "Decision-question matrix with method, question, output, and decision.",
       "onscreen": [
-        "White-box",
-        "Repair before release",
-        "Black-box",
-        "Validate external exposure",
-        "Finding list + retest evidence"
+        "SBOM / SCA: components?",
+        "White-box: fix before release?",
+        "Fuzz / abuse: what breaks?",
+        "Black-box: exposed from outside?",
+        "Pen test: can issues chain?",
+        "Retest: did repair work?"
       ],
       "must_not_show": [
         "Tool logos",
@@ -892,7 +941,7 @@
         "Delivery Quality",
         "Stage Rhythm and Time Control"
       ],
-      "speaker_note": "Testing 的價值，是讓風險變成可以修、可以驗證、可以追蹤的 finding。",
+      "speaker_note": "Testing 不是工具名稱競賽。每一種測試都要回答一個決策問題。SBOM/SCA 回答組成和已知漏洞；white-box 回答 release 前可修什麼；fuzz 和 abuse case 回答異常輸入會不會打壞流程；black-box 回答外部看得到什麼；penetration test 回答問題能不能被串成真實風險；retest 回答修補是否成立。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -901,13 +950,16 @@
     },
     {
       "id": 12,
-      "title": "Patch SLA",
-      "message": "Every security finding needs ownership, a decision, repair path, retest, and archived evidence.",
-      "audience_understanding": "Patch SLA is governance, not ticket hygiene.",
-      "visual_concept": "Finding journey with Decision as the dominant node.",
+      "title": "Finding Governance: Patch SLA",
+      "message": "Every security finding needs ownership, severity, a decision, a due date, repair or compensation, retest, and archived evidence.",
+      "audience_understanding": "Patch SLA is governance and residual-risk accountability, not ticket hygiene; regulated-sector resilience language helps managers see ownership, drills, backup, recovery, and supplier accountability.",
+      "visual_concept": "Finding journey with Decision as the dominant node and owner/severity/due-date tags.",
       "onscreen": [
         "Patch SLA",
         "Every finding needs a decision",
+        "Owner",
+        "Severity",
+        "Due date",
         "Intake",
         "Triage",
         "Decision",
@@ -933,7 +985,7 @@
         "Structure and Narrative Design",
         "Audience Impact"
       ],
-      "speaker_note": "沒有 decision，就沒有治理；沒有證據，就沒有信任。",
+      "speaker_note": "Patch SLA 在這裡不是 FDA 原文裡的固定名詞，而是一個 operating model。金融資安韌性的語言很值得借鏡：治理、問責、演練、備援、供應鏈、可恢復。醫療 AI 團隊不必一開始就變成大型金融機構，但至少要建立同一個方向的最小治理迴圈。真正成熟的團隊不是沒有漏洞，而是每個 finding 進來後，知道 owner 是誰、severity 怎麼判斷、決策是 fix now、compensate、defer 還是 not applicable、期限在哪裡、修完誰重測、證據放哪裡。沒有 decision，就沒有治理；沒有證據，就沒有信任。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -944,7 +996,7 @@
       "id": 13,
       "title": "Small Team 30 / 60 / 90",
       "message": "Start with minimum evidence, then repeatable workflow, then external validation.",
-      "audience_understanding": "A small team can start without pretending to have a large enterprise program.",
+      "audience_understanding": "A small team can start without pretending to have a large enterprise program; 30 / 60 / 90 is an adoption scaffold for the first evidence loop, not a legal requirement or fixed SLA format.",
       "visual_concept": "Three-step timeline with equal visual weight.",
       "onscreen": [
         "30",
@@ -967,7 +1019,7 @@
         "Audience Impact",
         "Stage Rhythm and Time Control"
       ],
-      "speaker_note": "重點不是三個月變完美，而是三個月後，公司開始自動留下可信證據。",
+      "speaker_note": "30 / 60 / 90 不是法規要求，也不是 Patch SLA 一定要長這樣。它是小團隊的 adoption scaffold：30 天讓產品和風險看得見，60 天讓風險能進流程，90 天讓外部驗證、CVD、Patch SLA 和 retest evidence 接起來。重點不是三個月變完美，而是三個月後，公司開始自動留下可信證據。",
       "constraint": {
         "pass_fail": "PASS",
         "violations": "None",
@@ -1009,14 +1061,14 @@
   ],
   "optimization": {
     "top_failure_points": [
-      "Slides 6-7 can become dense if they carry regulatory detail that belongs in speech.",
+      "Slides 6-7 can become dense if they carry regulatory detail that belongs in speech, and cross-sector context can become scope creep if it does not return to medical AI continuity.",
       "Slide 11 can drift into a testing-tool catalog instead of finding governance.",
       "If Slide 7 ends after 14:30, the close becomes vulnerable.",
       "Visual repetition can occur if comparison slides and process slides share the same generic grid.",
       "Audience impact drops if the final principle is delivered after time pressure appears."
     ],
     "top_improvements": [
-      "Rewrite Slide 6 as an evidence chain, not a legal text block.",
+      "Keep Taiwan national strategy and financial resilience as contextual bridges, not standalone sections; rewrite Slide 6 as an evidence chain, not a legal text block.",
       "Reduce Slide 7 to three columns with three labels each and move explanation to speech.",
       "Make Slide 12's Decision node the largest object in the flow.",
       "Use Slide 10 as silence, not content expansion.",
@@ -1024,18 +1076,20 @@
     ],
     "improved_outline": [
       "Thesis: not model; trust, patch, evidence.",
+      "Context: Taiwan AI, critical infrastructure, and supply-chain resilience converge in deployed medical AI.",
       "Map: four product scales determine evidence burden.",
       "Evidence: FDA 524B and FDA 2025 become traceability.",
       "Application: risk grows from model to connected medical system.",
       "Peak: cyber safety is patient safety.",
       "Operation: testing creates findings; Patch SLA creates decisions.",
-      "Action: 30 / 60 / 90; trust before audit."
+      "Action: 30 / 60 / 90 as the first evidence loop; trust before audit."
     ],
     "improved_opening": "各位好，我是林家聖。今天有很多關鍵字：FDA 524B、Threat Modeling、Patch SLA。但我想先用一句話把它們接起來：你賣的不是模型。",
     "improved_closing": "真正成熟的團隊，不是文件最多的團隊，而是每一個風險都知道怎麼證明、怎麼修、怎麼追的團隊。先把安全做進產品，法規文件才會自然長出來。",
     "improved_transitions": [
       "Slide 5 to 6: 有了產品尺度，法規就不是抽象要求，而是這一層產品要留下哪些證據。",
       "Slide 7 to 8: 現在把治理語言放回產品尺度，看看每一層多了什麼攻擊面。",
+      "Slide 9 continuity bridge: 金融業談交易不中斷，醫療這裡談 clinical continuity，然後立刻回到 PACS/HIS、更新和 downtime fallback。",
       "Slide 10 to 11: 如果 cyber safety 是 patient safety，testing 就不是工具展示，而是把風險變成可修補的 finding。",
       "Slide 11 to 12: 但 finding 出來以後，真正的治理才開始。",
       "Slide 13 to 14: Roadmap 的目的不是做更多文件，而是在稽核之前先建立信任。"

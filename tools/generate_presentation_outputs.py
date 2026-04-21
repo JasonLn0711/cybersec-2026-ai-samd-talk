@@ -596,7 +596,7 @@ def render_optimization_plan(data: dict) -> str:
 def write_csvs(data: dict) -> None:
     scoring_path = OUT_DIR / "scoring_report.csv"
     with scoring_path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=SCORING_HEADERS)
+        writer = csv.DictWriter(f, fieldnames=SCORING_HEADERS, lineterminator="\n")
         writer.writeheader()
         for category in data["scoring_categories"]:
             writer.writerow(
@@ -612,7 +612,7 @@ def write_csvs(data: dict) -> None:
 
     slide_path = OUT_DIR / "slide_validation.csv"
     with slide_path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=SLIDE_HEADERS)
+        writer = csv.DictWriter(f, fieldnames=SLIDE_HEADERS, lineterminator="\n")
         writer.writeheader()
         for slide in data["slides"]:
             writer.writerow(

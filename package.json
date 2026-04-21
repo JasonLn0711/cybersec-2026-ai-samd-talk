@@ -1,0 +1,13 @@
+{
+  "name": "cybersec-2026-ai-samd-talk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:reports": "python3 tools/generate_presentation_outputs.py",
+    "build:deck": "node tools/build_optimized_deck.mjs"
+  },
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}

@@ -11,7 +11,7 @@ First principle: rehearse to find the next constraint, not to keep polishing eve
 | 1 | Before slide edits | Read `docs/01_talk_design.md` and confirm the promise, memory anchors, timing, and public-safety boundary. | Talk spine locked. |
 | 2 | Before rebuilding outputs | Edit `data/presentation_os.json` only when generated reports or deck text need to change. | Single source updated. |
 | 3 | After JSON edits | Run `python3 tools/generate_presentation_outputs.py`. | Reports and CSVs aligned. |
-| 4 | When the deck must change | Run `node tools/build_optimized_deck.mjs` if `@oai/artifact-tool` is available. | Editable `14`-slide PPTX. |
+| 4 | When the deck must change | Run `npm run build:deck`. | Editable `14`-slide PPTX plus PDF/preview outputs when local render tools are available. |
 | 5 | Before timed rehearsal | Apply `docs/02_evaluation_system.md` slide gates. | Redesign queue or pass. |
 | 6 | First timed run | Speak the deck with cut markers, record checkpoints. | Timing log and weak spots. |
 | 7 | After each run | Score using `docs/02_evaluation_system.md`. | One next repair target. |
@@ -45,6 +45,7 @@ Gate: if any item fails, repair structure before improving visual style.
 - [ ] No public-safety boundary is violated.
 - [ ] Slide 6 says `Monitor / CVD / Patch / SBOM`, while the speaker explains FDA 524B as monitor, identify, address, coordinated vulnerability disclosure, updates/patches, and SBOM.
 - [ ] Slide 7 keeps AI RMF language separate from CSF 2.0 language; do not collapse both into an incomplete NIST function list.
+- [ ] National cybersecurity strategy, critical-infrastructure, and financial-sector references stay as context and analogy; they do not become a second talk.
 - [ ] Slide 12 treats `Patch SLA` as this talk's operating model, not as a quoted FDA term.
 
 Gate: if any slide has a hard failure, redesign that slide before timed rehearsal. Do not solve slide-density problems by speaking faster.
@@ -78,6 +79,7 @@ Ask the evaluator to answer these before giving opinions:
 | What was the talk's central thesis? | Not model; trustable, patchable, auditable system. |
 | What was the map? | Model, Viewer, Platform/Database, Connected Medical System. |
 | What does regulation require in this talk? | Evidence chain: risk, control, test, fix, evidence. |
+| Why mention national strategy or finance? | To frame medical AI as part of AI/CI/supply-chain resilience and to borrow continuity/governance language, not to change the main topic. |
 | What is the operational climax? | Patch SLA; every finding needs a decision. |
 | What should a small team do next? | 30 inventory, 60 workflow, 90 validation. |
 
