@@ -1,6 +1,6 @@
 # CYBERSEC 2026 AI SaMD Slide Deep Notes v1 - Layered zh-TW Rewrite
 
-Status: revised layered Traditional Mandarin version of `cybersec-2026-ai-samd-slide-deep-notes-v1.md` for the generated compact/fallback storyline. The original v1 file remains preserved as the legacy baseline.
+Status: archived layered Traditional Mandarin version of `archive/cybersec-2026-ai-samd-slide-deep-notes-v1.md` for the generated compact/fallback storyline. The current preferred script lives at `../cybersec-2026-ai-samd-slide-deep-notes-v1-positive-progressive-zh-tw.md`.
 
 這一版保留原本的 14 頁 generated compact fallback target、DeepBT Detector-Plus 產品情境、FDA 524B / Threat Modeling / SBOM / Patch SLA / testing / 30-60-90 roadmap 等核心內容，但把語氣從反覆對比改成「把觀眾帶到下一層」。
 

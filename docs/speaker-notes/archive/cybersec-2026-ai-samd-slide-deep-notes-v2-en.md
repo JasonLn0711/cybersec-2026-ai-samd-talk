@@ -1,6 +1,6 @@
 # CYBERSEC 2026 AI SaMD Slide Deep Notes - English Companion
 
-Status: English deep-note companion retained for rehearsal depth. The former zh-TW `v2` working copy was byte-identical to `v1` and has been removed; use `cybersec-2026-ai-samd-slide-deep-notes-v1.md` for the preserved zh-TW baseline and `cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` for current canonical `v1.3` slide-by-slide prep.
+Status: archived English deep-note companion retained for rehearsal depth. Use `../cybersec-2026-ai-samd-slide-deep-notes-v1-positive-progressive-zh-tw.md` for the current compact/fallback rehearsal script and `../reference/` for canonical `v1.3` slide-by-slide prep.
 
 This English note follows the generated compact `14`-slide fallback storyline. Do not treat it as the canonical `v1.3` deck map. The point of this version is not to cram every detail into slides; it is to prepare the knowledge, cases, trends, and workflows behind the talk so the stage delivery can have depth while the slides remain one-point-per-page, low-text, and spacious. The current owner-approved delivery surface is `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf`.
 

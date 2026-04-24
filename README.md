@@ -42,12 +42,13 @@ The three numbered docs replace the older split between strategy, deck spec, tra
 | Artifact | Role |
 | --- | --- |
 | `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` | Current owner-approved canonical deck PDF. No editable source PPTX for `v1.3` is currently present. |
-| `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md` | Main Taiwan Mandarin rehearsal reader combining talk track, audience analysis, and deep-note companion content slide by slide. |
-| `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-plus-audience-analysis-zh-tw.md` | Lighter slide-by-slide reader combining the `v1.3` talk track and audience analysis. |
-| `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` | Current `v1.3` slide-by-slide audience analysis, trend response, and 8 hard-question drill. |
-| `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` | Broader role-based Taiwanese Mandarin Q&A prep. |
-| `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v1.md` | Legacy zh-TW deep-note baseline for the generated compact/fallback storyline. |
-| `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v2-en.md` | English deep-note companion retained for rehearsal depth. |
+| `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md` | Main Taiwan Mandarin rehearsal reader combining talk track, audience analysis, and deep-note companion content slide by slide. |
+| `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-transcript-plus-audience-analysis-zh-tw.md` | Lighter slide-by-slide reader combining the `v1.3` talk track and audience analysis. |
+| `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` | Current `v1.3` slide-by-slide audience analysis, trend response, and 8 hard-question drill. |
+| `docs/speaker-notes/reference/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` | Broader role-based Taiwanese Mandarin Q&A prep. |
+| `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v1-positive-progressive-zh-tw.md` | Current positive-progressive rehearsal script for the generated compact/fallback storyline. |
+| `docs/speaker-notes/cybersec_2026_positive_progressive_style.md` | Current speaking-style guide for positive, progressive, non-negation stage language. |
+| `docs/speaker-notes/archive/` | Superseded drafts and legacy deep-note baselines retained for traceability. |
 
 The original imported file under `~/Downloads` is not the repo source of truth and should not be modified or deleted by agent work.
 
@@ -104,15 +105,16 @@ The generated fallback deck uses editable PowerPoint text, shapes, diagrams, and
 
 1. Use `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` as the current canonical deck PDF.
 2. Read [`docs/01_talk_design.md`](docs/01_talk_design.md) to confirm the thesis, audience promise, slide map, timing, script, and public-safety boundary.
-3. Use `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md` as the main Taiwan Mandarin slide-by-slide rehearsal reader.
-4. Use `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` for per-slide audience challenge prep and the 8 hard-question drill.
-5. Use `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` for broader Taiwanese Mandarin audience Q&A prep.
-6. Edit `data/presentation_os.json` only when generated fallback reports or fallback deck text need to change.
-7. Run `npm run build:reports` or `python3 tools/generate_presentation_outputs.py` only when the generated fallback package needs regeneration.
-8. Build the editable fallback PPTX with `npm run build:deck` only when the generated fallback artifact must change.
-9. Apply [`docs/02_evaluation_system.md`](docs/02_evaluation_system.md) before timed rehearsal.
-10. Rehearse and repair using [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md).
-11. Update the planning handoff only with status, links, and workflow changes; do not duplicate this package into the planning repo.
+3. Use `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md` as the main Taiwan Mandarin slide-by-slide rehearsal reader.
+4. Use `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md` for per-slide audience challenge prep and the 8 hard-question drill.
+5. Use `docs/speaker-notes/reference/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` for broader Taiwanese Mandarin audience Q&A prep.
+6. Use `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v1-positive-progressive-zh-tw.md` and `docs/speaker-notes/cybersec_2026_positive_progressive_style.md` for the generated compact/fallback storyline.
+7. Edit `data/presentation_os.json` only when generated fallback reports or fallback deck text need to change.
+8. Run `npm run build:reports` or `python3 tools/generate_presentation_outputs.py` only when the generated fallback package needs regeneration.
+9. Build the editable fallback PPTX with `npm run build:deck` only when the generated fallback artifact must change.
+10. Apply [`docs/02_evaluation_system.md`](docs/02_evaluation_system.md) before timed rehearsal.
+11. Rehearse and repair using [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md).
+12. Update the planning handoff only with status, links, and workflow changes; do not duplicate this package into the planning repo.
 
 ## Evaluation Architecture
 
@@ -149,7 +151,9 @@ Connection rule: update the planning handoff when this repo changes its canonica
 
 Keep source detail where it is used:
 
-- Current source-verified `v1.3` slide, transcript, and Q&A references live in `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`, `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-plus-audience-analysis-zh-tw.md`, `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md`, and `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md`.
+- Current source-verified `v1.3` slide, transcript, and Q&A references live in `docs/speaker-notes/reference/`.
+- Current generated compact/fallback rehearsal script and style guide live at the speaker-notes root.
+- Superseded speaker-note drafts and legacy baselines live in `docs/speaker-notes/archive/`; rewrite traceability lives in `docs/speaker-notes/change-log/`.
 - Generated compact fallback source anchors live in `data/presentation_os.json` and rebuild into `outputs/current/main_strategy.md`.
 - Event and deadline state lives in the planning repo, not in this README.
 

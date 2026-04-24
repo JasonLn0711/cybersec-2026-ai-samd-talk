@@ -2,7 +2,7 @@
 
 Source:
 
-`docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v1.md`
+`docs/speaker-notes/archive/cybersec-2026-ai-samd-slide-deep-notes-v1.md`
 
 Revised script:
 
@@ -10,8 +10,8 @@ Revised script:
 
 | Original Sentence | Revised Sentence | Transformation Type |
 | --- | --- | --- |
-| 這一版的核心不是「把所有資訊塞進投影片」，而是把每一頁背後的知識、案例、趨勢、工作流都準備好 | This version uses progressive, question-driven, cause-effect, and decision-support language. It keeps the DeepBT Detector-Plus product evidence examples and the compact 14-slide structure. | progressive |
-| 主軸是「AI SaMD 團隊賣的不是模型，而是一個 trustable、patchable、auditable 的臨床產品系統」 | Core path: Boundary -> Evidence -> Decision -> Repair Proof. | progressive |
+| 這一版的核心不是「把所有資訊塞進投影片」，而是把每一頁背後的知識、案例、趨勢、工作流都準備好 | 這一版使用 progressive、question-driven、cause-effect 與 decision-support 語言，保留 DeepBT Detector-Plus 產品證據案例與 compact 14-slide 結構。 | progressive |
+| 主軸是「AI SaMD 團隊賣的不是模型，而是一個 trustable、patchable、auditable 的臨床產品系統」 | Core path 是 Boundary -> Evidence -> Decision -> Repair Proof。 | progressive |
 | 資安不再是外掛文件，而是品質管理系統的一部分。 | cybersecurity evidence 要進入產品設計、標示、上市前文件與上市後維護。 | cause-effect |
 | 這一頁的任務不是介紹你有多厲害，而是讓所有人立刻知道... | 第一頁只需要讓觀眾看見今天的路徑：從 AI model，走到可以被醫院使用、被團隊修補、被審查者檢查的醫療軟體產品。 | progressive |
 | AI 醫療產品不是只要會算答案，它還要在醫院裡安全地被使用。 | 模型會算答案，是第一層。醫院接著會問：資料從哪裡來？誰可以使用？結果如何確認？系統故障時如何恢復？漏洞出現時誰修？修完後如何證明？ | question |
@@ -46,4 +46,3 @@ Revised script:
 | 不是產品做完才找資安補洞，不是送審前才補文件... | Threat Modeling 在架構設計時進來，SBOM 隨 build artifact 留下，testing 連到 release gate，Patch SLA 連到 finding governance，retest evidence 形成 repair proof。 | progressive |
 | 真正成熟的團隊，不是文件最多的團隊，而是... | 成熟團隊會讓每個風險都知道怎麼證明、怎麼修、怎麼追。 | decision |
 | AI 軟體醫材的資安，不是保護一個模型，而是在真實醫療世界裡... | 如果我們能說清楚 Boundary、留下 Evidence、做出 Decision、保存 Repair Proof，稽核就會從最後補文件，變成檢查一套已經在運作的產品信任系統。 | cause-effect |
-

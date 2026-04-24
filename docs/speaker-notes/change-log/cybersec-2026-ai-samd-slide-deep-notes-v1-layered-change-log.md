@@ -2,11 +2,11 @@
 
 Source file revised from:
 
-`docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v1.md`
+`docs/speaker-notes/archive/cybersec-2026-ai-samd-slide-deep-notes-v1.md`
 
 Revised full talk:
 
-`docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v1-layered-zh-tw.md`
+`docs/speaker-notes/archive/cybersec-2026-ai-samd-slide-deep-notes-v1-layered-zh-tw.md`
 
 | Original sentence | Revised sentence | Reason for revision |
 | --- | --- | --- |

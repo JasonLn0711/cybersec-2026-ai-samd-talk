@@ -6,9 +6,9 @@ Deck basis: `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.p
 
 Source files:
 
-- Audience analysis: `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`
+- Audience analysis: `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`
 - Transcript source material: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-keynote-style-transcript-v0.9-20260422.md`
-- Companion Q&A: `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md`
+- Companion Q&A: `docs/speaker-notes/reference/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md`
 
 ## How To Read This Copy
 

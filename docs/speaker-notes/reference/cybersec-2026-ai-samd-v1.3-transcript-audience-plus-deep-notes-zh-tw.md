@@ -6,10 +6,10 @@ Deck 基準: `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.
 
 來源檔案:
 
-- 觀眾分析: `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`
+- 觀眾分析: `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`
 - 逐字稿來源素材: `../planning-everything-track/data/projects/2026-04-medical-cybersecurity-tfda-fda-industry-deck/current/cybersec-2026-keynote-style-transcript-v0.9-20260422.md`
-- 深度筆記來源: `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v2-en.md`；已轉寫成台灣華語並對齊目前 `v1.3` deck
-- 搭配 Q&A: `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md`
+- 深度筆記來源: `docs/speaker-notes/archive/cybersec-2026-ai-samd-slide-deep-notes-v2-en.md`；已轉寫成台灣華語並對齊目前 `v1.3` deck
+- 搭配 Q&A: `docs/speaker-notes/reference/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md`
 
 ## 閱讀方式
 

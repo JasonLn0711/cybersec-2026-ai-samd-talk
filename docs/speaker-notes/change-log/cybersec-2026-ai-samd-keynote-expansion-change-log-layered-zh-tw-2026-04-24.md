@@ -2,11 +2,11 @@
 
 Source file revised from:
 
-`docs/speaker-notes/cybersec-2026-ai-samd-keynote-expansion-reader-easygoing-zh-tw-2026-04-24.md`
+`docs/speaker-notes/archive/cybersec-2026-ai-samd-keynote-expansion-reader-easygoing-zh-tw-2026-04-24.md`
 
 Revised full talk:
 
-`docs/speaker-notes/cybersec-2026-ai-samd-keynote-expansion-reader-layered-zh-tw-2026-04-24.md`
+`docs/speaker-notes/archive/cybersec-2026-ai-samd-keynote-expansion-reader-layered-zh-tw-2026-04-24.md`
 
 | Original sentence | Revised sentence | Reason for revision |
 | --- | --- | --- |

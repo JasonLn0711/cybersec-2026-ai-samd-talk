@@ -3,8 +3,8 @@
 Date: 2026-04-21
 Language: Taiwan Traditional Chinese
 Deck basis: `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf`
-Speaker-note companion: `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v2-en.md`
-Slide-by-slide companion: `docs/speaker-notes/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`
+Speaker-note companion: `docs/speaker-notes/archive/cybersec-2026-ai-samd-slide-deep-notes-v2-en.md`
+Slide-by-slide companion: `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`
 
 ## 查核基準
 

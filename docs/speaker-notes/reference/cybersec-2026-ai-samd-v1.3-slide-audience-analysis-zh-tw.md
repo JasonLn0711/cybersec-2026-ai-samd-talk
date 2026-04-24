@@ -6,8 +6,8 @@ Deck basis: `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.p
 
 Companion files:
 
-- `docs/speaker-notes/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md`
-- `docs/speaker-notes/cybersec-2026-ai-samd-slide-deep-notes-v2-en.md`
+- `docs/speaker-notes/reference/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md`
+- `docs/speaker-notes/archive/cybersec-2026-ai-samd-slide-deep-notes-v2-en.md`
 
 ## 使用方式
 

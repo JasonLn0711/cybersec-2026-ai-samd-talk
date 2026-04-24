@@ -1,6 +1,6 @@
 # CYBERSEC 2026 AI SaMD Slide Deep Notes v1 - Legacy zh-TW Baseline
 
-Status: preserved legacy zh-TW deep-note baseline for the generated compact/fallback storyline. The current canonical `v1.3` deck PDF has its slide-by-slide prep in `cybersec-2026-ai-samd-v1.3-slide-audience-analysis-zh-tw.md`.
+Status: preserved legacy zh-TW deep-note baseline for the generated compact/fallback storyline. The current preferred compact/fallback rehearsal script lives at `../cybersec-2026-ai-samd-slide-deep-notes-v1-positive-progressive-zh-tw.md`; canonical `v1.3` deck prep lives in `../reference/`.
 
 以下以當時的 **14 頁 generated compact fallback target** 為準來精修。這一版的核心不是「把所有資訊塞進投影片」，而是把每一頁背後的知識、案例、趨勢、工作流都準備好，讓你上台時可以講得有層次；投影片本身仍要維持一頁一重點、低文字量、強留白，否則會破壞你目前設計好的 keynote 節奏。你的 Talk Design 已經把這場定義成 30 分鐘、14 頁、28:30 spoken content + 1:30 buffer 的公開資安大會演講，主軸是「AI SaMD 團隊賣的不是模型，而是一個 trustable、patchable、auditable 的臨床產品系統」；Evaluation System 也提醒，投影片漂亮不能救弱敘事，真正評分會看產品尺度、證據鏈、測試策略、Patch SLA 和小團隊 roadmap 能不能被聽眾記住。
 
