@@ -4,18 +4,30 @@ Purpose: turn the canonical deck PDF, speaker-prep notes, evaluation system, and
 
 First principle: rehearse to find the next constraint, not to keep polishing everything. Each run should produce one repair target.
 
+## Output-First Practice Mode
+
+Use this mode when the bottleneck is not more reading, but making each slide speakable.
+
+- Capture surface: Notion is fine for fast writing.
+- Durable repo capture: `docs/speaker-notes/cybersec-2026-ai-samd-slide-output-practice-capture-2026-04-27.md`.
+- Rule: write how the slide would actually be spoken before reading more background.
+- Keep visible: unclear logic, imprecise technical claims, missing transitions, and待查 notes.
+- Repair shape: each weakness becomes one spoken sentence, one source check, one transition repair, or one cut marker.
+- Stop rule: do not turn every uncertainty into open-ended research; check sources only when the claim cannot be made public-safe or technically accurate otherwise.
+
 ## Operating Loop
 
 | Step | When | Action | Output |
 | ---: | --- | --- | --- |
 | 1 | Before rehearsal | Use `outputs/deck/cybersec-2026-ai-samd-cybersecurity-in-practice-v1.3.pdf` as the current deck and read `docs/speaker-notes/reference/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md`. | Current deck path and Taiwan Mandarin rehearsal reader locked. |
-| 2 | Before changing fallback outputs | Edit `data/presentation_os.json` only when generated fallback reports or fallback deck text need to change. | Fallback source updated. |
-| 3 | After JSON edits | Run `python3 tools/generate_presentation_outputs.py`. | Reports and CSVs aligned. |
-| 4 | When fallback deck must change | Run `npm run build:deck`. | Editable `14`-slide fallback PPTX plus PDF/preview outputs when local render tools are available. |
-| 5 | Before timed rehearsal | Apply `docs/02_evaluation_system.md` to the current deck and use fallback reports only as repair references. | Rehearsal queue or pass. |
-| 6 | First timed run | Speak the deck with cut markers, record checkpoints. | Timing log and weak spots. |
-| 7 | After each run | Score using `docs/02_evaluation_system.md`. | One next repair target. |
-| 8 | Final pass | Confirm no public-safety issue, no rushed close, and no hard slide failures. | Go/no-go decision. |
+| 2 | When the talk feels unspeakable | Do output-first practice: write the spoken version of each slide and paste the draft into `docs/speaker-notes/cybersec-2026-ai-samd-slide-output-practice-capture-2026-04-27.md`. | Rough spoken draft plus visible weakness list. |
+| 3 | Before changing fallback outputs | Edit `data/presentation_os.json` only when generated fallback reports or fallback deck text need to change. | Fallback source updated. |
+| 4 | After JSON edits | Run `python3 tools/generate_presentation_outputs.py`. | Reports and CSVs aligned. |
+| 5 | When fallback deck must change | Run `npm run build:deck`. | Editable `14`-slide fallback PPTX plus PDF/preview outputs when local render tools are available. |
+| 6 | Before timed rehearsal | Apply `docs/02_evaluation_system.md` to the current deck and use fallback reports only as repair references. | Rehearsal queue or pass. |
+| 7 | First timed run | Speak the deck with cut markers, record checkpoints. | Timing log and weak spots. |
+| 8 | After each run | Score using `docs/02_evaluation_system.md`. | One next repair target. |
+| 9 | Final pass | Confirm no public-safety issue, no rushed close, and no hard slide failures. | Go/no-go decision. |
 
 ## Message Gate
 
