@@ -1,5 +1,6 @@
 # CYBERSEC 2026 AI SaMD Talk
 
+<img src="http://estruyf-github.azurewebsites.net/api/VisitorHit?user=JasonLn0711&repo=cybersec-2026-ai-samd-talk&countColor=%237B1E7B" alt="Visitor count"/>
 Canonical repository for the CYBERSEC 2026 speech-delivery package:
 
 `AI 軟體醫材的資安實戰：從美國 FDA 524B 規範到 Threat Modeling 與 Patch SLA 的完整落地`
