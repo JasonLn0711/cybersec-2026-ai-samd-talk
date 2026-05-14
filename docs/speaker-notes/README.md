@@ -31,6 +31,7 @@ The output-practice capture is the preferred temporary workspace when rough spok
 | `reference/cybersec-2026-ai-samd-v1.3-transcript-plus-audience-analysis-zh-tw.md` | Combined rehearsal reader with talk track and per-slide audience analysis. |
 | `reference/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md` | Taiwan Mandarin rehearsal reader combining talk track, audience analysis, and deep-note companion content. |
 | `reference/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` | Broader role-based Q&A prep for general public, software company, and cybersecurity engineer audiences. |
+| `reference/cde-2026-clinical-cybersecurity-80min-prep-zh-tw.md` | CDE `2026-06-16` derivative prep note: confirmed constraints, Jason / 靖中 `80` minute split, slide skeleton, workback plan, and draft pre/post-test questions. |
 
 ## Change Logs
 

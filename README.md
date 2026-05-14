@@ -53,6 +53,17 @@ The three numbered docs replace the older split between strategy, deck spec, tra
 
 The original imported file under `~/Downloads` is not the repo source of truth and should not be modified or deleted by agent work.
 
+## CDE / Prof. Wu Derivative Prep
+
+The confirmed CDE session is a derivative use of the same medical-cybersecurity content base, not a replacement for the CYBERSEC canonical deck.
+
+| Artifact | Role |
+| --- | --- |
+| `docs/speaker-notes/reference/cde-2026-clinical-cybersecurity-80min-prep-zh-tw.md` | Current CDE `2026-06-16` prep note with confirmed constraints, Jason / 靖中 `80` minute split, slide skeleton, workback plan, and draft pre/post-test questions. |
+| `../planning-everything-track/data/knowledge/personal/sources/2026-04-20-cde-prof-wu-clinical-medical-device-it-cybersecurity-speech/source.md` | Planning-side source record for event facts, email archive, deadline, agenda, and capacity routing. |
+
+Boundary: keep raw email PDFs and deadline/source evidence in the planning repo; keep speakable deck content, role split, rehearsal notes, and question drafting here.
+
 ## Machine Source And Generated Outputs
 
 Structured source of truth:
