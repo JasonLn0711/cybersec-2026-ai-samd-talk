@@ -8,10 +8,12 @@ Use these root-level files first:
 
 | File | Use |
 | --- | --- |
+| `cybersec-2026-ai-samd-slide-output-practice-capture-2026-04-27.md` | Current output-first rehearsal capture for Notion paste-back: slide-by-slide spoken drafts, unclear logic, imprecise claims,待查 notes, and repair decisions. |
 | `cybersec-2026-ai-samd-slide-deep-notes-v1-positive-progressive-zh-tw.md` | Current readable rehearsal script for the generated compact/fallback storyline. It uses the strict positive-progressive style and keeps the `Boundary -> Evidence -> Decision -> Repair Proof` path visible. |
 | `cybersec_2026_positive_progressive_style.md` | Current speaking style guide for future edits: progressive, question-driven, cause-effect, decision-support, and non-negation stage language. |
 
 The positive-progressive script is the preferred file for rehearsal, future editing, and AI-agent context.
+The output-practice capture is the preferred temporary workspace when rough spoken text is being pasted back from Notion; promote only stable wording into the protected/current script after review.
 
 ## Folder Map
 
@@ -29,6 +31,7 @@ The positive-progressive script is the preferred file for rehearsal, future edit
 | `reference/cybersec-2026-ai-samd-v1.3-transcript-plus-audience-analysis-zh-tw.md` | Combined rehearsal reader with talk track and per-slide audience analysis. |
 | `reference/cybersec-2026-ai-samd-v1.3-transcript-audience-plus-deep-notes-zh-tw.md` | Taiwan Mandarin rehearsal reader combining talk track, audience analysis, and deep-note companion content. |
 | `reference/cybersec-2026-ai-samd-audience-qa-v1-zh-tw.md` | Broader role-based Q&A prep for general public, software company, and cybersecurity engineer audiences. |
+| `reference/cde-2026-clinical-cybersecurity-80min-prep-zh-tw.md` | CDE `2026-06-16` derivative prep note: confirmed constraints, Jason / 靖中 `80` minute split, slide skeleton, workback plan, and draft pre/post-test questions. |
 
 ## Change Logs
 
