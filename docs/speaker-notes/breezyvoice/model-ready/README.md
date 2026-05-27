@@ -31,6 +31,8 @@ For an `80` minute controlled render, use `cde-2026-breezyvoice-80min-engineered
 
 On RTX 5080, run `bash tools/setup_breezyvoice_rtx5080_runtime.sh` before rendering. The official BreezyVoice requirement uses a CUDA `11.8` PyTorch wheel that does not support RTX 5080 / `sm_120`; the local setup script replaces it with a CUDA `12.8` PyTorch runtime and keeps all runtime files under `.local/`.
 
+After pilot rendering, use `tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full` to verify the subclip-to-parent and parent-to-combined stitch path before any full batch render.
+
 ## Next Gate
 
 Run a pilot render before producing the full set:

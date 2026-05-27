@@ -49,6 +49,9 @@ For local RTX 5080 rendering, use:
 bash tools/setup_breezyvoice_rtx5080_runtime.sh
 python3 tools/prepare_breezyvoice_render_package.py
 bash .local/breezyvoice/commands/v1/run_pilot_template.sh
+python3 tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full --overwrite
 ```
 
 The setup script keeps the official BreezyVoice clone and Python venv under `.local/`, then replaces the official `torch==2.3.1+cu118` runtime with a CUDA `12.8` PyTorch build that supports RTX 5080 / `sm_120`.
+
+Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, and `pilot_machine_review.md`.

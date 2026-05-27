@@ -54,6 +54,21 @@ TERM_NORMALIZATIONS = {
     "Lurie Children’s Hospital": "Lurie Childrens Hospital",
 }
 
+PILOT_ASR_TERMS = [
+    "K eight S",
+    "五二四",
+    "Log four",
+    "Channel File",
+    "PACS",
+    "HIS",
+    "EMR",
+    "workflow",
+    "Clinical",
+    "CDE",
+    "FDA",
+    "SBOM",
+]
+
 CONTROL_RE = re.compile(
     r"<!-- BV26_META\n(?P<meta>.*?)\n-->\n\n"
     r"### (?P<title>.*?)\n\n"
@@ -281,6 +296,10 @@ def wav_duration_seconds(path: Path) -> float | None:
             return wav.getnframes() / float(wav.getframerate())
     except wave.Error:
         return None
+
+
+def read_optional_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8") if path.exists() else ""
 
 
 def command_version(command: str, *args: str) -> dict[str, object]:
@@ -626,6 +645,73 @@ def prepare_package() -> None:
     )
     pilot_outputs_existing = sum(1 for row in pilot_audio_rows if row["exists"])
     pilot_outputs_complete = pilot_outputs_existing == len(pilot_subclip_rows)
+    pilot_parent_paths = sorted(
+        {
+            REPO_ROOT / str(row["parent_output_wav"])
+            for row in pilot_subclip_rows
+        }
+    )
+    pilot_parent_outputs_existing = sum(1 for path in pilot_parent_paths if path.exists())
+    pilot_full_stitched_path = LOCAL_ROOT / f"output/{VERSION}/full/cde-2026-breezyvoice-pilot-stitched-v1.wav"
+    pilot_full_stitched_exists = pilot_full_stitched_path.exists()
+    pilot_asr_path = LOCAL_ROOT / f"review/{VERSION}/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt"
+    pilot_asr_text = read_optional_text(pilot_asr_path)
+    pilot_asr_term_hits = {term: pilot_asr_text.count(term) for term in PILOT_ASR_TERMS}
+    pilot_asr_forbidden_hits = {
+        token: pilot_asr_text.count(token)
+        for token in ["BV26", "<!--", "-->", "[BV26", "[/BV26]", "```"]
+        if token in pilot_asr_text
+    }
+    pilot_asr_missing_terms = [term for term, count in pilot_asr_term_hits.items() if count == 0]
+    pilot_machine_review_status = (
+        "needs_human_listening"
+        if pilot_asr_text and pilot_asr_missing_terms
+        else "asr_not_available"
+        if not pilot_asr_text
+        else "machine_review_no_control_markup"
+    )
+    write_json(
+        LOCAL_ROOT / f"review/{VERSION}/pilot_machine_review.json",
+        {
+            "pilot_asr_path": rel(pilot_asr_path),
+            "asr_exists": pilot_asr_path.exists(),
+            "asr_characters": len(pilot_asr_text),
+            "asr_term_hits": pilot_asr_term_hits,
+            "asr_missing_terms": pilot_asr_missing_terms,
+            "asr_forbidden_markup_hits": pilot_asr_forbidden_hits,
+            "status": pilot_machine_review_status,
+            "interpretation": (
+                "ASR is an auxiliary signal only. Missing term hits or odd substitutions require human listening before full batch approval."
+            ),
+        },
+    )
+    write_text(
+        LOCAL_ROOT / f"review/{VERSION}/pilot_machine_review.md",
+        "\n".join(
+            [
+                "# Pilot Machine Review",
+                "",
+                f"- ASR transcript: `{rel(pilot_asr_path)}`",
+                f"- ASR exists: `{pilot_asr_path.exists()}`",
+                f"- ASR characters: `{len(pilot_asr_text)}`",
+                f"- Status: `{pilot_machine_review_status}`",
+                f"- Forbidden markup hits: `{pilot_asr_forbidden_hits or {}}`",
+                "",
+                "Expected term hits from ASR:",
+                "",
+                "| Term | Count |",
+                "| --- | ---: |",
+                *[f"| `{term}` | {count} |" for term, count in pilot_asr_term_hits.items()],
+                "",
+                "Machine interpretation:",
+                "",
+                "- ASR is not a substitute for human listening.",
+                "- No forbidden orchestration markup should appear in the ASR transcript.",
+                "- Missing expected terms or strange substitutions are treated as a pilot-review risk, not as proof that the raw audio itself is unusable.",
+                "- Keep `full_batch_allowed=false` until the pilot listening checklist is accepted.",
+            ]
+        ),
+    )
 
     write_csv(
         LOCAL_ROOT / f"review/{VERSION}/render_review_log.csv",
@@ -853,6 +939,12 @@ def prepare_package() -> None:
             "pilot_subclip_count": len(pilot_subclip_rows),
             "pilot_outputs_existing": pilot_outputs_existing,
             "pilot_outputs_complete": pilot_outputs_complete,
+            "pilot_parent_outputs_existing": pilot_parent_outputs_existing,
+            "pilot_parent_outputs_complete": pilot_parent_outputs_existing == len(pilot_parent_paths),
+            "pilot_full_stitched_exists": pilot_full_stitched_exists,
+            "pilot_full_stitched_path": rel(pilot_full_stitched_path),
+            "pilot_machine_review": rel(LOCAL_ROOT / f"review/{VERSION}/pilot_machine_review.json"),
+            "pilot_machine_review_status": pilot_machine_review_status,
             "full_batch_allowed": False,
             "pilot_render_attempted": pilot_outputs_existing > 0,
             "reference_audio_required": REFERENCE_AUDIO_REQUIRED,
@@ -914,6 +1006,21 @@ def prepare_package() -> None:
         ),
     )
     (LOCAL_ROOT / f"commands/{VERSION}/run_pilot_template.sh").chmod(0o755)
+    write_text(
+        LOCAL_ROOT / f"commands/{VERSION}/stitch_pilot_template.sh",
+        "\n".join(
+            [
+                "#!/usr/bin/env bash",
+                "set -euo pipefail",
+                "",
+                "python3 tools/stitch_breezyvoice_outputs.py \\",
+                "  --selection pilot \\",
+                "  --stitch-full \\",
+                "  --overwrite",
+            ]
+        ),
+    )
+    (LOCAL_ROOT / f"commands/{VERSION}/stitch_pilot_template.sh").chmod(0o755)
 
     summary = {
         "version": VERSION,
@@ -952,7 +1059,18 @@ def prepare_package() -> None:
         ("10", "Pilot review checklist", "completed", "review/v1/pilot_review_checklist.md records the listening checks."),
         ("11", "修正規則", "completed", "review/v1/pilot_review_checklist.md records correction order."),
         ("12", "Full render 前通過標準", "completed_gate_defined", "review/v1/full_render_acceptance_gate.md defines pass criteria; full_batch_allowed remains false until pilot acceptance."),
-        ("13", "Full render stitch 與紀錄", "prepared_not_executed", "output/v1 directories and review/v1/render_review_log.csv are prepared; pilot audio exists, but full render/stitch remains gated by pilot listening acceptance."),
+        (
+            "13",
+            "Full render stitch 與紀錄",
+            "pilot_stitch_verified" if pilot_full_stitched_exists else "prepared_not_executed",
+            f"pilot stitch path has {pilot_parent_outputs_existing}/{len(pilot_parent_paths)} parent WAVs and pilot full stitched exists={pilot_full_stitched_exists}; full render/stitch remains gated by pilot listening acceptance.",
+        ),
+        (
+            "13a",
+            "Pilot machine review before full batch",
+            pilot_machine_review_status,
+            f"pilot_machine_review.json records ASR exists={pilot_asr_path.exists()}, forbidden markup hits={len(pilot_asr_forbidden_hits)}, missing expected term hits={len(pilot_asr_missing_terms)}.",
+        ),
     ]
     audit_lines = [
         "# BreezyVoice V1 Objective Audit",
