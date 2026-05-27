@@ -815,11 +815,13 @@ def prepare_package() -> None:
         ),
     )
 
-    write_csv(
-        LOCAL_ROOT / f"review/{VERSION}/render_review_log.csv",
-        review_rows,
-        ["output_prefix", "subclip_count", "runtime", "pronunciation_issue", "fix_applied", "accepted"],
-    )
+    render_review_log_path = LOCAL_ROOT / f"review/{VERSION}/render_review_log.csv"
+    if not render_review_log_path.exists():
+        write_csv(
+            render_review_log_path,
+            review_rows,
+            ["output_prefix", "subclip_count", "runtime", "pronunciation_issue", "fix_applied", "accepted"],
+        )
 
     write_text(
         LOCAL_ROOT / f"inputs/{VERSION}/pronunciation_override_policy.md",
@@ -1142,9 +1144,11 @@ def prepare_package() -> None:
                 "set -euo pipefail",
                 "",
                 "python3 tools/build_breezyvoice_pilot_review.py",
+                "python3 tools/build_breezyvoice_render_review_log.py",
                 "",
                 "echo \"Review: .local/breezyvoice/review/v1/pilot_listening_review.md\"",
                 "echo \"Decision CSV: .local/breezyvoice/review/v1/pilot_listening_review.csv\"",
+                "echo \"Render review log: .local/breezyvoice/review/v1/render_review_log.csv\"",
                 "echo \"Full batch gate: .local/breezyvoice/review/v1/full_batch_gate.json\"",
             ]
         ),
@@ -1219,6 +1223,7 @@ def prepare_package() -> None:
                 "  --overwrite",
                 "",
                 "python3 tools/build_breezyvoice_pilot_review.py",
+                "python3 tools/build_breezyvoice_render_review_log.py",
                 "python3 tools/verify_breezyvoice_objective.py --write-report || true",
             ]
         ),

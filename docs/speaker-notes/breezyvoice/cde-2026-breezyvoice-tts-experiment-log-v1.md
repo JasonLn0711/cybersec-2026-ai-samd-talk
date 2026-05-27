@@ -49,6 +49,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-07` | artifact-hygiene | Quarantine stale orphan pilot WAV before next human package | orphan_audio_quarantined_no_render | Refresh metadata, gate reports, objective verification, and Downloads package without rendering |
 | `EXP-20260528-08` | expert-review-ingestion | Add guarded expert-review ingestion path | ingestion_path_ready_gate_still_closed | Wait for completed expert review CSV; ingest it when returned |
 | `EXP-20260528-09` | guarded-full-render-template | Add guarded full-render template without running TTS | full_render_template_ready_but_gate_closed | Wait for returned expert review CSV; ingest it, then rerun the gate checker |
+| `EXP-20260528-10` | review-log-traceability | Build consolidated render review log before next human gate | render_review_log_builder_ready_gate_still_closed | Export refreshed Downloads review package and wait for completed expert review CSV or specific minimal pilot-fix instruction |
 
 ## Detailed Records
 
@@ -741,3 +742,78 @@ Next action:
 Additional observations:
 
 - The final full WAV path is now explicit and matches audio_output_spec.json, reducing post-accept command ambiguity
+
+### EXP-20260528-10 - Build consolidated render review log before next human gate
+
+- Timestamp: `2026-05-28T01:02:00+08:00`
+- Stage: `review-log-traceability`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `all, cde_full_01_opening_positioning_crazyhunter_entry_case, cde_full_16_k8s_review_controls, cde_full_20_crowdstrike_update_524b, cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- The previous render_review_log.csv was a blank template even though pilot parent WAVs, runtime ratios, and reject decisions already existed
+
+Hypothesis:
+
+- A manifest-driven render review log will make every TTS attempt auditable without running additional TTS or opening the full-render gate
+
+Change summary:
+
+- Added tools/build_breezyvoice_render_review_log.py to merge render_manifest, subclip_manifest, parent WAV duration, and pilot listening review decisions
+- Updated generated command templates and README docs to rebuild render_review_log.csv after pilot review and full render stitch
+- Preserved prepare_breezyvoice_render_package.py from wiping an existing enriched render review log
+
+Commands:
+
+- python3 tools/prepare_breezyvoice_render_package.py
+- python3 tools/build_breezyvoice_pilot_review.py
+- python3 tools/build_breezyvoice_render_review_log.py
+- python3 tools/check_breezyvoice_full_render_gate.py --write-report
+- python3 tools/verify_breezyvoice_objective.py --write-report
+
+Logs:
+
+- .local/breezyvoice/review/v1/render_review_log.csv
+- .local/breezyvoice/review/v1/full_render_gate_check.json
+- .local/breezyvoice/review/v1/objective_verification.json
+
+Outputs:
+
+- tools/build_breezyvoice_render_review_log.py
+- docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.md
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+
+Machine result:
+
+- render_review_log.csv now has 26 rows; four pilot parent chunks include runtime_seconds and reject status; non-pilot rows remain not_rendered_full_batch_gated
+- Full-render gate checker exited 2 as expected with allowed=false and four unaccepted pilot chunks
+- Objective verifier exited 2 as expected with overall_status=gated_waiting_human_review
+
+Human result:
+
+- No new human listening review received in this step
+
+Decision: `render_review_log_builder_ready_gate_still_closed`
+
+Fix applied:
+
+- Traceability/logging fix only; no TTS text, no audio render, no full batch run
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- Do not run full render until all four pilot parent chunks are accepted by human listening and check_breezyvoice_full_render_gate.py exits 0
+
+Next action:
+
+- Export refreshed Downloads review package and wait for completed expert review CSV or specific minimal pilot-fix instruction
+
+Additional observations:
+
+- FIRST PRINCIPLE: audio generation is a controlled manufacturing step; the review log is the batch record that binds source, chunk, runtime, defect, fix, and gate decision before scale-up

@@ -52,11 +52,12 @@ python3 tools/prepare_breezyvoice_render_package.py
 bash .local/breezyvoice/commands/v1/run_pilot_template.sh
 python3 tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full --overwrite
 python3 tools/build_breezyvoice_pilot_review.py
+python3 tools/build_breezyvoice_render_review_log.py
 ```
 
 The setup script keeps the official BreezyVoice clone and Python venv under `.local/`, then replaces the official `torch==2.3.1+cu118` runtime with a CUDA `12.8` PyTorch build that supports RTX 5080 / `sm_120`.
 
-Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, `pilot_machine_review.md`, `pilot_listening_review.csv`, and `full_batch_gate.json`.
+Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, `pilot_machine_review.md`, `pilot_listening_review.csv`, `render_review_log.csv`, and `full_batch_gate.json`. Rebuild `render_review_log.csv` after any stitch, expert-review ingestion, or rerender so runtime, issue, fix, accepted status, and stop-gate source stay aligned.
 
 ## Experiment Logging Rule
 
