@@ -73,3 +73,13 @@ action, and stop rule. If human listening is required, export a fresh package to
 `~/Downloads` with `python3 tools/export_breezyvoice_expert_review_package.py
 --overwrite`, record that directory/archive in the experiment log, and stop
 before any full render until the human review returns accepted decisions.
+
+Before any full render attempt, run:
+
+```bash
+python3 tools/check_breezyvoice_full_render_gate.py --write-report
+```
+
+Only a zero exit code means the full render gate is open. A non-zero exit means
+the next action is human listening review or the next expert-specified pilot
+repair, not full rendering.

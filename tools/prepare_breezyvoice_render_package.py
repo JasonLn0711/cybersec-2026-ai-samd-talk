@@ -1023,6 +1023,7 @@ def prepare_package() -> None:
                 "- no excessive sentence fatigue",
                 "- tone matches CDE medical-cybersecurity instruction",
                 "- every generated WAV maps to `subclip_manifest.csv` and `render_review_log.csv`",
+                "- `python3 tools/check_breezyvoice_full_render_gate.py --write-report` exits `0`",
                 "",
                 "After render:",
                 "",
@@ -1030,6 +1031,16 @@ def prepare_package() -> None:
                 "2. stitch parent chunks into the full lecture",
                 "3. normalize final full output around `-16 LUFS`",
                 "4. complete `render_review_log.csv` with runtime, pronunciation issue, fix, and accepted status",
+                "",
+                "Machine stop gate:",
+                "",
+                "Run this before any full render command:",
+                "",
+                "```bash",
+                "python3 tools/check_breezyvoice_full_render_gate.py --write-report",
+                "```",
+                "",
+                "If it exits non-zero, stop and do not run full render.",
             ]
         ),
     )
@@ -1139,6 +1150,18 @@ def prepare_package() -> None:
         ),
     )
     (LOCAL_ROOT / f"commands/{VERSION}/build_pilot_review_template.sh").chmod(0o755)
+    write_text(
+        LOCAL_ROOT / f"commands/{VERSION}/check_full_render_gate_template.sh",
+        "\n".join(
+            [
+                "#!/usr/bin/env bash",
+                "set -euo pipefail",
+                "",
+                "python3 tools/check_breezyvoice_full_render_gate.py --write-report",
+            ]
+        ),
+    )
+    (LOCAL_ROOT / f"commands/{VERSION}/check_full_render_gate_template.sh").chmod(0o755)
 
     summary = {
         "version": VERSION,

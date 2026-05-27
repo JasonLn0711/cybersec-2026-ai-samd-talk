@@ -45,6 +45,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-03` | pilot-render-review | Initial no-reference pilot render, stitch, and machine review | full_render_blocked_pending_human_review | Use expert/human review to decide minimal text conditioning |
 | `EXP-20260528-04` | term-conditioning | Pilot term-normalization pass after machine/listening risk | continue_to_expert_conditioning_not_full_render | Apply only expert-identified minimal corrections and rerender pilot |
 | `EXP-20260528-05` | expert-conditioning-human-gate | Expert pilot review conditioning and refreshed Downloads package | stop_for_human_review_before_full_render | Wait for human listening review; if rejected again, record the review, apply smallest fix, export a new Downloads package, and stop again |
+| `EXP-20260528-06` | full-render-stop-gate | Machine-enforced full-render gate check before any next TTS run | stop_for_human_review_enforced_by_machine_gate | Wait for human listening review; if rejected again, record the review and apply only the next minimal pilot fix |
 
 ## Detailed Records
 
@@ -468,3 +469,75 @@ Additional observations:
 
 - Current local output directory can contain stale WAVs from prior manifests; artifact hygiene should be audited and only manifest-listed files should enter review packages
 - Machine ASR is useful for forbidden markup, but not reliable enough for professional-term acceptance
+
+### EXP-20260528-06 - Machine-enforced full-render gate check before any next TTS run
+
+- Timestamp: `2026-05-28T00:43:30+08:00`
+- Stage: `full-render-stop-gate`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case, cde_full_16_k8s_review_controls, cde_full_20_crowdstrike_update_524b, cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- The workflow needs a hard stop so full render cannot proceed while human listening decisions are reject or undecided
+- User instructed that when human review is required, work should stop and wait rather than continue generation
+
+Hypothesis:
+
+- A dedicated gate checker that exits non-zero when pilot decisions are not all accept will prevent accidental full-batch rendering and produce auditable evidence for reviewers
+
+Change summary:
+
+- Added check_breezyvoice_full_render_gate.py, generated full_render_gate_check.json, updated docs and review package export to include the gate report
+
+Commands:
+
+- python3 tools/prepare_breezyvoice_render_package.py
+- python3 tools/build_breezyvoice_pilot_review.py
+- python3 tools/check_breezyvoice_full_render_gate.py --write-report
+- python3 tools/export_breezyvoice_expert_review_package.py --overwrite
+
+Logs:
+
+- .local/breezyvoice/review/v1/full_render_gate_check.json
+- .local/breezyvoice/review/v1/full_batch_gate.json
+- .local/breezyvoice/review/v1/pilot_listening_review.csv
+
+Outputs:
+
+- tools/check_breezyvoice_full_render_gate.py
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/review/full_render_gate_check.json
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Machine result:
+
+- Gate checker exited 2 as expected: allowed=false, full_batch_allowed=false, accepted_by_listening=false, four required pilot chunks unaccepted
+
+Human result:
+
+- No new human review received
+
+Decision: `stop_for_human_review_enforced_by_machine_gate`
+
+Fix applied:
+
+- No TTS text or audio change; added gate enforcement and package evidence
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- Do not run full render unless check_breezyvoice_full_render_gate.py exits 0 after all four pilot decisions are accept
+
+Next action:
+
+- Wait for human listening review; if rejected again, record the review and apply only the next minimal pilot fix
+
+Additional observations:
+
+- This gate should be run in any future full-render command template or manual runbook
+- The review package now includes the gate report so experts see why generation is stopped

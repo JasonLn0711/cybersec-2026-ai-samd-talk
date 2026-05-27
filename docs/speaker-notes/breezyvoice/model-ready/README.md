@@ -44,6 +44,11 @@ and is included in every expert review export. If a new run produces a human
 review gate, export a fresh copy to `~/Downloads` and stop until human decisions
 are returned.
 
+Before a full render command, run
+`python3 tools/check_breezyvoice_full_render_gate.py --write-report`. The command
+must exit `0`; otherwise the full render remains closed and the next action is
+human listening review or the next expert-specified pilot repair.
+
 ## Next Gate
 
 Run a pilot render before producing the full set:
