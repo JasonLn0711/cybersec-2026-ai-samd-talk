@@ -1,0 +1,7 @@
+group,source_slides,output_prefix,purpose,target_length
+01,36-38,cde_jingzhong_36_38_whitebox_scope,"White-box positioning, outside-in limit, review scope",pilot then 800-1200 Chinese chars per clip
+02,39-41,cde_jingzhong_39_41_device_evidence,"Medical-device cases and FDA-facing evidence",800-1200 Chinese chars per clip
+03,42-45,cde_jingzhong_42_45_deployment_k8s,"Deployment security, K8S, Tesla, Change Healthcare",800-1200 Chinese chars per clip
+04,46-49,cde_jingzhong_46_49_traceability_testing,"Threat-model traceability, test evidence, CrowdStrike, 524B",800-1200 Chinese chars per clip
+05,50-53,cde_jingzhong_50_53_remediation_sbom,"Remediation, dependency visibility, SBOM, Log4Shell / MOVEit",800-1200 Chinese chars per clip
+06,54-55,cde_jingzhong_54_55_operational_close,"Logging, recovery, Synnovis / NHS, closing summary",800-1200 Chinese chars per clip

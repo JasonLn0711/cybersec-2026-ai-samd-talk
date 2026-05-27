@@ -61,6 +61,7 @@ The confirmed CDE session is a derivative use of the same medical-cybersecurity 
 | Artifact | Role |
 | --- | --- |
 | `docs/speaker-notes/reference/cde-2026-clinical-cybersecurity-80min-prep-zh-tw.md` | Current CDE `2026-06-16` prep note with confirmed constraints, Jason / 靖中 `80` minute split, slide skeleton, workback plan, and draft pre/post-test questions. |
+| `docs/speaker-notes/breezyvoice/` | Syncable BreezyVoice text inputs, small source DOCX files, expert-delivered full-session model-ready transcript, and batch-render plan. Generated audio stays in `.local/breezyvoice/`. |
 | `../planning-everything-track/data/knowledge/personal/sources/2026-04-20-cde-prof-wu-clinical-medical-device-it-cybersecurity-speech/source.md` | Planning-side source record for event facts, email archive, deadline, agenda, and capacity routing. |
 
 Boundary: keep raw email PDFs and deadline/source evidence in the planning repo; keep speakable deck content, role split, rehearsal notes, and question drafting here.
@@ -166,6 +167,7 @@ Connection rule: update the planning handoff when this repo changes its canonica
 Keep source detail where it is used:
 
 - Current source-verified `v1.3` slide, transcript, and Q&A references live in `docs/speaker-notes/reference/`.
+- Current BreezyVoice syncable text inputs, small source DOCX files, and expert-delivered model-ready transcript live in `docs/speaker-notes/breezyvoice/`; generated audio and prompt audio stay under `.local/breezyvoice/`.
 - Current output-first spoken-draft capture lives in `docs/speaker-notes/cybersec-2026-ai-samd-slide-output-practice-capture-2026-04-27.md` until stable wording is promoted.
 - Current generated compact/fallback rehearsal script and style guide live at the speaker-notes root.
 - Superseded speaker-note drafts and legacy baselines live in `docs/speaker-notes/archive/`; rewrite traceability lives in `docs/speaker-notes/change-log/`.
