@@ -37,15 +37,50 @@ PILOT_PREFIXES = [
 ]
 
 TERM_NORMALIZATIONS = {
+    "CDE": "C D E",
+    "AI": "A I",
+    "ASR": "A S R",
+    "TTS": "T T S",
+    "TFDA": "T F D A",
+    "FDA": "F D A",
+    "SaMD": "S A M D",
+    "SBOM": "S B O M",
+    "SCA": "S C A",
+    "PACS": "P A C S",
+    "HIS": "H I S",
+    "EMR": "E M R",
+    "RIS": "R I S",
+    "LIS": "L I S",
+    "FHIR": "F H I R",
+    "DICOM": "DICOM，戴康",
+    "API": "A P I",
+    "VPN": "V P N",
+    "MFA": "M F A",
+    "RBAC": "R B A C",
+    "IAM": "I A M",
+    "HL7": "H L seven",
+    "SIEM": "S I E M",
+    "EDR": "E D R",
     "K8S": "K eight S",
     "FD&C Act Section 524B": "F D and C Act Section 五二四 B",
     "FD&C Act，Section 524B": "F D and C Act，Section 五二四 B",
     "FD&C Act Section 五二四 B": "F D and C Act Section 五二四 B",
+    "FD&C Act": "F D and C Act",
     "524B": "五二四 B",
     "Log4Shell": "Log four Shell",
     "MOVEit Transfer": "Move it Transfer",
     "Channel File 291": "Channel File 二九一",
     "NetworkPolicy": "Network Policy",
+    "workflow": "工作流程",
+    "clinical continuity": "臨床連續性",
+    "Clinical": "臨床",
+    "ransomware": "勒索軟體",
+    "downtime": "停機",
+    "vendor access": "廠商存取",
+    "patching limitation": "修補限制",
+    "credential risk": "憑證風險",
+    "White-box Testing": "White box Testing",
+    "CrazyHunter": "Crazy Hunter",
     "UnitedHealth": "United Health",
     "OneBlood": "One Blood",
     "BlackCat": "Black Cat",
@@ -54,20 +89,20 @@ TERM_NORMALIZATIONS = {
     "Lurie Children’s Hospital": "Lurie Childrens Hospital",
 }
 
-PILOT_ASR_TERMS = [
-    "K eight S",
-    "五二四",
-    "Log four",
-    "Channel File",
-    "PACS",
-    "HIS",
-    "EMR",
-    "workflow",
-    "Clinical",
-    "CDE",
-    "FDA",
-    "SBOM",
-]
+PILOT_ASR_TERM_VARIANTS = {
+    "K8S": ["K eight S", "K8S", "K 八 S"],
+    "524B": ["五二四", "524B", "五二四 B"],
+    "Log4Shell": ["Log four", "Log4Shell", "Log four Shell"],
+    "Channel File 291": ["Channel File", "二九一", "291"],
+    "PACS": ["P A C S", "PACS", "派克斯"],
+    "HIS": ["H I S", "HIS"],
+    "EMR": ["E M R", "EMR"],
+    "workflow": ["工作流程", "workflow"],
+    "clinical": ["臨床", "Clinical", "clinical"],
+    "CDE": ["C D E", "CDE"],
+    "FDA": ["F D A", "FDA"],
+    "SBOM": ["S B O M", "SBOM"],
+}
 
 CONTROL_RE = re.compile(
     r"<!-- BV26_META\n(?P<meta>.*?)\n-->\n\n"
@@ -656,7 +691,10 @@ def prepare_package() -> None:
     pilot_full_stitched_exists = pilot_full_stitched_path.exists()
     pilot_asr_path = LOCAL_ROOT / f"review/{VERSION}/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt"
     pilot_asr_text = read_optional_text(pilot_asr_path)
-    pilot_asr_term_hits = {term: pilot_asr_text.count(term) for term in PILOT_ASR_TERMS}
+    pilot_asr_term_hits = {
+        term: sum(pilot_asr_text.count(variant) for variant in variants)
+        for term, variants in PILOT_ASR_TERM_VARIANTS.items()
+    }
     pilot_asr_forbidden_hits = {
         token: pilot_asr_text.count(token)
         for token in ["BV26", "<!--", "-->", "[BV26", "[/BV26]", "```"]
@@ -677,6 +715,7 @@ def prepare_package() -> None:
             "asr_exists": pilot_asr_path.exists(),
             "asr_characters": len(pilot_asr_text),
             "asr_term_hits": pilot_asr_term_hits,
+            "asr_term_variants": PILOT_ASR_TERM_VARIANTS,
             "asr_missing_terms": pilot_asr_missing_terms,
             "asr_forbidden_markup_hits": pilot_asr_forbidden_hits,
             "status": pilot_machine_review_status,

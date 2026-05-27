@@ -54,6 +54,7 @@ def main() -> None:
     manifest_rows = read_csv(LOCAL_ROOT / f"manifests/{VERSION}/render_manifest.csv")
     pilot_rows = read_csv(LOCAL_ROOT / f"manifests/{VERSION}/pilot_manifest.csv")
     subclip_rows = read_csv(LOCAL_ROOT / f"manifests/{VERSION}/subclip_manifest.csv")
+    total_subclips = len(subclip_rows)
     stitch_summary_path = LOCAL_ROOT / f"review/{VERSION}/pilot_stitch_summary.json"
     machine_review_path = LOCAL_ROOT / f"review/{VERSION}/pilot_machine_review.json"
     existing_review_path = LOCAL_ROOT / f"review/{VERSION}/pilot_listening_review.csv"
@@ -78,7 +79,7 @@ def main() -> None:
     md_lines = [
         "# BreezyVoice Pilot Listening Review",
         "",
-        "Purpose: decide whether the four pilot rows are acceptable before running the full `92` subclip batch.",
+        f"Purpose: decide whether the four pilot rows are acceptable before running the full `{total_subclips}` subclip batch.",
         "",
         "Combined pilot WAV:",
         "",
