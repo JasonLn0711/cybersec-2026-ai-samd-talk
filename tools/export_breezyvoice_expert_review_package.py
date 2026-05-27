@@ -37,6 +37,7 @@ REVIEW_FILES = [
     "render_review_log.csv",
     "orphan_audio_inventory.csv",
     "full_render_gate_check.json",
+    "objective_verification.json",
 ]
 
 EXPERIMENT_LOG_FILES = [

@@ -46,6 +46,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-04` | term-conditioning | Pilot term-normalization pass after machine/listening risk | continue_to_expert_conditioning_not_full_render | Apply only expert-identified minimal corrections and rerender pilot |
 | `EXP-20260528-05` | expert-conditioning-human-gate | Expert pilot review conditioning and refreshed Downloads package | stop_for_human_review_before_full_render | Wait for human listening review; if rejected again, record the review, apply smallest fix, export a new Downloads package, and stop again |
 | `EXP-20260528-06` | full-render-stop-gate | Machine-enforced full-render gate check before any next TTS run | stop_for_human_review_enforced_by_machine_gate | Wait for human listening review; if rejected again, record the review and apply only the next minimal pilot fix |
+| `EXP-20260528-07` | artifact-hygiene | Quarantine stale orphan pilot WAV before next human package | orphan_audio_quarantined_no_render | Refresh metadata, gate reports, objective verification, and Downloads package without rendering |
 
 ## Detailed Records
 
@@ -541,3 +542,68 @@ Additional observations:
 
 - This gate should be run in any future full-render command template or manual runbook
 - The review package now includes the gate report so experts see why generation is stopped
+
+### EXP-20260528-07 - Quarantine stale orphan pilot WAV before next human package
+
+- Timestamp: `2026-05-28T00:47:00+08:00`
+- Stage: `artifact-hygiene`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_16_k8s_review_controls`
+
+Reason:
+
+- The verifier and orphan inventory showed one local subclip WAV from a prior manifest that was no longer listed in the current subclip manifest
+- Keeping stale audio beside current pilot files can confuse human review and future package assembly
+
+Hypothesis:
+
+- Moving the orphan WAV into an archive folder preserves evidence while preventing it from being mistaken for a current pilot deliverable
+
+Change summary:
+
+- Moved cde_full_16_k8s_review_controls_p04.wav from output/v1/subclips to output/v1/archive/orphan-audio-2026-05-28
+
+Commands:
+
+- mkdir -p .local/breezyvoice/output/v1/archive/orphan-audio-2026-05-28
+- mv .local/breezyvoice/output/v1/subclips/cde_full_16_k8s_review_controls_p04.wav .local/breezyvoice/output/v1/archive/orphan-audio-2026-05-28/
+
+Logs:
+
+- .local/breezyvoice/review/v1/orphan_audio_inventory.csv
+- docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.md
+
+Outputs:
+
+- .local/breezyvoice/output/v1/archive/orphan-audio-2026-05-28/cde_full_16_k8s_review_controls_p04.wav
+
+Machine result:
+
+- Artifact moved; no TTS render executed
+
+Human result:
+
+- No new human review received
+
+Decision: `orphan_audio_quarantined_no_render`
+
+Fix applied:
+
+- Local artifact hygiene only; no text, manifest, or accepted-review change
+
+Downloads package:
+
+- none recorded
+
+Stop rule:
+
+- Rebuild metadata and export package; full render remains blocked unless gate checker exits 0
+
+Next action:
+
+- Refresh metadata, gate reports, objective verification, and Downloads package without rendering
+
+Additional observations:
+
+- Quarantining stale audio is safer than deleting it because prior experiment logs can still trace the earlier render attempt
