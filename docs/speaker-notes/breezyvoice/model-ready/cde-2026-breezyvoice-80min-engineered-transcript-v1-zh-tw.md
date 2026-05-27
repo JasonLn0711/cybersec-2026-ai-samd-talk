@@ -1,0 +1,834 @@
+# CDE 2026 臨床端醫材 / 資訊系統資安要求 80 分鐘 BreezyVoice 工程版逐字稿
+
+Status: `model-ready engineering draft v1`
+
+Source baseline:
+
+- `docs/speaker-notes/breezyvoice/model-ready/cde-2026-breezyvoice-merged-transcript-batch.csv`
+- `docs/speaker-notes/breezyvoice/model-ready/cde-2026-breezyvoice-merged-transcript-clean.txt`
+- Format and detail-control reference: `docs/speaker-notes/reference/cde-2026-clinical-cybersecurity-60min-transcript-breezevoice26-zh-tw.md`
+- Pronunciation reference: `docs/speaker-notes/breezyvoice/model-ready/cde-2026-breezyvoice-pronunciation-notes.md`
+
+Purpose: keep the latest merged full-session transcript, including 靖中的 white-box / deployment section, while adding the richer `BV26` metadata, pacing, pronunciation, and production controls from the earlier `60` minute script.
+
+Decision: use the later expert-delivered merged transcript as the content baseline. The earlier `60` minute file remains the best engineering-control template, but it does not include the final integrated 靖中 content. This file therefore does **not** replace the expert transcript semantically; it wraps and lightly tunes it for an `80` minute BreezyVoice render path.
+
+Tone policy: spoken transcript sections use affirmative, positive-scope Taiwan Traditional Chinese. The delivery leads with capability, evidence, governance, scope control, and next implication. Boundaries are framed as claim-evidence alignment, validation layers, stewardship, and production safety.
+
+## A. BreezyVoice 26 / BreezyVoice 語音工程設定
+
+> 注意：以下 `[BV26 ...]`、`BV26_META`、`[PAUSE=...]` 是 **Orchestrator Markup**。
+> 正確流程是由你的程式先讀取標籤，再轉成切段、可選的 reference audio、停頓、語速、注音發音控制與後處理。
+> 真正送進 TTS 的文字應該去除控制標籤，避免模型把標籤念出來。
+
+```yaml
+voice_engine: BreezyVoice_26_or_BreezyVoice_Taigi_TTS
+language_primary: zh-TW
+script: Traditional_Chinese
+accent: Taiwan_Mandarin
+target_duration_minutes: 80
+target_total_seconds: 4800
+content_baseline: expert_delivered_merged_full_session_transcript
+chunk_count: 26
+total_model_text_characters_after_light_tuning: 28053
+average_characters_per_minute_target: 350.7
+
+speaker_reference:
+  required: false
+  no_reference_mode: default_voice
+  optional_file: adult_tw_mandarin_calm_medical_cybersecurity_30s.wav
+  consent_required_if_used: true
+  duration_target_sec: 25-45
+  recording_style: calm_professional_medical_cybersecurity_lecture
+  mic_quality: clean_close_mic_no_noise
+  avoid:
+    - celebrity_voice
+    - named_comedian_voice
+    - family_member_without_consent
+    - dramatic_podcast_voice
+    - streamer_voice
+
+global_voice_profile:
+  role: clinical_medical_cybersecurity_public_speaker
+  perceived_age: 32-45
+  gender: neutral_or_mature_professional
+  warmth: 0.56
+  authority: 0.72
+  humor_dryness: 0.24
+  emotional_intensity: 0.24
+  target_cpm: 350
+  max_sentence_fatigue_sec: 24
+  volume_lufs: -16
+  noise_reduction: mild
+  post_pause_trim: false
+
+pronunciation_control:
+  bopomofo_enabled: true
+  english_acronym_mode: letter_by_letter_when_clinical
+  mixed_language_style: taiwan_professional
+  terms:
+    AI: "A-I"
+    ASR: "A-S-R"
+    TTS: "T-T-S"
+    CDE: "C-D-E"
+    FDA: "F-D-A"
+    TFDA: "T-F-D-A"
+    NYCU: "N-Y-C-U"
+    SaMD: "S-A-M-D；Software as a Medical Device；軟體醫材"
+    SBOM: "S-B-O-M；軟體物料清單"
+    SCA: "S-C-A；Software Composition Analysis"
+    PACS: "派克斯；或 P-A-C-S"
+    HIS: "H-I-S"
+    EMR: "E-M-R"
+    RIS: "R-I-S"
+    LIS: "L-I-S"
+    DICOM: "Dai-com；戴康"
+    HL7: "H-L-seven"
+    FHIR: "fire"
+    API: "A-P-I"
+    VPN: "V-P-N"
+    MFA: "M-F-A"
+    RBAC: "R-B-A-C"
+    IAM: "I-A-M"
+    K8S: "K-eight-S；或 K 八 S"
+    Kubernetes: "Kubernetes；庫伯內提斯"
+    YAML: "Y-A-M-L if pilot misreads"
+    SIEM: "S-I-E-M"
+    EDR: "E-D-R"
+    510k: "五一零 K"
+    "FD&C Act Section 524B": "F-D and C Act，Section 五二四 B"
+    CrazyHunter: "Crazy Hunter 勒索軟體"
+    Change_Healthcare: "Change Healthcare；美國醫療支付服務商"
+    Log4Shell: "Log four Shell"
+    MOVEit_Transfer: "Move it Transfer"
+
+segment_presets:
+  OPENING:
+    speed_cpm: 320
+    warmth: 0.60
+    authority: 0.66
+    pause_sentence_ms: 620
+  TECH_EXPLAIN:
+    speed_cpm: 350
+    warmth: 0.50
+    authority: 0.74
+    pause_sentence_ms: 460
+  CASE_STORY:
+    speed_cpm: 330
+    warmth: 0.58
+    authority: 0.66
+    pause_sentence_ms: 610
+  SAFETY_SLOW:
+    speed_cpm: 300
+    warmth: 0.54
+    authority: 0.82
+    pause_sentence_ms: 760
+  TRANSITION:
+    speed_cpm: 335
+    warmth: 0.54
+    authority: 0.68
+    pause_sentence_ms: 560
+  CONCLUSION:
+    speed_cpm: 292
+    warmth: 0.64
+    authority: 0.80
+    pause_sentence_ms: 820
+```
+
+## B. 80-Minute Design And Rendering Plan
+
+### Content Decision
+
+- Use the expert-delivered merged transcript as the source of truth because it already integrates Jason's first half, 靖中的 second half, the handoff, and the shared close.
+- Use the earlier `60` minute script for control grammar: global voice profile, segment metadata, per-segment pronunciation hints, explicit pause policy, and pilot-render gates.
+- Keep rendering batch-based. Do not generate one long `80` minute WAV in a single pass. Render by stable `output_prefix`, review pilot rows, then stitch approved clips.
+- Reference audio is optional. If no prompt WAV is present, run pilot rendering in no-reference / default-voice mode rather than blocking execution.
+- Keep generated audio, prompt audio, caches, and failed WAVs under `.local/breezyvoice/`.
+
+### Timing Contract
+
+- Target: `80:00`.
+- Model text after light tuning: `28053` characters.
+- Average target density: `350.7` characters per minute before inserted pause overhead.
+- Segment timing below is proportional to cleaned text length, rounded to `5` seconds, and totals exactly `80:00`.
+- If pilot audio runs long, first reduce pause length in `TECH_EXPLAIN` rows; keep `SAFETY_SLOW` and `CONCLUSION` pauses intact.
+- If pilot audio runs short, add paragraph pauses after case consequences and after review questions; do not pad with new content unless a slide needs clearer transition.
+
+| # | Prefix | Segment | Preset | Chars | Target | Review focus |
+| --- | --- | --- | --- | ---: | ---: | --- |
+| 01 | `cde_full_01_opening_positioning_crazyhunter_entry_case` | Opening positioning / CrazyHunter entry case | `OPENING` | 1087 | `3:05` | opening pacing |
+| 02 | `cde_full_02_story_map_clinical_incident_chain` | Story map / Clinical incident chain | `TECH_EXPLAIN` | 1124 | `3:15` | technical clarity |
+| 03 | `cde_full_03_chansn_system_of_systems_mackay_and_emerge` | Chansn system of systems / Mackay and emergency operation | `SAFETY_SLOW` | 965 | `2:45` | clinical gravity |
+| 04 | `cde_full_04_vendor_access_trust_boundary_regulation_as` | Vendor access trust boundary / Regulation as lifecycle | `TECH_EXPLAIN` | 1083 | `3:05` | technical clarity |
+| 05 | `cde_full_05_stryker_supply_chain_medibank_credentials` | Stryker supply chain / Medibank credentials | `TECH_EXPLAIN` | 794 | `2:15` | technical clarity |
+| 06 | `cde_full_06_evidence_chain_foxconn_supplier_risk` | Evidence chain / Foxconn supplier risk | `TECH_EXPLAIN` | 1130 | `3:15` | technical clarity |
+| 07 | `cde_full_07_imaging_systems_semiconductor_campaign` | Imaging systems / Semiconductor campaign | `CASE_STORY` | 1130 | `3:15` | case pacing |
+| 08 | `cde_full_08_finding_anatomy_outside_in_not_enough` | Finding anatomy / Outside-in not enough | `TECH_EXPLAIN` | 1031 | `2:55` | technical clarity |
+| 09 | `cde_full_09_lurie_children_systex_handoff` | Lurie children / Systex handoff | `TRANSITION` | 1121 | `3:10` | handoff smoothness |
+| 10 | `cde_full_10_whitebox_positioning_outsidein` | White-box positioning and outside-in limit | `TRANSITION` | 1081 | `3:05` | handoff smoothness |
+| 11 | `cde_full_11_internal_cause_review_scope` | Internal cause and white-box review scope | `TECH_EXPLAIN` | 1182 | `3:25` | technical clarity |
+| 12 | `cde_full_12_input_logging_contec_start` | Input validation, logging, and Contec case start | `TECH_EXPLAIN` | 1181 | `3:20` | technical clarity |
+| 13 | `cde_full_13_contec_fda_evidence` | Contec case close and FDA-facing evidence | `CASE_STORY` | 1186 | `3:25` | case pacing |
+| 14 | `cde_full_14_abbott_firmware_deployment` | Abbott pacemaker firmware and deployment start | `SAFETY_SLOW` | 1102 | `3:10` | clinical gravity |
+| 15 | `cde_full_15_deployment_controls_k8s_intro` | Deployment controls and K8S introduction | `TECH_EXPLAIN` | 1195 | `3:25` | technical clarity |
+| 16 | `cde_full_16_k8s_review_controls` | K8S review controls | `TECH_EXPLAIN` | 1118 | `3:10` | technical clarity |
+| 17 | `cde_full_17_tesla_k8s_case` | Tesla K8S case | `CASE_STORY` | 1211 | `3:25` | case pacing |
+| 18 | `cde_full_18_change_deployment_traceability` | Change Healthcare deployment case and traceability start | `CASE_STORY` | 1191 | `3:25` | case pacing |
+| 19 | `cde_full_19_traceability_testing_activities` | Threat-model traceability and testing activities | `TECH_EXPLAIN` | 1150 | `3:15` | technical clarity |
+| 20 | `cde_full_20_crowdstrike_update_524b` | CrowdStrike update failure and 524B start | `CASE_STORY` | 1122 | `3:10` | case pacing |
+| 21 | `cde_full_21_524b_remediation_workflow` | 524B mapping and remediation workflow | `TECH_EXPLAIN` | 922 | `2:40` | technical clarity |
+| 22 | `cde_full_22_remediation_dependency_visibility` | Remediation evidence and dependency visibility | `TECH_EXPLAIN` | 1088 | `3:05` | technical clarity |
+| 23 | `cde_full_23_log4shell_moveit_response` | Log4Shell MOVEit vulnerability response | `CASE_STORY` | 932 | `2:40` | case pacing |
+| 24 | `cde_full_24_logging_synnovis_start` | Operational evidence and Synnovis case start | `SAFETY_SLOW` | 1122 | `3:10` | clinical gravity |
+| 25 | `cde_full_25_synnovis_lifecycle_trust` | Synnovis case close and lifecycle trust | `CONCLUSION` | 902 | `2:35` | handoff smoothness |
+| 26 | `cde_full_26_shared_close_test_anchors` | Shared close and pre/post-test anchors | `CONCLUSION` | 903 | `2:35` | final close |
+
+### Pilot Render Gate
+
+Render these rows before the full batch:
+
+1. `cde_full_01_opening_positioning_crazyhunter_entry_case` for opening warmth, speed, and positive-scope tone.
+2. `cde_full_16_k8s_review_controls` for K eight S, RBAC, YAML, Network Policy, and cloud-identity pronunciation.
+3. `cde_full_20_crowdstrike_update_524b` for CrowdStrike, Channel File 二九一, and FD&C Act Section 524B pronunciation.
+4. `cde_full_26_shared_close_test_anchors` for final pacing, test-question anchors, and closing authority.
+
+Pilot acceptance checks:
+
+- Acronyms are understandable without sounding over-spelled.
+- Long sentences do not produce breathless delivery or semantic flattening.
+- Case sections sound grounded and clinical, not sensational.
+- Handoff from Jason content into 靖中 white-box/system-review content sounds natural.
+- Final close lands on lifecycle trust and CDE test-question anchors.
+
+## C. 80-Minute BreezyVoice Transcript
+
+<!-- BV26_META
+segment_id: S01
+group: "00"
+output_prefix: "cde_full_01_opening_positioning_crazyhunter_entry_case"
+source_notes: "slides 1-3; slides 1-4; session positioning; slides 2-3; slides 5-7; product visuals converted to deployment lesson; slide 4; first case"
+target_duration: "3:05"
+timeline: "00:00-03:05"
+character_count: 1087
+preset: "OPENING"
+speed_cpm: 162
+delivery: "warm formal opening with calm authority"
+pronunciation_hints:
+  - "C D E"
+  - "T F D A"
+  - "F D A"
+  - "五一零 K"
+  - "S A M D；Software as a Medical Device"
+  - "派克斯，或 P A C S"
+  - "H I S"
+  - "E M R"
+-->
+
+### S01 Opening positioning / CrazyHunter entry case
+
+[BV26 preset=OPENING speed=162 target_duration=3:05 output_prefix=cde_full_01_opening_positioning_crazyhunter_entry_case pause_after=700ms]
+各位好，今天這場 CDE 課程的題目是：臨床端對醫療器材與資訊系統之資安要求。這個題目看起來像法規，也像資安技術課。實際上，我們今天要處理的是醫療現場最基本的一個問題：當醫療器材、AI 系統、PACS、HIS、EMR、雲端服務與廠商維護通道全部連在一起時，醫院要怎麼判斷這個系統可以被信任。今天會把資安放回臨床 workflow，用產品生命週期來看證據，用醫院部署現實來看責任分工，讓法規條文變成可以行動、可以交接、可以驗證的治理語言。 這一場和前兩場的角色不同。前兩場偏向驗證單位與醫材業者，看的是驗證要求、設計驗證經驗與常見缺失。今天的視角會移到臨床端，也就是系統進到醫院以後會遇到的情境。醫院會問：這個系統接到哪裡？誰可以登入？資料怎麼流？廠商如何維護？弱點誰負責？修補多久？修完怎麼證明？事件後如何調查與恢復？所以今天的主軸很清楚：法規是起點，真正的挑戰是醫療資安如何在醫院端落地。 這場課程會從醫療系統的角度談資安，並把工具名稱與條文文字推進到臨床治理情境。投影片前幾頁提到醫療 AI、SaMD、DICOM workflow、臨床驗證、TFDA 醫療器材許可與 FDA 510(k) 證據。這些經驗提供的是實作來源。醫療 AI 系統從研究到臨床使用，中間要通過影像資料、使用者角色、臨床驗證、醫院資訊系統、法規文件、上市後維護與資安治理。當我們談 cybersecurity requirements，這些環節會全部回到同一條 evidence chain。 以醫療影像 AI 來說，模型準確率是起點，真正進入醫院還需要完成臨床部署證據。它要能接影像設備、PACS 或 AI PACS、DICOM router、HIS 或 RIS、報告流程、醫師 viewer 與院內通知。它也要支援版本管理、權限控管、日誌稽核、異常處理、效能追蹤與臨床導入。這些看似工程或營運細節，實際上都是資安邊界。只要帳號、資料流、設定、更新或整合介面沒有被治理，臨床端就很難信任系統長期運作。這也是今天從 clinical cybersecurity in practice 出發的原因。 我們先用台灣近期的勒索軟體案例進入。投影片提到 CrazyHunter campaign 影響了多家醫療機構，也促成醫院勒索軟體應變流程被更明確地討論。這類案例的價值，在於它清楚呈現醫療服務一旦中斷，影響會很快從資訊系統轉成臨床營運壓力。掛號、檢查、影像、報告、病歷查詢、轉診、用藥與收費，每一個環節都可能被迫改用降級流程。醫院是支撐照護流程的關鍵基礎設施；服務停止時，代價會直接出現在照護流程裡。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S02
+group: "00"
+output_prefix: "cde_full_02_story_map_clinical_incident_chain"
+source_notes: "slides 4 and narrative map; slide 8; concept; slide 9; case; slide 10; clinical path"
+target_duration: "3:15"
+timeline: "03:05-06:20"
+character_count: 1124
+preset: "TECH_EXPLAIN"
+speed_cpm: 172
+delivery: "clear lifecycle map and clinical translation"
+pronunciation_hints:
+  - "T F D A"
+  - "F D A"
+  - "派克斯，或 P A C S"
+  - "S B O M"
+  - "K eight S"
+  - "Change Healthcare"
+-->
+
+### S02 Story map / Clinical incident chain
+
+[BV26 preset=TECH_EXPLAIN speed=172 target_duration=3:15 output_prefix=cde_full_02_story_map_clinical_incident_chain pause_after=460ms]
+今天的 story map 是一條 lifecycle。先看醫院現實：為什麼資安事件會影響 patient safety。再看 FDA 與 TFDA 的邏輯：為什麼醫療器材從單機設備變成 connected systems 之後，資安就變成產品生命週期責任。接著看 attack surface：風險不只在單一 device，也在帳號、網路、資料交換、廠商維護、更新機制與第三方元件。中段會釐清 testing vocabulary 與 finding anatomy。後半段進入 White-box Testing、system review、K eight S、SBOM、remediation、logging 與 recovery。最後收斂到 lifecycle trust。 接著看一個基本轉變。Cybersecurity 已經不只是 IT 問題。傳統 IT 視角通常會想到 firewall、antivirus、perimeter defense，或是完成一份 compliance checklist。這些仍然重要，可是醫療現場的問題更複雜。醫療器材與資訊系統會連到院內網路、雲端服務、AI inference service、廠商遠端維護、使用者帳號與臨床資料流程。醫療資安的判斷必須問得更具體：系統支援哪個臨床流程？失效時影響哪個部門？資料延遲、被竄改或無法取得時，臨床人員怎麼辦？廠商如何更新？醫院如何驗證？事件後如何留下調查證據？ Change Healthcare 的事件，是一個很好的例子。它看起來是美國醫療支付與 claims 平台受到攻擊，實際影響一路延伸到 pharmacy payment、provider workflow，以及照護現場的營運能力。這提醒我們，醫療系統裡的關鍵服務不一定只在急診室裡。保險申報、藥局付款、檢查授權、供應鏈與行政流程，只要卡住，最後都可能增加臨床端壓力。資安事件會沿著 workflow 傳遞，從資訊系統開始，最後出現在候診時間、檢查排程、報告速度、醫師可用資訊與病人安全上。 投影片把 cyber incident 轉成 clinical incident 的路徑畫得很清楚：ransomware 進入網路，核心系統不可用，PACS down，影像檢查延遲，報告與診斷決策被拖慢，最後形成 patient safety risk。這條路徑把技術語言翻成臨床語言，讓現場能判斷哪些控制、備援與恢復證據最重要。真正要治理的核心，是檔案加密背後造成的照護流程中斷，以及系統如何安全降級與可信恢復。臨床端最在意的也不是攻擊者名稱，而是系統中斷時能否維持照護、能否安全降級、能否恢復可信狀態。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S03
+group: "01"
+output_prefix: "cde_full_03_chansn_system_of_systems_mackay_and_emerge"
+source_notes: "slides 11-12; hospital architecture; slide 13; data trust; slide 14; patch governance; slide 15; emergency response"
+target_duration: "2:45"
+timeline: "06:20-09:05"
+character_count: 965
+preset: "SAFETY_SLOW"
+speed_cpm: 145
+delivery: "clinical urgency without panic"
+pronunciation_hints:
+  - "派克斯，或 P A C S"
+  - "H I S"
+  - "E M R"
+  - "R I S"
+  - "L I S"
+  - "Dai-com；戴康"
+  - "V P N"
+-->
+
+### S03 Chansn system of systems / Mackay and emergency operation
+
+[BV26 preset=SAFETY_SLOW speed=145 target_duration=2:45 output_prefix=cde_full_03_chansn_system_of_systems_mackay_and_emerge pause_after=700ms]
+台灣醫院勒索軟體與病人資料外洩事件也指向同一件事：醫院是一個 system of systems。院內有 HIS、EMR、PACS、LIS、RIS、影像工作站、護理站、藥局系統、身分管理、網域服務、廠商 VPN、醫療設備、雲端服務與第三方介面。臨床使用者每天在這些系統之間移動，病人資料也在這些系統之間流動。只要其中一個連接點缺乏控管，風險就可能傳到別的系統。帳號被竊取可能導致資料外洩，PACS 停擺可能導致影像延遲，廠商維護路徑被濫用可能接觸到 device subnet。 大型醫療資料外洩案例則提醒我們，醫療資料不只包含姓名與身分證字號。它可能包含診斷、檢查、影像、檢驗、用藥、指紋或其他高度敏感資料。醫療資料外洩後，受影響者很難像更換密碼一樣把健康資訊換掉。臨床端因此會同時關心 confidentiality、integrity 與 availability。Confidentiality 保護病歷與影像不被未授權存取。Integrity 確保影像、報告與設定沒有被錯誤修改。Availability 則讓臨床系統在需要時可用。醫療資安的終點，是照護不中斷，也讓資料值得信任。 醫院裡常聽到一句話：那就 patch。這句話在一般企業環境可能合理，在醫院裡會變成治理問題。醫療設備可能正在支援病人照護，不能任意停機。更新可能需要製造商確認，也可能需要臨床功能驗證。HIS、PACS、DICOM gateway、醫療設備與 viewer 之間的相容性很脆弱。停機時間也不是 IT 部門自己決定，因為每一次 downtime 都可能影響病人流程。Patch 在醫院會成為一個完整治理流程，包含風險判斷、驗證、排程、溝通、執行與重測。 Mackay Memorial Hospital 這類勒索軟體事件會引起高度關注，原因就在這裡。當大量電腦受到影響，醫院需要的不只是資安工具，也需要 emergency-response operations。誰判斷影響範圍？哪些系統先隔離？哪些服務維持？哪些流程降級？醫療人員如何取得必要資訊？病人如何被告知？系統恢復後，如何確認資料完整、介面正常、報告可信？這些問題都不是單一技術團隊可以獨立回答。它們需要醫院資訊、臨床、廠商、品質、法規與管理層共同建立 decision path。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S04
+group: "01"
+output_prefix: "cde_full_04_vendor_access_trust_boundary_regulation_as"
+source_notes: "slide 16; vendor access; slide 17; supply chain clinical impact; slide 18; FDA logic; slide 18; lifecycle explanation"
+target_duration: "3:05"
+timeline: "09:05-12:10"
+character_count: 1083
+preset: "TECH_EXPLAIN"
+speed_cpm: 172
+delivery: "trust-boundary and lifecycle explanation"
+pronunciation_hints:
+  - "T F D A"
+  - "F D A"
+  - "S A M D；Software as a Medical Device"
+  - "派克斯，或 P A C S"
+  - "H I S"
+  - "E M R"
+  - "V P N"
+  - "M F A"
+-->
+
+### S04 Vendor access trust boundary / Regulation as lifecycle
+
+[BV26 preset=TECH_EXPLAIN speed=172 target_duration=3:05 output_prefix=cde_full_04_vendor_access_trust_boundary_regulation_as pause_after=460ms]
+廠商遠端維護是另一個高風險入口。Vendor laptop 透過 VPN 進入 hospital network，再接到 medical device subnet。這條路徑在日常維運上很必要，因為醫療設備可能需要遠端診斷、版本更新、校正與維修。問題在於這條受信任的路徑是否被治理。醫院會問：VPN 是否限制來源？維護帳號是否個人化？是否有 MFA？是否符合 least privilege？維護 session 是否有 log？廠商能進入哪個 subnet？維護完成後權限是否收回？發生事件時，醫院能不能知道哪個帳號在什麼時間做了什麼？可信任的 access path，需要嚴格治理。 One Blood ransomware 的案例，讓我們看到另一種臨床連續性壓力。血液供應商受到攻擊時，影響不只停留在供應商內部。醫院可能需要保守使用血品，某些手術可能延後，臨床排程與資源配置也會受到影響。這類事件說明，醫院資安不能只看院內機房。醫療服務本來就依賴供應鏈、檢驗服務、血液供應、影像服務、保險與支付平台、醫材廠商與雲端平台。任何一個外部服務出問題，都可能成為院內臨床流程的限制。臨床端因此需要合約、通報、替代流程與恢復驗證。 接著進入法規邏輯。FDA cybersecurity requirements 之所以擴大，原因很直接：醫療器材已經從 standalone device 變成 connected systems。第一階段的醫療器材比較像 isolated hardware，可能沒有網路暴露，也沒有遠端更新。後來開始接到 hospital network，跟 HIS、PACS、EMR 交換資料。再往後，雲端服務、遠端資料、AI-enabled SaMD、model update、remote support 都進來了。當醫材變成 interconnected computing system，風險也跟著變。弱點可能來自第三方套件、雲端設定、更新機制、帳號權限、遠端維護、API、container image 或資料交換介面。 FDA 與 TFDA 開始重視 cybersecurity，根本原因是醫療器材的產品型態變了。它們承載臨床資料，支援臨床決策，也需要在上市後持續維護。這讓審查問題從「上市前有沒有測過」延伸成「整個生命週期能不能治理」。產品上市後，新漏洞會出現，第三方套件會更新，醫院部署環境會改變，雲端與遠端維護路徑也會變。製造商需要有能力監控、評估、修補、通知、重測與保存紀錄。醫院端則需要看到這些能力不是口頭承諾，而是流程與證據。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S05
+group: "02"
+output_prefix: "cde_full_05_stryker_supply_chain_medibank_credentials"
+source_notes: "slide 19; supply-chain exposure; slide 20; SBOM; slide 21; credentials"
+target_duration: "2:15"
+timeline: "12:10-14:25"
+character_count: 794
+preset: "TECH_EXPLAIN"
+speed_cpm: 174
+delivery: "supply-chain and identity governance"
+pronunciation_hints:
+  - "S B O M"
+  - "C V E"
+  - "M F A"
+-->
+
+### S05 Stryker supply chain / Medibank credentials
+
+[BV26 preset=TECH_EXPLAIN speed=174 target_duration=2:15 output_prefix=cde_full_05_stryker_supply_chain_medibank_credentials pause_after=460ms]
+Stryker 這類醫療設備製造商遭遇網路攻擊的案例，提醒我們 medical supply chain 本身也需要清楚的資安治理。製造商、雲端服務、第三方軟體、維運商、醫院部署環境，最後都會進到同一條 evidence chain。醫療器材業者常以為資安主要發生在醫院端。實際上，產品開發、供應商管理、軟體更新、遠端維護、交付部署、上市後弱點處理，每一段都可能把風險帶進臨床使用。臨床端因此會要求廠商提供可追溯的設計、測試、修補與維護證據。 這裡就接到 SBOM。SBOM 可以從套件清單進一步變成 responsibility map。真正要問的問題是：產品用了哪些 direct dependencies？哪些 transitive dependencies？container base image 是什麼版本？vendor binary 來源是否清楚？某個 CVE 出現時，誰負責判斷是否受影響？誰決定修補、替代控制、時程與重測？如果第三方元件出現高風險漏洞，可是產品團隊、廠商、醫院與維運單位都不知道誰要處理，這個 component 就是 unowned risk。SBOM 的價值不是表格本身，而是事件發生時能不能快速轉成行動。 Medibank breach 這類由 credential 問題開始、最後造成大量敏感健康資料外洩的事件，對醫療與健康資料場域特別有警示性。在醫療環境裡，credential 不是單純登入資訊。它可能決定誰能看到病歷、誰能進入管理介面、誰能連到影像系統、誰能操作雲端平台、誰能改設定。弱密碼、共享帳號、沒有 MFA、過大的 service account 權限，都可能讓小問題快速擴大。臨床端因此會把 identity、access control、logging 與 incident response 放在一起看，而不是只問密碼複雜度。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S06
+group: "02"
+output_prefix: "cde_full_06_evidence_chain_foxconn_supplier_risk"
+source_notes: "slide 22; evidence; slide 23; attack surface intro; slide 24; vendor path; slide 25; supply chain"
+target_duration: "3:15"
+timeline: "14:25-17:40"
+character_count: 1130
+preset: "TECH_EXPLAIN"
+speed_cpm: 172
+delivery: "evidence-chain and attack-surface bridge"
+pronunciation_hints:
+  - "V P N"
+-->
+
+### S06 Evidence chain / Foxconn supplier risk
+
+[BV26 preset=TECH_EXPLAIN speed=172 target_duration=3:15 output_prefix=cde_full_06_evidence_chain_foxconn_supplier_risk pause_after=460ms]
+Trust 要從口頭保證推進到可稽核證據。投影片把 evidence 分成四類：design evidence、testing evidence、deployment evidence、patch and retest evidence。Design evidence 說明 threat model、architecture review 與 security requirements。Testing evidence 說明 penetration test、fuzz testing、vulnerability scan 或其他安全測試結果。Deployment evidence 說明實際設定、access control、network segmentation 與 remote access boundary。Patch and retest evidence 則說明修補後如何確認問題真的被控制。信任不是一句「我們很安全」。信任是可被稽核的證據鏈。 接下來進入 attack surface。Ardent Health Services 的 ransomware 事件讓我們看到，當醫院網路被迫離線、非緊急手術暫停，恢復過程就會變成分階段的臨床營運問題。這類案例的重要性，在於它把「攻擊面」從技術資產清單拉回醫療服務。攻擊者碰到的可能是網路、帳號、伺服器或 endpoint；醫院感受到的是排程延後、資料不可用、替代流程壓力與恢復驗證。攻擊面會由人員、資料、系統、廠商、更新與工作流程共同形成。 Vendor maintenance access 是很典型的 attack path。投影片畫出 vendor VPN、privileged account、device subnet 這條路徑。廠商維護本身是正常需求，風險來自治理不足。共享帳號讓責任無法追溯。高權限帳號讓單一 credential 變成大範圍入口。Vendor laptop 如果在醫院政策外，可能把外部風險帶進院內。VPN 如果沒有最小權限、時間限制、來源限制與 log，受信任的維護路徑就會變成攻擊路徑。臨床端對這類路徑的要求通常很明確：限定範圍、強制驗證、全程紀錄、定期審查、事件後可追溯。 Foxconn 與其他供應鏈攻擊案例，會讓電子產業與醫療器材業者特別有感。醫療系統的資安風險常常不是孤立在醫院裡，而是從供應商、製造商、維運環境、更新通道與資料交換平台一路帶進來。這裡要注意一個原則：供應鏈風險最後會落到責任分工。哪一段是製造商負責？哪一段是醫院負責？哪一段是第三方維運或雲端服務負責？事件通報、版本確認、修補時程、替代控制與重測證據，都需要在事件前就定義清楚。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S07
+group: "03"
+output_prefix: "cde_full_07_imaging_systems_semiconductor_campaign"
+source_notes: "slide 26; imaging; slide 27; Synnovis first pass; slide 28; testing vocabulary; slide 29; supplier/critical-sector campaign"
+target_duration: "3:15"
+timeline: "17:40-20:55"
+character_count: 1130
+preset: "CASE_STORY"
+speed_cpm: 154
+delivery: "imaging and supplier-risk case narration"
+pronunciation_hints:
+  - "派克斯，或 P A C S"
+  - "E M R"
+  - "Dai-com；戴康"
+  - "Synnovis"
+-->
+
+### S07 Imaging systems / Semiconductor campaign
+
+[BV26 preset=CASE_STORY speed=154 target_duration=3:15 output_prefix=cde_full_07_imaging_systems_semiconductor_campaign pause_after=520ms]
+影像系統是高價值目標。Radiology modality、DICOM router、PACS、viewer、報告系統與 EMR，形成一條高度依賴的臨床流程。影像資料量大、敏感性高，availability 與 integrity 都很關鍵。如果 PACS 不可用，放射科、急診、手術排程、門診追蹤都可能被影響。如果影像或報告資料被錯誤修改，臨床判讀會失去信任。如果某個 viewer 或影像整合介面暴露過大，攻擊者可能利用信任關係進入更核心的系統。因此，影像資安不能只看一台伺服器。它要看資料流、身份、網路位置、整合介面、備援能力與恢復驗證。 Synnovis 與 NHS London 的事件，說明第三方臨床服務一旦中斷，病理、血液檢驗、輸血服務、門診與手術都會受到牽動。這個案例也提醒我們：臨床影響常常來自整條服務鏈，不只來自單一醫院設備。當 vendor 或 clinical service provider 出現 ransomware，醫院可能需要重新安排檢驗、延後手術、處理積壓案件，並確認恢復後的資料完整性。這類事件會在後半段再次出現，因為它同時牽涉 third-party integration trust boundary、recovery validation 與 clinical continuity evidence。 接著釐清測試名詞。不同測試方法，證明的事情不同。Vulnerability scan 通常找已知漏洞、錯誤設定與基本暴露。它速度快、範圍大，適合作為初步盤點；可是它不能充分證明 exploitability，也不能說明臨床影響。Black-box testing 從外部可觀察行為開始，會看到沒有內部資訊時攻擊者能碰到什麼。Penetration testing 更進一步，嘗試把 entry point、弱點、權限與影響串成實際 attack chain。這些方法都重要。臨床端要看的不是某個工具跑過，而是測試是否能回答風險問題：哪個系統受影響？攻擊路徑是否可信？影響是否和臨床流程有關？修補後如何重測？ 台灣半導體與關鍵供應鏈遭遇 email-based intrusion 或 espionage campaign 的案例，也可以放回同一個框架來看。很多大型事件的起點很普通：一封郵件、一組 credential、一個暴露介面、一個沒有被追蹤的第三方元件。供應鏈越重要，攻擊者越可能從邊界比較弱的地方開始。醫療器材與電子產業常有長供應鏈、跨國開發、委外維運、共同測試環境與多地部署。這些條件都會讓帳號、文件、測試系統、更新檔與維護通道成為 attack surface。防禦的第一步，是把這些路徑畫出來。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S08
+group: "03"
+output_prefix: "cde_full_08_finding_anatomy_outside_in_not_enough"
+source_notes: "slide 30; finding anatomy; slide 31; downtime; slide 32; outside-in limit"
+target_duration: "2:55"
+timeline: "20:55-23:50"
+character_count: 1031
+preset: "TECH_EXPLAIN"
+speed_cpm: 174
+delivery: "finding anatomy and testing vocabulary"
+pronunciation_hints:
+  - "standard Taiwan Mandarin"
+-->
+
+### S08 Finding anatomy / Outside-in not enough
+
+[BV26 preset=TECH_EXPLAIN speed=174 target_duration=2:55 output_prefix=cde_full_08_finding_anatomy_outside_in_not_enough pause_after=460ms]
+這也讓 security finding 的品質變得非常重要。好的 finding 會從漏洞名稱與工具證據往前推進到可執行修補。一份有用的 finding，至少要說清楚 affected asset、evidence、path、impact、owner、fix、retest，以及 residual risk。Asset 指出是哪一台設備、哪一個 application、哪一個 container 或哪個 interface。Evidence 提供可驗證證據。Path 說明風險如何被觸發，但不需要變成 exploit cookbook。Impact 要翻譯成臨床、營運與 patient safety 語言。Owner 要清楚，可能是製造商、醫院 IT、第三方廠商或臨床系統負責人。Fix 要可執行，retest 要證明修補有效，residual risk 要記錄修完後還剩下什麼。 Signature Healthcare 的案例提到，醫院在 EHR 系統無法使用時，必須進入 downtime procedures 與紙本流程。這讓我們看到，資安事件最後會落到臨床營運的替代流程與恢復能力。Downtime procedure 要成為現場可啟動、可交接、可回填的操作能力。真正事件發生時，臨床人員需要知道如何掛號、如何查病歷、如何記錄醫囑、如何安排檢查、如何同步資料、如何恢復系統後避免重複或遺漏。資安測試如果只停在技術漏洞，沒有連到 downtime workflow，就很難支援醫院端的風險決策。 這裡也引出下一個問題：outside-in testing 到底能證明什麼？Penetration testing 可以從攻擊者視角驗證 exploitability。它可以告訴我們攻擊者是否能從外部碰到某個入口、利用某個弱點、取得某種權限，或造成某種影響。可是 complex medical device 與 healthcare information system 需要更深一層的說明。外部測試看到的是現象。系統內部還要回答根因：哪個設計決策造成權限邊界不清楚？哪段程式少了 authorization check？哪個 deployment 設定開了不該開的服務？哪個 dependency 把風險帶進來？哪個 service account 權限太大？這就是 white-box review 與 system review 要接手的地方。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S09
+group: "04"
+output_prefix: "cde_full_09_lurie_children_systex_handoff"
+source_notes: "slide 33; Lurie case; slide 34; deployment evidence; slide 35-36; handoff"
+target_duration: "3:10"
+timeline: "23:50-27:00"
+character_count: 1121
+preset: "TRANSITION"
+speed_cpm: 166
+delivery: "handoff from outside-in testing to system review"
+pronunciation_hints:
+  - "A P I"
+-->
+
+### S09 Lurie children / Systex handoff
+
+[BV26 preset=TRANSITION speed=166 target_duration=3:10 output_prefix=cde_full_09_lurie_children_systex_handoff pause_after=560ms]
+Lurie Childrens Hospital 的案例中，系統長時間離線，電子病歷存取受到限制。這對兒童醫院這類高度依賴臨床資訊系統的場域來說，影響非常明顯。兒科、急診、住院、檢查與用藥流程，都需要可靠的資訊系統支援。當系統離線，臨床團隊不只要處理病人，也要處理資訊不足、流程切換與資料回填。這類案例提醒我們：資安保護的不是單一設備，而是 connected care workflow。測試與審查要能說明，系統在遭遇異常或事件時，有沒有足夠的降級、恢復與驗證能力。 接著把問題從「能不能被攻擊」推到「安全控制能不能在部署後存活」。一個設計文件裡安全的系統，到了醫院現場可能因為設定、網路位置、帳號制度、相容性或維護流程而失效。Secure defaults 要關閉不必要服務與 unused ports，強制 strong authentication。Configuration hardening 要移除 default credentials，套用 least privilege，並記錄 approved settings。Network placement 要說明 subnet、firewall rules、allowed paths 與 remote-access boundaries。Credential and key handling 要保護 service accounts、API keys、certificates 與 update-signing keys。Installation evidence 要記錄版本、啟用服務、access controls、network rules 與 deviations。Deployment 是 engineering controls 接上 clinical reality 的地方。 Systex 的 ransomware note 與後續應變案例，提醒我們即使是資訊服務供應商，也會成為醫療與關鍵服務部署治理的一部分。供應商事件不一定直接等於臨床事件，可是它會暴露一個現實：系統是否可維護、可隔離、可調查、可恢復，不能等到事件發生後才第一次整理。到這裡，我們已經把醫院端的 attack surface、測試方法、finding 結構、臨床影響與 threat modeling 串起來。下一步要看的，是系統內部如何支撐這些判斷。外部測試回答攻擊者可以從外面觀察到什麼、觸發什麼、造成什麼影響。White-box Testing 與 system review 要回答風險從哪裡來，控制措施有沒有真正實作，部署後是否仍然有效，修補後如何重測，剩餘風險如何被記錄。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S10
+group: "05"
+output_prefix: "cde_full_10_whitebox_positioning_outsidein"
+source_notes: "Slides 36-37; Jingzhong clean text, white-box value and outside-in limit."
+target_duration: "3:05"
+timeline: "27:00-30:05"
+character_count: 1081
+preset: "TRANSITION"
+speed_cpm: 166
+delivery: "white-box positioning"
+pronunciation_hints:
+  - "F D A"
+  - "A P I"
+-->
+
+### S10 White-box positioning and outside-in limit
+
+[BV26 preset=TRANSITION speed=166 target_duration=3:05 output_prefix=cde_full_10_whitebox_positioning_outsidein pause_after=560ms]
+接下來我們進入今天後半段的重點，也就是 White-box Testing。 前面我們談了很多醫療資安的臨床衝擊，包括醫院系統中斷、影像流程停擺、廠商維護通道、修補困難，以及部署環境的治理問題。這些問題最後會回到一個核心：我們不能只知道外部看得到什麼弱點，我們還要知道這個弱點為什麼存在，以及它是否真的被控制。 所以這一段我想把白箱測試重新定位。白箱測試從 source code review 往外擴展，成為連接 threat model、程式、設定、部署與修補證據的審查方法。對醫療裝置與醫療資訊系統來說，白箱測試更像是一條 evidence chain：從 threat model 開始，進入 code review，再產生 test evidence，接著完成 fix and retest，最後累積成 lifecycle trust。 也就是說，白箱測試的價值，是把漏洞背後的設計決策、實作細節、設定條件、部署環境、修補紀錄、重測結果全部串起來。 這也呼應 FDA 或醫療法規審查會關心的事情。審查者不只是問「你有沒有做測試」，而是會問：你的控制措施從哪裡來？跟哪個風險有關？程式裡是否真的有實作？部署後是否仍然有效？修補後是否有重測？剩餘風險是否有被接受？ 所以這一頁可以用一句話帶過：White-box testing explains why a risk exists — and how to prove it is controlled. 白箱測試的目標，是讓資安決策變成可以被驗證、可以被稽核、可以被追蹤的生命週期證據。 這一頁說明為什麼只做 outside-in testing 不夠。 外部測試，例如 black-box testing 或 penetration testing，通常回答的是：「攻擊者從外面可以看到什麼？可以連到什麼？可以觸發什麼？可以利用什麼？」這些測試非常重要，因為它們能證明 exploitability，也就是攻擊者是否真的可以走出一條攻擊路徑。 但是外部測試提供現象與 exploitability；白箱審查接著補上根因、控制與重測證據。 例如，滲透測試發現某個 API 可以繞過權限檢查。這個結果很重要，但下一步我們還要問：為什麼可以繞過？是設計上沒有定義角色邊界？是程式裡缺少 authorization check？是 token 驗證邏輯錯誤？是 deployment 時把 debug endpoint 打開？還是某個 service account 權限過大？ 這就是白箱審查要補上的地方。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S11
+group: "05"
+output_prefix: "cde_full_11_internal_cause_review_scope"
+source_notes: "Slides 37-38; internal cause, architecture, source code, auth/authz."
+target_duration: "3:25"
+timeline: "30:05-33:30"
+character_count: 1182
+preset: "TECH_EXPLAIN"
+speed_cpm: 174
+delivery: "internal cause and review scope"
+pronunciation_hints:
+  - "派克斯，或 P A C S"
+  - "H I S"
+  - "L I S"
+  - "Dai-com；戴康"
+  - "A P I"
+-->
+
+### S11 Internal cause and white-box review scope
+
+[BV26 preset=TECH_EXPLAIN speed=174 target_duration=3:25 output_prefix=cde_full_11_internal_cause_review_scope pause_after=460ms]
+我會把這一頁分成三個層次來講：第一個是 outside-in testing，它看到的是攻擊者能不能碰到這個系統；第二個是 observed weakness，也就是我們從外部看到的弱點，例如未授權存取、資訊洩漏、弱密碼、未保護的 API、錯誤設定；第三個是 internal cause，白箱審查要把這個弱點往內部追，找到造成問題的設計、程式碼、設定、dependency 或部署條件。 因此黑箱或滲透測試回答的是：What can an attacker do? 白箱審查回答的是：Why is the system vulnerable, and how do we prove the fix works? 對醫療系統來說，這個差異非常關鍵。因為我們不只需要修掉表面問題，還要確保同類問題不會在其他模組、其他部署環境、其他醫院場域重複出現。 接著談白箱測試的範圍。 很多人一聽到 white-box，就直覺想到 source code。但在醫療資安裡，白箱範圍一定要比 source code 更大。這一頁列了六個面向：architecture、source code、authentication、authorization、input validation、logging and configuration。 首先是 architecture。這裡要看 trust boundary、data flow、external interface。特別是醫療系統常常不是單一服務，而是連到 HIS、PACS、LIS、DICOM gateway、雲端平台、AI inference service、廠商維護通道。架構圖裡如果沒有把 trust boundary 畫清楚，後面測試就很容易只測到局部。 第二是 source code。這裡會看 secure coding、unsafe patterns、logic flaws。醫療系統常常有很多業務邏輯與臨床流程邏輯，不是掃描工具一定能看懂。所以 manual review 很重要，尤其是權限檢查、資料更新、狀態轉換、錯誤處理。 第三是 authentication。也就是 identity verification、session、credential handling。醫療系統裡常見問題包括 service account 使用不當、session timeout 不合理、token 保存方式不安全，或是管理介面和一般使用者介面使用相同登入流程。 第四是 authorization。這是白箱審查很容易找到價值的地方。因為很多系統表面上有登入，但不同角色之間的權限邊界沒有被一致執行。醫師、護理師、技師、系統管理員、廠商維護帳號，應該有不同權限；如果只在前端隱藏按鈕，後端沒有檢查，就是典型問題。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S12
+group: "05"
+output_prefix: "cde_full_12_input_logging_contec_start"
+source_notes: "Slides 38-39; input validation, logging/config, patient monitor case."
+target_duration: "3:20"
+timeline: "33:30-36:50"
+character_count: 1181
+preset: "TECH_EXPLAIN"
+speed_cpm: 172
+delivery: "input, logging, and device-case setup"
+pronunciation_hints:
+  - "F D A"
+  - "Dai-com；戴康"
+  - "C M S 八千"
+  - "M N 一二零"
+-->
+
+### S12 Input validation, logging, and Contec case start
+
+[BV26 preset=TECH_EXPLAIN speed=172 target_duration=3:20 output_prefix=cde_full_12_input_logging_contec_start pause_after=460ms]
+第五是 input validation。醫療資料格式複雜，例如 DICOM、HL7、FHIR、影像檔、報告文字、裝置訊號。白箱審查要看 parser assumptions，確認 malformed input 不會造成 crash、資料污染或未預期流程。 第六是 logging and configuration。很多系統不是被攻破後才發現沒有防禦，而是發生事件後才發現沒有足夠 log 可以調查。設定也很重要，因為 secure default、hardening、secret management，通常決定部署後的實際安全狀態。 所以這一頁的重點是：Scope should follow the clinical workflow, not just the application boundary. 白箱測試要把問題推進到真實臨床流程、真實醫院網路、真實部署設定：這個 application 在那裡是否仍然安全、可維護、可追溯。 接下來用第一個案例說明白箱測試的價值。這個案例是 Contec CMS8000 / Epsimed MN-120 病人監視器漏洞。 這類 bedside patient monitor 是非常典型的醫療設備。它看起來像是一個臨床儀器，但實際上裡面包含 firmware、network stack、資料傳輸、設定介面，有些也會連到中央監控站或醫院網路。 這個案例的 incident path 是：clinical device、firmware logic、hardcoded flow、external endpoint。 FDA 警示提到，某些病人監視器的漏洞可能導致 device crash、remote control，或 data corruption。從一般 IT 角度看，這是設備漏洞；但從臨床角度看，這是 patient safety、data integrity、availability 的問題。 如果 bedside monitor 當機，臨床人員可能失去即時監測資訊。如果資料被修改或傳輸錯誤，可能造成錯誤判讀。如果設備被遠端控制，風險就更嚴重。 白箱討論點有三個。第一，review firmware logic and hidden services。很多醫療設備裡可能有維護服務、測試模式、工程介面，外部掃描不一定能完整理解其用途。白箱要看 firmware 或設計文件，確認這些功能是否必要、是否有權限保護、是否有記錄。 第二，identify hardcoded endpoints and data flows。如果設備會連到外部 endpoint，白箱審查要確認這個資料流是否在 threat model 中有被定義，是否有加密、驗證、錯誤處理，以及是否可被關閉或設定。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S13
+group: "05"
+output_prefix: "cde_full_13_contec_fda_evidence"
+source_notes: "Slides 39-40; case takeaway and design/implementation/verification evidence."
+target_duration: "3:25"
+timeline: "36:50-40:15"
+character_count: 1186
+preset: "CASE_STORY"
+speed_cpm: 152
+delivery: "device vulnerability case and FDA-facing evidence"
+pronunciation_hints:
+  - "standard Taiwan Mandarin"
+-->
+
+### S13 Contec case close and FDA-facing evidence
+
+[BV26 preset=CASE_STORY speed=152 target_duration=3:25 output_prefix=cde_full_13_contec_fda_evidence pause_after=520ms]
+第三，map behavior back to threat model evidence。也就是把 observed behavior 連回設計證據。如果某個網路行為不是 threat model 裡的一部分，那它本身就是 governance gap。 這個案例可以用一句話收斂：Black-box testing may see suspicious traffic; white-box review explains why the behavior exists. 這一頁要把白箱測試拉回法規與審查語言。 醫療資安最後不是只要工程團隊說「我們修好了」，而是要能對審查者、醫院、品質系統、甚至事件調查說明：控制措施如何被設計、如何被實作、如何被驗證。 這裡可以分成三種證據。 第一是 design evidence。這包含 threat model linkage、trust-boundary decisions、安全需求、架構審查。也就是我們為什麼認為某個資產重要？可能的威脅是什麼？攻擊路徑是什麼？控制措施是什麼？ 第二是 implementation evidence。這是白箱審查的核心。包含 source review、access control、input handling、update path、credential handling、logging implementation。這些證明不是只有文件上說有控制，而是實際程式或設定裡真的存在控制。 第三是 verification evidence。包含 static analysis、dynamic analysis、security test report、retest evidence。這些證明控制措施不只是存在，而且被測試過；修補後也重新驗證過。 這裡要特別強調 traceability。每個控制措施最好都能往前追到 threat model，往後追到測試與修補紀錄。這樣在面對法規、客戶或醫院資安審查時，才不是散落的測試報告，而是一套完整證據鏈。 白箱測試在這裡的角色，是把技術細節翻譯成 regulatory-facing evidence。 第二個案例是 Abbott / St. Jude pacemaker firmware recall。 這個案例可以幫助我們理解，醫療設備的修補不是一般 IT patch。Pacemaker 是植入式設備，透過 radio-frequency communication 進行通訊，因此如果存在 unauthorized access risk，修補策略就必須同時考慮資安與病人安全。 這個 incident path 是：cyber risk、firmware update、validation、residual risk。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S14
+group: "06"
+output_prefix: "cde_full_14_abbott_firmware_deployment"
+source_notes: "Slides 41-42; regulated-device fix evidence and deployment bridge."
+target_duration: "3:10"
+timeline: "40:15-43:25"
+character_count: 1102
+preset: "SAFETY_SLOW"
+speed_cpm: 144
+delivery: "implantable-device update and deployment safety"
+pronunciation_hints:
+  - "standard Taiwan Mandarin"
+-->
+
+### S14 Abbott pacemaker firmware and deployment start
+
+[BV26 preset=SAFETY_SLOW speed=144 target_duration=3:10 output_prefix=cde_full_14_abbott_firmware_deployment pause_after=700ms]
+重點在於，firmware update 在一般軟體裡可能只是更新版本；但在醫療設備裡，它本身就是一個 safety control。也就是說，更新不能只看能不能修掉漏洞，還要看更新過程是否安全、更新後設備功能是否正常、是否會引入新的臨床風險。 白箱討論點有三個。第一，verify update authenticity and integrity controls。Firmware update 必須確認來源可信、內容沒有被竄改。這通常涉及 code signing、hash verification、secure boot 或 update package validation。 第二，document clinical validation and rollback assumptions。醫療設備更新失敗的後果可能很嚴重，因此要知道更新前後如何驗證功能、是否有 rollback 機制、如果不能 rollback 又如何處理 residual risk。 第三，archive residual-risk rationale after remediation。修補完成後，要記錄剩餘風險是什麼、為什麼可以接受、有哪些補償控制，讓風險接受有清楚依據。 這個案例的結論是：For regulated devices, the fix itself becomes part of the evidence chain. 換句話說，在醫療裝置世界裡，修補不是結束，而是新的證據起點。 接著進入 deployment。 這一頁非常重要，因為很多系統在設計文件裡看起來安全，但部署到真實醫院環境後，安全控制就失效了。 原因是 deployment 是工程設計與臨床現實交會的地方。系統上線時會遇到醫院既有網路、既有帳號制度、既有防火牆規則、既有維護流程、既有 downtime 限制。這些條件如果沒有被納入資安證據，安全設計就可能無法落地。 這一頁列了幾個部署重點。 第一是 secure defaults。系統預設應該關閉不必要服務、關閉未使用 port、強制強認證。不要把安全責任完全留給醫院現場設定。 第二是 configuration hardening。要移除 default credentials，套用 least privilege，並且記錄 approved settings。 第三是 network placement。系統應該放在哪個 subnet？哪些 firewall rule 允許？哪些 remote-access boundary 被定義？這些都會影響攻擊面。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S15
+group: "06"
+output_prefix: "cde_full_15_deployment_controls_k8s_intro"
+source_notes: "Slides 42-43; secure defaults, hardening, credential handling, K8S intro."
+target_duration: "3:25"
+timeline: "43:25-46:50"
+character_count: 1195
+preset: "TECH_EXPLAIN"
+speed_cpm: 172
+delivery: "deployment controls and K eight S introduction"
+pronunciation_hints:
+  - "派克斯，或 P A C S"
+  - "H I S"
+  - "R B A C"
+  - "A P I"
+  - "K eight S"
+  - "Kubernetes；庫伯內提斯"
+  - "Y A M L if needed"
+-->
+
+### S15 Deployment controls and K8S introduction
+
+[BV26 preset=TECH_EXPLAIN speed=172 target_duration=3:25 output_prefix=cde_full_15_deployment_controls_k8s_intro pause_after=460ms]
+第四是 credential handling。Service account、API key、certificate、update signing key 都是高價值資產。部署時如果把 credential 放在不安全位置，前面設計再好都會失敗。 第五是 operational handoff。也就是監控、備份、修補、事件回應、重測的責任要交接清楚。很多事件不是沒有技術控制，而是沒有人知道誰負責。 所以這一頁可以用一句話收斂：Deployment is where engineering controls meet clinical reality. 這一頁是新增的 K eight S 概念頁，用來銜接 deployment security。 Kubernetes，也就是 K eight S，現在越來越常出現在醫療資訊系統、AI inference service、資料管線、API gateway、雲端醫療平台裡。很多團隊把 K eight S 視為部署工具，但從資安角度看，它其實是一個完整的 infrastructure control plane。 K eight S 控制的不只是 container 要跑在哪裡。它還控制 workload scheduling、service identity、secrets、network exposure、cluster resource，以及 cloud resource 的連結。 這一頁的 risk path 是：container image、pod、service account、K eight S API、cluster 或 cloud resource。 這條路徑代表什麼？代表攻擊者不一定要一開始就攻破整個系統。他可能先取得一個 container 的執行權限，接著讀到 pod 裡的 service account token，再透過 K eight S API 查詢 cluster 資源，如果 RBAC 過寬，就可能橫向移動到其他 namespace、其他 service，甚至取得 cloud credential。 對醫療場域來說，K eight S 風險可能影響 API gateways、AI inference services、data pipelines、HIS/PACS integrations、monitoring services，或 cloud-connected medical applications。 所以白箱審查在 K eight S 裡要看什麼？第一，要 review Kubernetes manifests、Helm charts、deployment YAML。這些就是部署層的 source code，也就是 infrastructure as code。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S16
+group: "06"
+output_prefix: "cde_full_16_k8s_review_controls"
+source_notes: "Slide 43; RBAC, service accounts, secrets, NetworkPolicy, logs."
+target_duration: "3:10"
+timeline: "46:50-50:00"
+character_count: 1118
+preset: "TECH_EXPLAIN"
+speed_cpm: 174
+delivery: "K eight S control-plane review"
+pronunciation_hints:
+  - "R B A C"
+  - "A P I"
+  - "K eight S"
+  - "Kubernetes；庫伯內提斯"
+  - "Tesla"
+-->
+
+### S16 K8S review controls
+
+[BV26 preset=TECH_EXPLAIN speed=174 target_duration=3:10 output_prefix=cde_full_16_k8s_review_controls pause_after=460ms]
+第二，要 verify RBAC、service accounts、namespace isolation。每個 workload 的權限是否最小化？service account 是否被共用？namespace 是否真的隔離？ 第三，要檢查 secrets handling and cloud credential exposure。Secret 是否被放在 environment variable？是否被寫進 image？CI/CD variables 是否外洩？ 第四，要驗證 NetworkPolicy、ingress rules、exposed services。不是只有 application endpoint，K eight S API、dashboard、internal service 也都可能成為攻擊面。 第五，要看 image provenance、container privileges、admission controls。Container 是否用 privileged mode？是否允許 hostPath mount？image 來源是否可信？ 第六，要確認 audit logs、runtime alerts、recovery evidence。當事件發生時，能不能知道哪個 pod、哪個 service account、哪個 API call 被使用？ 這頁的 bottom line 很重要：In Kubernetes, the security boundary is not the container. The real boundary is identity, configuration, network policy, and deployment governance. 接著用 Tesla Kubernetes Console Cryptojacking 這個真實事件說明 K eight S 風險。 這不是醫院事件，但攻擊模式非常適合醫療雲端系統借鏡。事件路徑是：exposed K eight S console、pod credentials、AWS access、cryptomining workload。 研究人員曾報告，攻擊者存取了一個未妥善保護的 Kubernetes administrative console，該環境連到 Tesla 的 cloud infrastructure。Pod 中存在 credential，使攻擊者能進一步存取 AWS 基礎設施，最後利用 cloud resource 進行 cryptocurrency mining。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S17
+group: "07"
+output_prefix: "cde_full_17_tesla_k8s_case"
+source_notes: "Slide 44; K8S console exposure and healthcare-cloud relevance."
+target_duration: "3:25"
+timeline: "50:00-53:25"
+character_count: 1211
+preset: "CASE_STORY"
+speed_cpm: 154
+delivery: "K eight S exposure case"
+pronunciation_hints:
+  - "M F A"
+  - "R B A C"
+  - "I A M"
+  - "A P I"
+  - "K eight S"
+  - "Change Healthcare"
+  - "United Health"
+-->
+
+### S17 Tesla K8S case
+
+[BV26 preset=CASE_STORY speed=154 target_duration=3:25 output_prefix=cde_full_17_tesla_k8s_case pause_after=520ms]
+這個事件表面上看起來是 cryptojacking，也就是偷用雲端資源挖礦。但對醫療系統來說，我們不能只看挖礦。我們要看背後的攻擊模式：一個暴露的 orchestration interface，加上 pod 裡的 credential，加上過大的 cloud permission，就可能造成 cloud compromise、data exposure risk、workload abuse，以及 service disruption。 如果類似事件發生在醫療環境，可能影響 AI 推論服務、病人資料管線、影像處理服務、API gateway，甚至造成資料外洩或臨床服務中斷。 白箱討論點包括：第一，verify K eight S dashboards and API servers are not publicly exposed。管理介面不應該暴露在公開網路上。 第二，prohibit long-lived cloud credentials inside pods or environment variables。Pod 裡不應該放長期有效的雲端金鑰。 第三，review service-account token scope and RBAC permissions。即使攻擊者拿到 token，也不應該能橫向移動或取得過多資源。 第四，scan manifests、container images、CI/CD variables for secrets。因為 secret 很常不是在 runtime 才洩漏，而是在部署文件、image layer 或 pipeline 裡早就存在。 第五，validate cloud IAM least privilege from workload identity。K eight S 裡的 workload identity 與 cloud IAM 權限要一起看。 第六，ensure audit logs can reconstruct pod、API、credential usage。沒有 audit log，事件後就很難知道攻擊者做了什麼。 這個案例的結論是：K eight S security is deployment security. White-box review must include infrastructure-as-code, runtime identity, secrets handling, and cloud permission boundaries. 接下來是 Change Healthcare / United Health cyberattack。 這個案例的重點是 credential、no MFA、critical platform、care and payment disruption。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S18
+group: "07"
+output_prefix: "cde_full_18_change_deployment_traceability"
+source_notes: "Slides 45-46; MFA path review and threat-model traceability."
+target_duration: "3:25"
+timeline: "53:25-56:50"
+character_count: 1191
+preset: "CASE_STORY"
+speed_cpm: 154
+delivery: "MFA deployment case and traceability"
+pronunciation_hints:
+  - "V P N"
+  - "M F A"
+  - "A P I"
+  - "United Health"
+-->
+
+### S18 Change Healthcare deployment case and traceability start
+
+[BV26 preset=CASE_STORY speed=154 target_duration=3:25 output_prefix=cde_full_18_change_deployment_traceability pause_after=520ms]
+根據簡報內容，AP 報導 United Health CEO 在聽證中提到，攻擊者進入了一台缺乏 multifactor authentication 的伺服器。後續造成 claims、pharmacy payment、provider workflows 在美國醫療體系大規模受到影響。 這個案例非常適合用來說明：部署路徑上的一個弱點，可能造成全國等級的醫療營運中斷。 很多時候產品功能本身可能有支援 MFA，但真實部署路徑沒有強制 MFA。這就是白箱與部署審查要一起看的地方。我們不能只問「系統是否支援 MFA」，而要問「所有實際可以進入 critical platform 的路徑，是否都強制 MFA」。 白箱討論點有三個。第一，verify MFA is enforced on real deployment paths。包含 VPN、管理介面、vendor access、service console、雲端平台、跳板機。 第二，review privileged accounts and service accounts。高權限帳號是否有 least privilege？是否有人員帳號與服務帳號混用？是否有 shared credential？ 第三，archive deployment deviations and ownership。如果某條路徑暫時沒有 MFA，是誰核准？期限多久？補償控制是什麼？何時重測？ 這個案例可以用一句話總結：White-box review should test deployed access paths, not only product features. 這一頁把白箱測試拉回 threat modeling。 Threat modeling 的功能是找出什麼事情可能出錯。它會定義 asset、threat、attack path、control。但是 threat model 本身還不夠，因為它可能只是設計階段的假設。 白箱審查的價值，就是檢查這些控制措施是否真的存在。 這一頁的鏈條是：threat、attack path、control、white-box test、evidence。 舉例來說，如果 threat model 認為「未授權使用者可能透過 API 存取病人影像」，那 control 可能是 role-based access control、token validation、audit logging。白箱測試就要看程式碼裡每個 API 是否都做 authorization check，deployment 是否強制 token validation，log 是否記錄使用者、病人資料、時間、動作。 最後產出的不是單一 checklist，而是 traceable evidence。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S19
+group: "07"
+output_prefix: "cde_full_19_traceability_testing_activities"
+source_notes: "Slides 46-47; review question and FDA-relevant test evidence."
+target_duration: "3:15"
+timeline: "56:50-60:05"
+character_count: 1150
+preset: "TECH_EXPLAIN"
+speed_cpm: 174
+delivery: "testing evidence and traceability"
+pronunciation_hints:
+  - "F D A"
+  - "S B O M"
+  - "S C A"
+  - "A P I"
+  - "K eight S"
+  - "CrowdStrike"
+  - "Channel File 二九一"
+-->
+
+### S19 Threat-model traceability and testing activities
+
+[BV26 preset=TECH_EXPLAIN speed=174 target_duration=3:15 output_prefix=cde_full_19_traceability_testing_activities pause_after=460ms]
+這裡有一個很實用的 review question：Which asset, assumption, and residual risk does each finding map back to? 每個 finding 都應該能回答：它影響哪個資產？打破哪個假設？對應哪條攻擊路徑？修補後還剩什麼風險？ 如果回答不出來，這個 finding 可能就很難推動臨床或管理層決策。 這一頁列出 FDA-relevant 的 security testing activities。 重點是讓不同測試產生互補證據，組合起來解釋根因並驗證修補。 Static code analysis 可以在 runtime 前找出 vulnerable patterns，例如 unsafe function、insecure crypto、hardcoded secret、SQL injection pattern。 Dynamic analysis 可以看到 runtime behavior，例如記憶體錯誤、錯誤處理、異常輸入造成的 unsafe path。 Manual code review 可以找 logic flaws and unsafe assumptions。這點在醫療流程尤其重要，因為很多風險不是工具能掃到，而是流程邏輯錯誤。 Secret detection 可以找 keys、tokens、default credentials。這跟前面的 K eight S、cloud deployment 特別相關。 Fuzz 或 malformed input testing 可以測試 parser 和資料處理流程。醫療資料格式複雜，這類測試非常重要。 Attack-surface analysis 會看 exposed interfaces and services。包含 API、管理介面、debug service、遠端維護介面。 Vulnerability chaining 則是把小問題串成實際 impact。單一弱點可能看似低風險，但如果加上過大權限、缺少 log、錯誤網路配置，就可能變成重大攻擊路徑。 SCA / SBOM review 則把 components mapped to known risk。當第三方元件出現漏洞時，能不能快速知道自己是否受影響。 所以這頁的重點是：Different tests produce different evidence — combine them to explain root cause and verify the fix. 接著是 CrowdStrike Channel File 二九一 global outage。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S20
+group: "08"
+output_prefix: "cde_full_20_crowdstrike_update_524b"
+source_notes: "Slides 48-49; update supply path and 524B bridge."
+target_duration: "3:10"
+timeline: "60:05-63:15"
+character_count: 1122
+preset: "CASE_STORY"
+speed_cpm: 154
+delivery: "update failure and 524B bridge"
+pronunciation_hints:
+  - "S B O M"
+  - "E D R"
+-->
+
+### S20 CrowdStrike update failure and 524B start
+
+[BV26 preset=CASE_STORY speed=154 target_duration=3:10 output_prefix=cde_full_20_crowdstrike_update_524b pause_after=520ms]
+這個案例很有意思，因為它不是惡意攻擊，而是 faulty security content update。也就是安全更新本身造成全球 Windows 系統 crash。 事件路徑是：content update、validator、interpreter、endpoint crash。 這個事件影響了醫院、銀行、航空等關鍵服務。對醫療場域來說，它提醒我們：資安工具與資安更新本身也是 supply path，也需要測試、驗證、分階段部署與 rollback 機制。 白箱討論點包括：第一，test update validators and malformed inputs。如果安全內容更新會被 endpoint agent 解讀，那 validator 與 interpreter 就是重要 trust boundary。 第二，require staged rollout and rollback evidence。不能所有 endpoint 同時吃到同一個更新，尤其是醫院 critical service。應該有分階段、監控、暫停、回復機制。 第三，treat update infrastructure as a trust boundary。更新管道不是背景機制，而是高權限軟體供應鏈。 這個案例可以用一句話收斂：Security updates are also software supply paths that require white-box validation. 醫療系統裡很多控制都依賴安全軟體、代理程式、EDR、patch service、remote management agent。這些元件一旦失效，可能同樣造成臨床中斷。 這一頁回到 FD&C Act Section 524B。 對 cyber devices 來說，524B 把 cybersecurity 變成更明確的 submission expectation。它要求製造商不只在上市前考慮資安，也要有能力在上市後監控、處理漏洞、提供更新與修補，並管理 SBOM 與元件風險。 白箱證據可以幫助幾個面向。 第一，monitor and address vulnerabilities。白箱審查可以找出 design 或 code weaknesses，這些弱點如果沒有處理，未來可能變成 postmarket exploit。 第二，cybersecure design and maintenance。白箱可以證明 authentication、authorization、update、logging controls 是否真的被實作。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S21
+group: "08"
+output_prefix: "cde_full_21_524b_remediation_workflow"
+source_notes: "Slides 49-50; regulatory expectation to controls and remediation evidence."
+target_duration: "2:40"
+timeline: "63:15-65:55"
+character_count: 922
+preset: "TECH_EXPLAIN"
+speed_cpm: 172
+delivery: "regulatory mapping and remediation workflow"
+pronunciation_hints:
+  - "S B O M"
+  - "Y A M L if needed"
+-->
+
+### S21 524B mapping and remediation workflow
+
+[BV26 preset=TECH_EXPLAIN speed=172 target_duration=2:40 output_prefix=cde_full_21_524b_remediation_workflow pause_after=460ms]
+第三，SBOM and component risk。Dependencies、container layers、third-party libraries 必須能連到 vulnerability assessment。 第四，updates and patches。包括 signing、integrity verification、rollback、keys、release controls。 這裡的 practical goal 是：trace each regulatory expectation to controls and verification evidence. 也就是把法規語言轉成工程控制，再把工程控制轉成測試證據與維護證據。 接下來談 remediation。 找到漏洞只是第一步。真正有價值的白箱測試，是能把 finding 轉成 reviewable evidence。 這一頁的流程是：finding、cause、fix、retest、residual risk、archive。 Finding 是我們看到的問題。Cause 是根因，例如某段程式缺少權限檢查、某個 deployment YAML 讓 container 跑在 privileged mode、某個 service account 權限過大。 Fix 是修補動作，例如 commit、configuration change、network policy update、credential rotation。 Retest 是確認修補有效。沒有 retest，就只是聲稱修好了。 Residual risk 是修完後仍然存在的風險。例如某個舊版設備短期內不能更新，那就要有補償控制。 Archive 是把上述證據保存起來，讓未來審查、客戶稽核、事件調查、上市後維護都可以追溯。 這頁下方列了三個重點。 Affected component 要清楚：source file、config、container、interface。 Threat-model link 要清楚：asset、threat、attack path、control。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S22
+group: "09"
+output_prefix: "cde_full_22_remediation_dependency_visibility"
+source_notes: "Slides 50-51; fix evidence, dependency ownership, SBOM/SCA."
+target_duration: "3:05"
+timeline: "65:55-69:00"
+character_count: 1088
+preset: "TECH_EXPLAIN"
+speed_cpm: 172
+delivery: "dependency ownership and remediation evidence"
+pronunciation_hints:
+  - "S B O M"
+  - "S C A"
+  - "C V E"
+  - "Log four Shell"
+  - "Move it Transfer"
+-->
+
+### S22 Remediation evidence and dependency visibility
+
+[BV26 preset=TECH_EXPLAIN speed=172 target_duration=3:05 output_prefix=cde_full_22_remediation_dependency_visibility pause_after=460ms]
+Fix evidence 要清楚：commit、validation、retest result。 這裡可以強調：沒有被記錄的修補，在法規與治理角度幾乎等於沒有發生。 接下來談 dependency visibility。 現代醫療軟體不可能完全自己寫。它會使用 open-source libraries、commercial components、container base images、runtime、database driver、AI framework、web framework。這些直接與間接相依元件都可能帶來風險。 這一頁把 dependency 分成 application、direct dependencies、transitive dependencies。 Direct dependency 是我們直接使用的套件。Transitive dependency 是我們的 dependency 又依賴的其他套件。很多重大漏洞發生時，組織最困難的不是修補，而是先搞清楚自己到底有沒有用到。 這也是 SBOM 與 SCA 的價值。 Transitive dependencies 可能帶著隱藏漏洞。Vendor binaries 必須知道 exact version and origin。Container layers 則包含 base OS、runtime、application layer，這些也都是風險的一部分。 最重要的是 ownership tracking。每個 component 應該有人負責 monitoring、patching、retesting。 所以 SBOM 從 paperwork 推進成 vulnerability response 的速度基礎。當新的 CVE 出現時，如果你花三週才知道自己有沒有受影響，那臨床與營運風險就已經暴露太久。 這一頁用 Log four Shell 與 Move it Transfer 說明 healthcare vulnerability response。 Log four Shell 是 Log4j 的 remote-code-execution 風險，Move it Transfer 則涉及 SQL injection 風險。這些都是廣泛使用第三方元件或工具造成的重大風險。 這個案例的 incident path 是：application、direct dependency、transitive component、owner / patch / retest。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S23
+group: "09"
+output_prefix: "cde_full_23_log4shell_moveit_response"
+source_notes: "Slide 52; direct/transitive dependencies and response ownership."
+target_duration: "2:40"
+timeline: "69:00-71:40"
+character_count: 932
+preset: "CASE_STORY"
+speed_cpm: 154
+delivery: "vulnerability response case"
+pronunciation_hints:
+  - "S B O M"
+  - "A P I"
+-->
+
+### S23 Log4Shell MOVEit vulnerability response
+
+[BV26 preset=CASE_STORY speed=154 target_duration=2:40 output_prefix=cde_full_23_log4shell_moveit_response pause_after=520ms]
+對 healthcare organizations 來說，第一個問題往往不是立刻修，而是先判斷：我有哪些系統使用這個元件？它在哪個版本？是在 application 裡、container 裡、vendor tool 裡，還是在某個 appliance 裡？ 如果沒有 SBOM 或 dependency inventory，回應速度就會非常慢。 白箱討論點有三個。第一，map direct and transitive dependencies。不能只看 package.json 或 requirements.txt 的第一層，要看完整 dependency tree。 第二，track vendor binaries and container layers。有些風險藏在 vendor-provided binary 或 container base image 裡。 第三，assign owner、patch path、retest evidence。每個受影響元件都要知道誰負責、怎麼修、修完怎麼驗證。 這頁可以用一句話收斂：SBOM determines response speed when a vulnerability appears. 接下來談 operational evidence。 很多資安事件真正困難的不是發現系統壞了，而是要證明發生了什麼、影響了什麼、修復是否可信、服務是否可以恢復。 Log 建立 investigation evidence；validation 建立 trusted recovery。 這一頁分成兩條鏈。 第一條是 audit trail：login、API access、config change、alert、investigation。這些 log 能幫助我們知道誰在什麼時間做了什麼，是否有異常行為，是否有資料被存取或修改。 第二條是 recovery chain：detect、contain、recover、validate、resume clinical service。這是醫療場域非常重要的流程。因為恢復服務要從系統重新啟動推進到資料完整性、介面連線、工作流程與臨床使用都可信。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S24
+group: "10"
+output_prefix: "cde_full_24_logging_synnovis_start"
+source_notes: "Slides 53-54; logging/recovery evidence and third-party service risk."
+target_duration: "3:10"
+timeline: "71:40-74:50"
+character_count: 1122
+preset: "SAFETY_SLOW"
+speed_cpm: 146
+delivery: "operational evidence and third-party recovery"
+pronunciation_hints:
+  - "A P I"
+  - "S I E M"
+  - "Synnovis"
+-->
+
+### S24 Operational evidence and Synnovis case start
+
+[BV26 preset=SAFETY_SLOW speed=146 target_duration=3:10 output_prefix=cde_full_24_logging_synnovis_start pause_after=700ms]
+所以這一頁要強調：log 讓調查有證據，validation 讓恢復可以被信任。 對白箱審查來說，logging 不是上線後才補的功能，而應該在設計與實作階段就被檢查。哪些事件要記錄？log 是否包含足夠 context？是否避免記錄敏感資料？是否防竄改？是否能跟 SIEM 或醫院監控整合？ 這些都是 evidence 的一部分。 最後一個案例是 Synnovis / NHS London ransomware incident。 這個事件不是單一醫院內部系統被攻擊，而是臨床服務供應商遭到勒索軟體攻擊，導致 pathology、blood testing、transfusion services、appointments、operations 都受到影響。 事件路徑是：vendor attack、lab capacity reduced、clinical backlog、validated recovery。 這個案例非常適合說明第三方服務風險。醫院的臨床流程越來越依賴外部供應商與委外服務。當 vendor 發生事件，醫院即使自己的系統沒有被直接攻破，照護流程仍然會受到影響。 白箱討論點包括：第一，review third-party integration trust boundaries。醫院與 vendor 之間交換哪些資料？透過哪些 API？有哪些帳號？哪些 network path？誰能寫入？誰能讀取？ 第二，validate recovered interfaces and data integrity。事件後恢復不能只看 vendor 說服務回來了。醫院端要確認資料傳輸、檢驗結果、介面狀態、工作流程都正確。 第三，link recovery evidence to clinical continuity。恢復證據應該跟臨床服務恢復連在一起，例如檢驗量能、報告延遲、積壓案件、替代流程、恢復驗證。 這頁的結論是：A vendor incident can become a hospital clinical-delay incident. 這也是為什麼醫療資安必須跨越單一系統邊界，納入供應鏈、第三方服務、資料交換與恢復治理。 最後一頁做總結。 這整段白箱測試的主線是：risk identification、threat modeling、security testing、finding and remediation、validation and retest、lifecycle trust。 也就是說，白箱測試把整個產品生命週期串起來，讓風險識別、控制、修補、重測與上市後維護形成同一條證據鏈。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S25
+group: "10"
+output_prefix: "cde_full_25_synnovis_lifecycle_trust"
+source_notes: "Slides 54-55; recovery evidence and white-box close."
+target_duration: "2:35"
+timeline: "74:50-77:25"
+character_count: 902
+preset: "CONCLUSION"
+speed_cpm: 146
+delivery: "lifecycle trust close"
+pronunciation_hints:
+  - "S B O M"
+  - "S C A"
+  - "K eight S"
+-->
+
+### S25 Synnovis case close and lifecycle trust
+
+[BV26 preset=CONCLUSION speed=146 target_duration=2:35 output_prefix=cde_full_25_synnovis_lifecycle_trust pause_after=700ms]
+一開始，我們用 risk identification 找出哪些資產與臨床流程重要。接著用 threat modeling 定義攻擊路徑與控制措施。再透過 white-box、gray-box、black-box、SCA、fuzzing、manual review 等測試方法產生證據。 找到問題後，要進入 finding and remediation。這裡要從報告推進到 root cause、owner、fix、commit 或 configuration evidence。 修完之後要 validation and retest。因為醫療系統裡，修補本身也可能帶來新風險。最後，所有證據累積成 lifecycle trust。 我想用三句話收尾。 第一，醫療資安的目標，是保護臨床連續性與病人安全。 第二，白箱測試承接外部測試，進一步解釋根因、驗證控制、建立可追溯證據。 第三，對醫療裝置與醫療資訊系統而言，真正的 trust 會從 verbal assurance 推進成 auditable evidence。 因此，當我們談 cybersecurity requirements 時，可以把問題從「有沒有做弱掃」、「有沒有做滲透測試」、「有沒有 SBOM」推進到： 這個風險對哪個臨床流程有影響？ 控制措施是否真的存在於設計、程式、設定與部署裡？ 修補後是否有重測？ 剩餘風險是否被記錄與接受？ 事件發生後是否能調查、恢復並重新建立信任？ 這就是從 white-box testing 走向 lifecycle trust 的核心。 今天後半段我們從白箱測試談到醫療資安證據鏈。白箱測試不是只看程式碼，而是把 threat model、source code、configuration、K eight S deployment、SBOM、logging、remediation、retest 全部串起來。對醫療系統來說，資安控制必須能在真實部署環境中存活，也必須能在事件後提供調查與恢復證據。最後，我們要建立的不是一次性的測試報告，而是貫穿產品生命週期的 trust evidence。
+[/BV26]
+
+<!-- BV26_META
+segment_id: S26
+group: "11"
+output_prefix: "cde_full_26_shared_close_test_anchors"
+source_notes: "Final close; lifecycle trust and three CDE test-question anchors."
+target_duration: "2:35"
+timeline: "77:25-80:00"
+character_count: 903
+preset: "CONCLUSION"
+speed_cpm: 142
+delivery: "shared close and test anchors"
+pronunciation_hints:
+  - "T F D A"
+  - "F D A"
+  - "派克斯，或 P A C S"
+  - "S B O M"
+-->
+
+### S26 Shared close and pre/post-test anchors
+
+[BV26 preset=CONCLUSION speed=142 target_duration=2:35 output_prefix=cde_full_26_shared_close_test_anchors pause_after=700ms]
+回到全場主線。前半段我們從醫院現實開始，看見 ransomware、PACS downtime、vendor access、patching limitation、credential risk、供應鏈與第三方服務如何影響 clinical continuity。中段把 FDA、TFDA、524B、SBOM 與 evidence chain 放進產品生命週期。後半段再用 White-box Testing 與 system review，把 root cause、deployment condition、remediation、retest、logging 與 recovery 串起來。所以臨床端對醫療器材與資訊系統的資安要求，可以簡化成一個判斷框架：風險要能被識別，控制要能被設計，測試要能連到臨床情境，finding 要能推動修補，部署條件要能被保存，事件後要能調查與恢復，最後證據要能回到 lifecycle trust。法規要求是最低門檻。真正的目標，是讓醫療系統在真實環境中安全、可維護、可追溯、可恢復。 最後，把三個 pre-test 與 post-test question 對應到今天的重點。第一題問：醫院端評估醫療器材或資訊系統資安時，最重要的資料是什麼？答案會從孤立掃描報告與模型準確率，推進到可追溯的風險、控制、測試、修補、重測與證據鏈。這就是今天講的 lifecycle trust。 第二題問：白箱測試與滲透測試的差異是什麼？滲透測試從攻擊者視角驗證外部可達攻擊路徑與影響。白箱測試從內部程式、設定、相依套件與部署條件找出可修的根因。兩者要接在一起，才能同時看見 exploitability 與 control evidence。 第三題問：發現高風險 finding 後，完整治理流程包含什麼？要先記錄 owner、風險判斷、修補或補償決策、時程、重測證據與 residual risk。工具顯示通過只是其中一個訊號，治理需要留下可被檢查的決策與證據。請各位把這三題帶回今天的主軸：醫療資安是一條由臨床連續性、工程控制、法規證據與上市後維護共同形成的信任鏈。謝謝大家。
+[/BV26]
+
+## D. Post-Generation Review Checklist
+
+- Check total stitched runtime against `80:00`; acceptable first-pass range is `78:30-82:00` before micro-tuning.
+- Review all pilot rows first, then render remaining rows by stable `output_prefix`.
+- For any bad clip, adjust only punctuation, acronym spacing, or that row's pronunciation hints; regenerate only the affected row.
+- Keep raw and stitched audio in `.local/breezyvoice/output/`; keep this Markdown and the batch CSV tracked.
+- When audio is approved, record final runtime, changed rows, and pronunciation fixes in `docs/speaker-notes/breezyvoice/model-ready/README.md`.
