@@ -4,6 +4,25 @@
 
 用結構引導理解與決策。讓觀眾感覺自己原本理解的一層被自然帶到下一層。
 
+## 正向自信語氣規則
+
+舞台稿、CDE 逐字稿、speaker notes、對外簡報與 stakeholder-facing 摘要，
+預設採用正向、自信、大方、非防衛的語氣。
+
+核心順序：
+
+> claim -> evidence -> contribution -> scope control -> next implication
+
+寫法要求：
+
+- 先說這件事能建立什麼能力、證據、信任或治理路徑。
+- 把限制寫成 scope control、validation layer、stewardship commitment 或
+  claim-evidence alignment。
+- 把風險寫成可治理的 decision pressure，而不是防守式辯解。
+- 把排除項寫成公開安全、臨床安全、法規邊界或責任分工。
+- Spoken transcript 使用肯定句推進；工程註解和機器設定可保留必要的精確
+  禁止語，因為那些不是演講口播內容。
+
 ## 舞台稿禁止使用的句型
 
 以下句型會用否定製造對比，舞台稿應改寫成 progression、question、cause-effect 或 decision-support：
@@ -48,6 +67,8 @@
 | 這不是法規，是產品能力。 | 這些要求會轉化為產品在營運中的能力。 |
 | Testing 不是為了報告好看，而是為了產出決策。 | Testing 要回答 release decision：哪些風險已控制、哪些需要修補、哪些需要 compensating control。 |
 | Patch SLA 不是越快越好。 | Patch SLA 要同時追求快速控制風險與維持 patient safety。 |
+| 我們不是來防守。 | 我們主動建立可驗證、可修補、可交接的治理能力。 |
+| 這個限制不是缺點。 | 這個 scope control 讓 claim 和 evidence 保持一致。 |
 
 ## Slide Rhythm Rules
 

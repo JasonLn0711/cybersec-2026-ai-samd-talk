@@ -59,24 +59,38 @@ The planning repo may link to this repo for project context. This repo should no
    - If changing generated reports, update `data/presentation_os.json` or the generator first.
    - Do not treat generated files as independent live sources unless `README.md` explicitly says so.
 
-2. Keep the talk package public-safe.
+2. Use confident positive-scope stage language.
+   - Public talks, CDE scripts, speaker notes, stakeholder-facing summaries,
+     and rehearsal readers should lead with what the audience can trust, do,
+     verify, govern, and improve.
+   - Avoid denial-led, defensive, or guarded stage phrasing in spoken content.
+     Rewrite negative contrast into affirmative progression: `A opens the path
+     to B`, `the useful question is`, `the evidence supports`, `the next
+     governance move is`.
+   - Boundaries and exclusions should sound like scope controls and stewardship
+     commitments, not apologies. Use claim -> evidence -> contribution ->
+     scope control -> next implication.
+   - Engineering notes may keep exact machine-safety wording when needed, but
+     spoken transcripts should use positive, confident, generous phrasing.
+
+3. Keep the talk package public-safe.
    - Exclude proprietary code, raw student records, private hospital/client detail, credentials, exploit-ready private instructions, and patent-sensitive implementation mechanics.
 
-3. Preserve the owner-approved deck target.
+4. Preserve the owner-approved deck target.
    - The active deck is the `v1.3` canonical PDF unless `README.md` or the project owner changes that decision.
    - The compact `14`-slide generated package remains fallback/reference material, not the current canonical deck.
 
-4. Maintain traceability.
+5. Maintain traceability.
    - Talk design, evaluation, rehearsal workflow, generated reports, and deck output should stay mutually consistent.
    - If the canonical file set or workflow changes, update `README.md` and the planning handoff.
 
-5. Use relative repo paths where possible.
+6. Use relative repo paths where possible.
    - Absolute local paths are allowed only as clearly labeled machine-specific examples.
 
-6. Keep generated artifacts reproducible.
+7. Keep generated artifacts reproducible.
    - When changing generator behavior, run the relevant generation command and inspect outputs.
 
-7. Keep edits small and operational.
+8. Keep edits small and operational.
    - Prefer a focused correction to a broad redesign unless the current structure blocks work.
 
 ## Recommended Workflow
