@@ -46,13 +46,13 @@ TERM_NORMALIZATIONS = {
     "SaMD": "S A M D",
     "SBOM": "S B O M",
     "SCA": "S C A",
-    "PACS": "P A C S",
+    "PACS": "派克斯",
     "HIS": "H I S",
     "EMR": "E M R",
     "RIS": "R I S",
     "LIS": "L I S",
     "FHIR": "F H I R",
-    "DICOM": "DICOM，戴康",
+    "DICOM": "戴康 DICOM",
     "API": "A P I",
     "VPN": "V P N",
     "MFA": "M F A",
@@ -61,7 +61,10 @@ TERM_NORMALIZATIONS = {
     "HL7": "H L seven",
     "SIEM": "S I E M",
     "EDR": "E D R",
+    "K8S API": "K eight S，A P I",
     "K8S": "K eight S",
+    "CI/CD": "C I C D",
+    "AWS": "A W S",
     "FD&C Act Section 524B": "F D and C Act Section 五二四 B",
     "FD&C Act，Section 524B": "F D and C Act，Section 五二四 B",
     "FD&C Act Section 五二四 B": "F D and C Act Section 五二四 B",
@@ -79,7 +82,11 @@ TERM_NORMALIZATIONS = {
     "vendor access": "廠商存取",
     "patching limitation": "修補限制",
     "credential risk": "憑證風險",
-    "White-box Testing": "White box Testing",
+    "White-box Testing": "White box testing，白箱測試",
+    "White box Testing": "White box testing，白箱測試",
+    "white-box validation": "white box validation，白箱驗證",
+    "software supply paths": "software supply chain，供應鏈",
+    "supply path": "supply chain，供應鏈",
     "CrazyHunter": "Crazy Hunter",
     "UnitedHealth": "United Health",
     "OneBlood": "One Blood",
@@ -185,8 +192,45 @@ def normalize_text(text: str) -> str:
     normalized = clean_model_text(text)
     for old, new in TERM_NORMALIZATIONS.items():
         normalized = normalized.replace(old, new)
+    normalized = apply_pilot_review_conditioning(normalized)
     normalized = re.sub(r"[ \t]+", " ", normalized).strip()
     return normalized
+
+
+def apply_pilot_review_conditioning(text: str) -> str:
+    """Apply conservative text conditioning from pilot human review.
+
+    These replacements keep the source transcript frozen while improving
+    model-facing pacing and pronunciation for the pilot failure modes.
+    """
+    replacements = {
+        "P A C S、H I S、E M R": "派克斯，H I S，E M R",
+        "派克斯、H I S、E M R": "派克斯，H I S，E M R",
+        "戴康 DICOM 工作流程": "戴康 DICOM 影像流程",
+        "戴康 DICOM router": "戴康 DICOM router",
+        "verify R B A C、service accounts、namespace isolation": "verify，R B A C，service accounts，namespace isolation",
+        "secrets handling and cloud credential exposure": "secrets handling，以及 cloud credential exposure",
+        "Network Policy、ingress rules、exposed services": "Network Policy，ingress rules，exposed services",
+        "application endpoint，K eight S A P I、dashboard、internal service": "application endpoint，K eight S，A P I，dashboard，internal service",
+        "In Kubernetes, the security boundary is not the container. The real boundary is identity, configuration, network policy, and deployment governance.": "在 Kubernetes 裡，security boundary 不是 container。真正的 boundary 是 identity、configuration、network policy 與 deployment governance。",
+        "Tesla Kubernetes Console Cryptojacking": "Tesla 雲端基礎設施加密貨幣挖礦案例",
+        "exposed K eight S console、pod credentials、A W S access、cryptomining workload": "exposed K eight S console，pod credentials，A W S access，crypto mining workload",
+        "Tesla 的 cloud infrastructure": "Tesla 的雲端基礎設施",
+        "cloud resource 進行 cryptocurrency mining": "雲端資源進行加密貨幣挖礦",
+        "faulty security content update": "CrowdStrike Falcon 安全內容更新",
+        "Security updates are also software supply chain，供應鏈 that require white box validation，白箱驗證.": "Security updates are also software supply chain，供應鏈；they require white box validation，白箱驗證。",
+        "F D and C Act Section 五二四 B": "F D and C Act，Section 五二四 B",
+        "F D A、T F D A、五二四 B、S B O M": "F D A，T F D A，五二四 B，S B O M",
+        "White box Testing 與 system review": "White box testing，白箱測試，與 system review",
+        "White box testing，白箱測試與滲透測試": "White box testing，白箱測試，與滲透測試",
+        "白箱測試從內部程式": "White box testing，白箱測試，從內部程式",
+        "白箱審查": "White box review，白箱審查",
+        "白箱證據": "White box evidence，白箱證據",
+        "白箱可以證明": "White box evidence 可以證明",
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    return text
 
 
 def validate_model_text(text: str, label: str) -> None:

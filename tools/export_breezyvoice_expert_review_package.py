@@ -102,6 +102,12 @@ def package_path_from_repo_value(value: str, package: Path, kind: str) -> Path:
 def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> None:
     full_wav = LOCAL_ROOT / f"output/{VERSION}/full/cde-2026-breezyvoice-pilot-stitched-v1.wav"
     copy_file(full_wav, package / "audio/full" / full_wav.name)
+    subclip_rows = read_csv(LOCAL_ROOT / f"manifests/{VERSION}/subclip_manifest.csv")
+    subclips_by_parent: dict[str, list[dict[str, str]]] = {}
+    for row in subclip_rows:
+        subclips_by_parent.setdefault(row["parent_output_prefix"], []).append(row)
+    for rows in subclips_by_parent.values():
+        rows.sort(key=lambda item: int(item["subclip_index"]))
 
     for row in review_rows:
         prefix = row["output_prefix"]
@@ -109,10 +115,11 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
         copy_file(REPO_ROOT / row["normalized_text_path"], package / "text/normalized_segments" / Path(row["normalized_text_path"]).name)
         clean_text = LOCAL_ROOT / f"inputs/{VERSION}/segments/{prefix}.txt"
         copy_file(clean_text, package / "text/segments" / clean_text.name)
-        for src in sorted((LOCAL_ROOT / f"output/{VERSION}/subclips").glob(f"{prefix}_p*.wav")):
-            copy_file(src, package / "audio/subclips" / src.name)
-        for src in sorted((LOCAL_ROOT / f"inputs/{VERSION}/subclips").glob(f"{prefix}_p*.txt")):
-            copy_file(src, package / "text/subclips" / src.name)
+        for subclip in subclips_by_parent.get(prefix, []):
+            wav_path = REPO_ROOT / subclip["planned_output_wav"]
+            text_path = REPO_ROOT / subclip["clean_text_path"]
+            copy_file(wav_path, package / "audio/subclips" / wav_path.name)
+            copy_file(text_path, package / "text/subclips" / text_path.name)
 
     review_dir = LOCAL_ROOT / f"review/{VERSION}"
     for filename in REVIEW_FILES:
@@ -185,8 +192,8 @@ def write_playlist(package: Path, rows: list[dict[str, object]]) -> None:
     write_text(package / "review/package_relative_playlist.m3u", "\n".join(lines))
 
 
-def expert_prompt() -> str:
-    return """# Prompt For TTS Expert
+def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
+    return f"""# Prompt For TTS Expert
 
 請協助審查這份 CDE 2026 BreezyVoice pilot TTS 音檔包。目標不是重寫講稿，而是在進入完整 80 分鐘 full render 前，判斷目前四段 pilot 音檔是否已經達到可接受品質，或指出最小必要修正。
 
@@ -194,11 +201,12 @@ def expert_prompt() -> str:
 
 這是 80 分鐘醫療資安課程的 BreezyVoice TTS pilot review package。完整工程稿已凍結為 v1 source：
 
-- 26 個 chunks
+- {summary['segments']} 個 chunks
 - 80:00 timing plan
-- 約 28053 model-text characters
-- 93 個 planned subclips
-- 本次 pilot 使用 no-reference / default voice mode
+- 約 {summary['model_text_characters']} model-text characters
+- {summary['subclips']} 個 planned full-render subclips
+- 本次 pilot 有 {pilot_subclip_count} 個 subclips
+- 本次 pilot 使用 {summary['pilot_execution_mode']}
 - full render 目前尚未開放，必須等四段 pilot 都通過人工聽審
 
 請先閱讀：
@@ -304,7 +312,12 @@ def expert_prompt() -> str:
 只要四段 parent chunk 都被人工審查為 `accept`，才會進入完整 80 分鐘 full render。"""
 
 
-def readme(summary: dict[str, object], gate: dict[str, object], rows: list[dict[str, object]]) -> str:
+def readme(
+    summary: dict[str, object],
+    gate: dict[str, object],
+    rows: list[dict[str, object]],
+    pilot_subclip_count: int,
+) -> str:
     table = "\n".join(
         [
             "| Output prefix | Audio | Runtime | Target | Ratio | Current status |",
@@ -338,7 +351,7 @@ Important: ASR is only an auxiliary signal. Judge by listening to the WAV files.
 
 1. `audio/full/cde-2026-breezyvoice-pilot-stitched-v1.wav`
 2. The four parent chunks in `audio/parent_chunks/`
-3. The 15 files in `audio/subclips/` only when a parent chunk needs defect localization
+3. The {pilot_subclip_count} files in `audio/subclips/` only when a parent chunk needs defect localization
 
 ## Required Parent-Chunk Decisions
 
@@ -388,7 +401,8 @@ def create_archive(package: Path) -> Path:
     return archive_path
 
 
-def validate_package(package: Path) -> dict[str, object]:
+def validate_package(package: Path, review_rows: list[dict[str, object]]) -> dict[str, object]:
+    expected_subclips = sum(int(str(row["subclip_count"])) for row in review_rows)
     counts = {
         "full_wavs": len(list((package / "audio/full").glob("*.wav"))),
         "parent_wavs": len(list((package / "audio/parent_chunks").glob("*.wav"))),
@@ -402,9 +416,9 @@ def validate_package(package: Path) -> dict[str, object]:
     expected = {
         "full_wavs": 1,
         "parent_wavs": 4,
-        "subclip_wavs": 15,
+        "subclip_wavs": expected_subclips,
         "normalized_segment_txt": 4,
-        "subclip_txt": 15,
+        "subclip_txt": expected_subclips,
         "expert_prompt_exists": True,
         "expert_readme_exists": True,
         "expert_form_exists": True,
@@ -432,12 +446,13 @@ def main() -> None:
     summary, gate, _machine, review_rows = load_state()
     copy_package_inputs(package, review_rows)
     rows = expert_rows(package, review_rows)
+    pilot_subclip_count = sum(int(str(row["subclip_count"])) for row in rows)
     write_expert_form(package, rows)
     write_playlist(package, rows)
-    write_text(package / "PROMPT_FOR_TTS_EXPERT.md", expert_prompt())
-    write_text(package / "README_FOR_TTS_EXPERT.md", readme(summary, gate, rows))
+    write_text(package / "PROMPT_FOR_TTS_EXPERT.md", expert_prompt(summary, pilot_subclip_count))
+    write_text(package / "README_FOR_TTS_EXPERT.md", readme(summary, gate, rows, pilot_subclip_count))
     write_package_summary(package, gate, summary, rows)
-    counts = validate_package(package)
+    counts = validate_package(package, rows)
     archive = None if args.no_archive else create_archive(package)
 
     print(
