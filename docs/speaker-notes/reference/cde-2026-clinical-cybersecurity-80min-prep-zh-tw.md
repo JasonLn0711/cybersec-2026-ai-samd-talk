@@ -21,6 +21,32 @@ Planning source of truth:
 | Test-question rule | Questions should come from the handout so learners can find answers themselves |
 | Administrative attachment | CDE authorization agreement is archived in the planning source bundle; CDE says a paper copy will be provided on the course day for signature |
 
+## Transcript And Audio Production Decision
+
+Recorded on `2026-05-26` from Jason's planning update:
+
+- Prof. Wu wants the `1.5` hour CDE lecture prepared as a full transcript and
+  as pre-recorded lecture audio.
+- Jason's production target is about `80` minutes of speakable content, not the
+  full `90` minutes, because the official session should preserve time for
+  Q&A, transitions, and possible rest.
+- Jason does not want to personally record the full talk. The preferred route
+  is:
+  1. write a clean slide-by-slide transcript first;
+  2. keep the language in Taiwan-used Traditional Chinese with oral pacing;
+  3. use `BreezyVoice 26` to convert the transcript into Taiwan Traditional
+     Chinese speech audio;
+  4. review the generated audio for pronunciation, pacing, English acronym,
+     technical-term, and sensitive-content errors before handoff.
+
+Production implication:
+
+- This file should support a speakable transcript, not only slide bullets.
+- Each retained slide needs a concise spoken paragraph that can survive TTS.
+- English acronyms, company names, and cybersecurity terms should be written in
+  a way that a Taiwan Mandarin TTS voice can pronounce acceptably, or marked
+  for manual correction.
+
 ## First-Principles Frame
 
 Scarce resource: the audience's ability to convert cybersecurity from abstract regulation into hospital-side acceptance, testing, repair, and governance decisions.
