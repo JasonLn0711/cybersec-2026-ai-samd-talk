@@ -23,7 +23,9 @@ This folder owns the tracked, syncable text inputs for BreezyVoice production.
 
 ## Production Rule
 
-Use `model-ready/cde-2026-breezyvoice-merged-transcript-batch.csv` as the current rendering baseline. Use the `text` column as BreezyVoice input and keep metadata columns for review, routing, and regeneration.
+Use `model-ready/cde-2026-breezyvoice-merged-transcript-batch.csv` as the clean rendering baseline. Use the `text` column as BreezyVoice input and keep metadata columns for review, routing, and regeneration.
+
+Use `model-ready/cde-2026-breezyvoice-80min-engineered-transcript-v1-zh-tw.md` when the render needs the richer `BV26` control layer from the earlier `60` minute script: `80:00` pacing, per-segment preset, pronunciation hints, pilot-render gates, and post-generation review checks. Reference audio is optional; absence of a prompt WAV should use no-reference / default-voice mode rather than block pilot rendering. The prepared local runner is `tools/breezyvoice_render_subclips.py --voice-mode default`.
 
 Use the earlier clean and timed source files as traceability companions. Keep the LINE transcript and collaboration notes in the CDE prep note, not in the spoken audio script.
 

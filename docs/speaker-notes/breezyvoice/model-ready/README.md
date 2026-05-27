@@ -13,6 +13,7 @@ The expert output follows the final PPT order and pacing. It is a rewritten full
 | `cde-2026-breezyvoice-merged-transcript-clean.txt` | Complete clean transcript for human review before rendering. | `475` lines, `28270` characters. |
 | `cde-2026-breezyvoice-merged-transcript-batch.csv` | BreezyVoice batch input with stable `output_prefix` values. | `26` rows, `26` unique output prefixes. |
 | `cde-2026-breezyvoice-pronunciation-notes.md` | Focused pronunciation notes for acronyms, technical terms, event names, and product names. | `87` lines. |
+| `cde-2026-breezyvoice-80min-engineered-transcript-v1-zh-tw.md` | `80` minute engineering draft that wraps the expert-delivered merged transcript with `BV26` metadata, pacing, pronunciation, pilot-render gates, and positive-scope spoken tuning. | `26` `BV26` chunks, `80:00` timing plan. |
 
 ## Batch Contract
 
@@ -25,6 +26,8 @@ group,segment,output_prefix,text,notes
 Use only the `text` column as the model narration input. It is designed to contain spoken text only, without slide labels, Markdown headings, tables, source notes, or planning notes.
 
 The `output_prefix` column is stable so individual clips can be regenerated without replacing the full audio package.
+
+For an `80` minute controlled render, use `cde-2026-breezyvoice-80min-engineered-transcript-v1-zh-tw.md` as the orchestrator-facing draft. Strip `BV26` / `BV26_META` markup before sending text into the model, and keep the stable `output_prefix` values for per-row regeneration. Reference audio is optional; if no prompt WAV is present, run pilot rendering in no-reference / default-voice mode. The local runner path for that policy is `tools/breezyvoice_render_subclips.py --voice-mode default`.
 
 ## Next Gate
 

@@ -956,7 +956,7 @@ Recommended local-safe workspace:
   - `docs/speaker-notes/breezyvoice/cde-2026-jingzhong-section-batch-plan.csv`
   - `docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-merged-transcript-workfile.md`
 - Current local-only paths:
-  - `.local/breezyvoice/prompts/jason_reference.wav`
+  - `.local/breezyvoice/prompts/v1/jason_reference.wav` only if optional prompt audio is later used.
   - `.local/breezyvoice/output/`
 
 Merge status:
@@ -1011,8 +1011,8 @@ Suggested batch groups:
 BreezyVoice settings:
 
 - `model_path`: pin this explicitly in every command. Start with `MediaTek-Research/BreezyVoice` unless the local installation is pinned to `MediaTek-Research/BreezyVoice-300M`.
-- `speaker_prompt_audio_path`: use a clean Taiwan Mandarin prompt clip in the same serious lecture style as the final output.
-- `speaker_prompt_text_transcription`: provide the exact transcript for the prompt audio; the BreezyVoice docs say this is highly recommended for better accuracy.
+- `speaker_prompt_audio_path`: optional only. The current package should execute without a prompt WAV by using the local no-reference / default SFT speaker path.
+- `speaker_prompt_text_transcription`: optional only, and required only when a prompt WAV is deliberately supplied. Keep the transcript exact if this path is used.
 - `content_to_synthesize`: pass only one batch segment at a time.
 - `output_path`: write each clip as an individual `.wav` in `.local/breezyvoice/output/`.
 - `PYTHONUTF8=1`: set this before running inference so Chinese text stays stable.
