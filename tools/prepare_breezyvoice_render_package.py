@@ -722,6 +722,25 @@ def prepare_package() -> None:
         pilot_audio_rows,
         ["subclip_id", "parent_output_prefix", "planned_output_wav", "exists", "duration_seconds", "accepted"],
     )
+    planned_subclip_wavs = {REPO_ROOT / str(row["planned_output_wav"]) for row in subclip_rows}
+    actual_subclip_wavs = sorted((LOCAL_ROOT / f"output/{VERSION}/subclips").glob("*.wav"))
+    orphan_audio_rows = []
+    for output_path in actual_subclip_wavs:
+        if output_path not in planned_subclip_wavs:
+            duration = wav_duration_seconds(output_path)
+            orphan_audio_rows.append(
+                {
+                    "output_wav": rel(output_path),
+                    "duration_seconds": f"{duration:.2f}" if duration is not None else "",
+                    "status": "orphan_not_in_current_subclip_manifest",
+                    "action": "archive_or_delete_before_manual_review_if_this_filename_could_confuse_selection",
+                }
+            )
+    write_csv(
+        LOCAL_ROOT / f"review/{VERSION}/orphan_audio_inventory.csv",
+        orphan_audio_rows,
+        ["output_wav", "duration_seconds", "status", "action"],
+    )
     pilot_outputs_existing = sum(1 for row in pilot_audio_rows if row["exists"])
     pilot_outputs_complete = pilot_outputs_existing == len(pilot_subclip_rows)
     pilot_parent_paths = sorted(
@@ -1169,6 +1188,12 @@ def prepare_package() -> None:
             "Pilot machine review before full batch",
             pilot_machine_review_status,
             f"pilot_machine_review.json records ASR exists={pilot_asr_path.exists()}, forbidden markup hits={len(pilot_asr_forbidden_hits)}, missing expected term hits={len(pilot_asr_missing_terms)}.",
+        ),
+        (
+            "14",
+            "Artifact hygiene before human review",
+            "orphan_audio_detected" if orphan_audio_rows else "no_orphan_audio",
+            f"review/v1/orphan_audio_inventory.csv records {len(orphan_audio_rows)} WAV files under output/v1/subclips that are not in the current subclip manifest.",
         ),
     ]
     audit_lines = [

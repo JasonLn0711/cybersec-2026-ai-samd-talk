@@ -35,7 +35,14 @@ After pilot rendering, use `tools/stitch_breezyvoice_outputs.py --selection pilo
 
 Then run `tools/build_breezyvoice_pilot_review.py`. It creates the local listening decision table and `full_batch_gate.json`; the full batch stays blocked until all four pilot parent rows are accepted by listening.
 
-To hand the current pilot outputs to a TTS expert, run `python3 tools/export_breezyvoice_expert_review_package.py --overwrite`. The exporter copies the four required parent WAVs, the stitched pilot WAV, the 15 pilot subclips, matching model text, manifests, ASR notes, the expert prompt, and a fillable review CSV into `~/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/`, then creates a `.tar.gz` next to it.
+To hand the current pilot outputs to a TTS expert, run `python3 tools/export_breezyvoice_expert_review_package.py --overwrite`. The exporter copies the four required parent WAVs, the stitched pilot WAV, the manifest-listed pilot subclips, matching model text, manifests, ASR notes, the expert prompt, experiment log, and a fillable review CSV into `~/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/`, then creates a `.tar.gz` next to it.
+
+Before any new TTS run or text-conditioning change, append a record with
+`tools/record_breezyvoice_experiment.py`. The tracked log lives at
+`docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.md`
+and is included in every expert review export. If a new run produces a human
+review gate, export a fresh copy to `~/Downloads` and stop until human decisions
+are returned.
 
 ## Next Gate
 

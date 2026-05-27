@@ -20,6 +20,7 @@ This folder owns the tracked, syncable text inputs for BreezyVoice production.
 | `cde-2026-jingzhong-section-batch-plan.csv` | Planned output groups for batch rendering and review. |
 | `cde-2026-breezyvoice-merged-transcript-workfile.md` | Merge-status and delivery-intake file for the all-session BreezyVoice transcript. |
 | `expert-package-source/` | TTS expert handoff notes, full transcript source bundle, and full-session batch outline. |
+| `cde-2026-breezyvoice-tts-experiment-log-v1.md` / `.jsonl` | Durable experiment log for every TTS text-conditioning, render, stitch, ASR, review-package, and human-gate decision. |
 
 ## Production Rule
 
@@ -56,3 +57,19 @@ python3 tools/build_breezyvoice_pilot_review.py
 The setup script keeps the official BreezyVoice clone and Python venv under `.local/`, then replaces the official `torch==2.3.1+cu118` runtime with a CUDA `12.8` PyTorch build that supports RTX 5080 / `sm_120`.
 
 Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, `pilot_machine_review.md`, `pilot_listening_review.csv`, and `full_batch_gate.json`.
+
+## Experiment Logging Rule
+
+Every TTS experiment must be recorded before the next render or full-batch
+decision. Use:
+
+```bash
+python3 tools/record_breezyvoice_experiment.py --experiment-id EXP-YYYYMMDD-NN --stage <stage> --title "<title>" --decision "<decision>"
+```
+
+The record must explain the reason, expected effect, affected chunks, commands,
+log paths, outputs, machine result, human result if any, fix applied, next
+action, and stop rule. If human listening is required, export a fresh package to
+`~/Downloads` with `python3 tools/export_breezyvoice_expert_review_package.py
+--overwrite`, record that directory/archive in the experiment log, and stop
+before any full render until the human review returns accepted decisions.

@@ -35,6 +35,12 @@ REVIEW_FILES = [
     "pilot_audio_inventory.csv",
     "pilot_status.json",
     "render_review_log.csv",
+    "orphan_audio_inventory.csv",
+]
+
+EXPERIMENT_LOG_FILES = [
+    REPO_ROOT / "docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.md",
+    REPO_ROOT / "docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.jsonl",
 ]
 
 MANIFEST_FILES = [
@@ -125,6 +131,10 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
     for filename in REVIEW_FILES:
         copy_file(review_dir / filename, package / "review" / filename)
 
+    for path in EXPERIMENT_LOG_FILES:
+        if path.exists():
+            copy_file(path, package / "review/experiment_log" / path.name)
+
     asr_dir = review_dir / "asr"
     copy_file(asr_dir / "cde-2026-breezyvoice-pilot-stitched-v1.txt", package / "review/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt")
     copy_file(asr_dir / "pilot_whisper_tiny_after_term_normalization.log", package / "review/asr/pilot_whisper_tiny_after_term_normalization.log")
@@ -213,7 +223,8 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
 
 1. `README_FOR_TTS_EXPERT.md`
 2. `review/pilot_listening_review.md`
-3. `forms/expert_pilot_review_form.csv`
+3. `review/experiment_log/cde-2026-breezyvoice-tts-experiment-log-v1.md`
+4. `forms/expert_pilot_review_form.csv`
 
 ## 請優先聽的音檔
 
@@ -366,6 +377,11 @@ Special attention:
 
 Fill `forms/expert_pilot_review_form.csv`.
 
+For context on why the current pilot exists and what was already changed, read
+`review/experiment_log/cde-2026-breezyvoice-tts-experiment-log-v1.md`. That log
+is the authority for previous render attempts, text-conditioning rationale,
+machine results, expert feedback, and current stop rules.
+
 Use `decision_accept_or_reject` values:
 
 - `accept`: usable for full-batch gate
@@ -374,6 +390,10 @@ Use `decision_accept_or_reject` values:
 If rejected, fill `pronunciation_issue`, `fix_recommendation`, and `notes`.
 
 Full render should remain blocked until all four required parent chunks are accepted by human listening.
+
+The package also includes `review/orphan_audio_inventory.csv`. Those WAVs, if
+listed, are local artifact-hygiene warnings only and should not be reviewed as
+current pilot deliverables unless they also appear in `manifests/subclip_manifest.csv`.
 """
 
 
@@ -385,6 +405,7 @@ def write_package_summary(package: Path, gate: dict[str, object], summary: dict[
         "full_pilot_audio": "audio/full/cde-2026-breezyvoice-pilot-stitched-v1.wav",
         "expert_prompt": "PROMPT_FOR_TTS_EXPERT.md",
         "expert_form": "forms/expert_pilot_review_form.csv",
+        "experiment_log": "review/experiment_log/cde-2026-breezyvoice-tts-experiment-log-v1.md",
         "full_batch_allowed_before_review": gate["full_batch_allowed"],
         "reference_audio_required": summary["reference_audio_required"],
         "pilot_execution_mode": summary["pilot_execution_mode"],
