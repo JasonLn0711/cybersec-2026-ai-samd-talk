@@ -1021,6 +1021,22 @@ def prepare_package() -> None:
         ),
     )
     (LOCAL_ROOT / f"commands/{VERSION}/stitch_pilot_template.sh").chmod(0o755)
+    write_text(
+        LOCAL_ROOT / f"commands/{VERSION}/build_pilot_review_template.sh",
+        "\n".join(
+            [
+                "#!/usr/bin/env bash",
+                "set -euo pipefail",
+                "",
+                "python3 tools/build_breezyvoice_pilot_review.py",
+                "",
+                "echo \"Review: .local/breezyvoice/review/v1/pilot_listening_review.md\"",
+                "echo \"Decision CSV: .local/breezyvoice/review/v1/pilot_listening_review.csv\"",
+                "echo \"Full batch gate: .local/breezyvoice/review/v1/full_batch_gate.json\"",
+            ]
+        ),
+    )
+    (LOCAL_ROOT / f"commands/{VERSION}/build_pilot_review_template.sh").chmod(0o755)
 
     summary = {
         "version": VERSION,

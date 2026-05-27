@@ -33,6 +33,8 @@ On RTX 5080, run `bash tools/setup_breezyvoice_rtx5080_runtime.sh` before render
 
 After pilot rendering, use `tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full` to verify the subclip-to-parent and parent-to-combined stitch path before any full batch render.
 
+Then run `tools/build_breezyvoice_pilot_review.py`. It creates the local listening decision table and `full_batch_gate.json`; the full batch stays blocked until all four pilot parent rows are accepted by listening.
+
 ## Next Gate
 
 Run a pilot render before producing the full set:
