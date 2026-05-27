@@ -860,6 +860,7 @@ Answer: A.
 | Date | Output |
 | --- | --- |
 | `2026-05-22` | Jason / 靖中 agree on slide split, no-overlap boundary, and integrated evidence table |
+| `2026-05-27` | 靖中 confirms his PPT and written materials are complete; Jason owns the audio / voice portion and local integration check |
 | `2026-05-29` | Rough slides complete for both halves |
 | `2026-06-03` | CV slide and `3` pre/post-test questions complete |
 | `2026-06-05` | Integrated review copy ready for Prof. Wu / 靖中 timing check |
@@ -867,10 +868,126 @@ Answer: A.
 | `2026-06-15` | Rehearsal and backup copy ready |
 | `2026-06-16` | Session support / delivery |
 
+## Collaboration Delivery Log
+
+### `2026-05-27` LINE Intake From 靖中
+
+Record status:
+
+- Source: user-provided LINE transcript.
+- Status: 靖中 says his PPT and written materials are complete.
+- Local material state: the files named in the LINE thread have been downloaded locally; this note records the handoff without committing the source files into the public talk package.
+- Ownership: Jason owns the audio / voice portion and the next local integration check.
+- External status: 靖中 says he has already sent the PPT to the teacher and will upload the cybersecurity assignment on `2026-05-27`.
+
+Verbatim transcript:
+
+```text
+15:11 阿中 我這邊都完成囉~語音的部分在麻煩妳了感謝~
+
+15:11 阿中 Clinical-Cybersecurity-Requirements-for-Medical-Devices-and-Healthcare-Information-Systems-.pptx
+
+15:12 阿中 講稿.docx
+
+15:12 阿中 純文字板.docx
+
+15:12 阿中 我今天也會把資安作業上傳~
+
+15:16 阿聖 Jason 好的，
+
+15:16 阿聖 Jason 我也來處理一下～
+
+
+15:36 阿中 PPT我先給老師了～～
+
+15:36 阿中 辛苦你了謝謝～～
+```
+
+Next evidence gate:
+
+- Confirm the downloaded `Clinical-Cybersecurity-Requirements-for-Medical-Devices-and-Healthcare-Information-Systems-.pptx`, `講稿.docx`, and `純文字板.docx` are stored in a local-safe path.
+- Review whether the voice / audio portion changes slide timing, speaker handoff, or the final `2026-06-08` submission package.
+- Record the final integrated deck path after Jason completes the audio / voice-side work.
+
+## BreezyVoice Transcript Integration Recommendation
+
+Decision:
+
+- 靖中的內容可以彙整進 BreezyVoice-ready 逐字稿。
+- Use `純文字板.docx` as the first TTS text base because it is already closer to clean narration.
+- Use `講稿.docx` as the timing and slide-reference companion because it preserves slide numbers, section labels, and time allocation.
+- Keep the LINE transcript in this collaboration log as handoff evidence; keep the spoken TTS script limited to audience-facing talk text.
+
+Recommended local-safe workspace:
+
+- Put syncable text and small source files under `docs/speaker-notes/breezyvoice/`.
+- Keep generated audio, prompt audio, model cache, temporary WAV files, and failed render attempts under `.local/breezyvoice/`; this repo ignores `.local/`.
+- Current tracked paths:
+  - `docs/speaker-notes/breezyvoice/source/講稿.docx`
+  - `docs/speaker-notes/breezyvoice/source/純文字板.docx`
+  - `docs/speaker-notes/breezyvoice/cde-2026-jingzhong-section-clean.txt`
+  - `docs/speaker-notes/breezyvoice/cde-2026-jingzhong-section-timed-source.txt`
+  - `docs/speaker-notes/breezyvoice/cde-2026-jingzhong-section-batch-plan.csv`
+  - `docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-merged-transcript-workfile.md`
+- Current local-only paths:
+  - `.local/breezyvoice/prompts/jason_reference.wav`
+  - `.local/breezyvoice/output/`
+
+Merge status:
+
+- The full BreezyVoice transcript is not merged yet.
+- Current tracked model-facing content covers 靖中的 section only.
+- The merged transcript should become `docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-merged-transcript-clean.txt` after Jason's first-half spoken draft and the shared close are written.
+
+Transcript preparation rule:
+
+- Start from `純文字板.docx`.
+- Preserve the spoken paragraphs and final summary.
+- Strip document furniture such as the title line, time-allocation list, and slide labels from the model input.
+- Keep slide boundaries in the batch CSV filename or metadata so the spoken sentence stays natural.
+- Add oral transition lines only where the audio needs a natural handoff, for example: `接下來我們進入後半段，從白箱測試談到生命週期證據。`
+- Keep English technical terms when they are standard in the audience context: `White-box Testing`, `SBOM`, `K8S`, `PACS`, `HIS`, `EMR`, `FHIR`, `DICOM`, `Log4Shell`, `MOVEit`.
+- Use manual 注音 only for words that the pilot render misreads; BreezyVoice supports optional bopomofo hints such as `好[:ㄏㄠ3]`, and the model docs recommend using those hints sparingly.
+
+Batching recommendation:
+
+- Produce the audio with `batch_inference.py` so each clip remains reviewable and easy to regenerate.
+- Target `800-1200` Chinese characters per row for the first pass, then adjust after listening.
+- Keep one row to one slide or one tight topic block.
+- Use stable output names so bad clips can be regenerated without replacing the whole audio package.
+
+Suggested batch groups:
+
+| Group | Source slides | Output prefix | Purpose |
+| --- | --- | --- | --- |
+| 01 | `36-38` | `cde_jingzhong_36_38_whitebox_scope` | White-box positioning, outside-in limit, review scope |
+| 02 | `39-41` | `cde_jingzhong_39_41_device_evidence` | Medical-device cases and FDA-facing evidence |
+| 03 | `42-45` | `cde_jingzhong_42_45_deployment_k8s` | Deployment security, K8S, Tesla, Change Healthcare |
+| 04 | `46-49` | `cde_jingzhong_46_49_traceability_testing` | Threat-model traceability, test evidence, CrowdStrike, 524B |
+| 05 | `50-53` | `cde_jingzhong_50_53_remediation_sbom` | Remediation, dependency visibility, SBOM, Log4Shell / MOVEit |
+| 06 | `54-55` | `cde_jingzhong_54_55_operational_close` | Logging, recovery, Synnovis / NHS, closing summary |
+
+BreezyVoice settings:
+
+- `model_path`: pin this explicitly in every command. Start with `MediaTek-Research/BreezyVoice` unless the local installation is pinned to `MediaTek-Research/BreezyVoice-300M`.
+- `speaker_prompt_audio_path`: use a clean Taiwan Mandarin prompt clip in the same serious lecture style as the final output.
+- `speaker_prompt_text_transcription`: provide the exact transcript for the prompt audio; the BreezyVoice docs say this is highly recommended for better accuracy.
+- `content_to_synthesize`: pass only one batch segment at a time.
+- `output_path`: write each clip as an individual `.wav` in `.local/breezyvoice/output/`.
+- `PYTHONUTF8=1`: set this before running inference so Chinese text stays stable.
+
+Pilot gate:
+
+1. Render one short paragraph from slide `36`.
+2. Listen for pacing, pronunciation of English terms, and long-sentence fatigue.
+3. Add minimal punctuation or 注音 hints only where the pilot shows a real issue.
+4. Render one case-heavy paragraph from slide `43` or `44`.
+5. If both clips are clear, generate the six batch groups.
+
 ## Open Questions
 
 - Who has the latest Prof. Wu CV slide or preferred CV wording?
-- Does 靖中 already have a white-box / system-testing deck segment, or should this file seed his slides?
+- How should Jason integrate 靖中的 completed PPT, `講稿.docx`, and `純文字板.docx` into the final review copy?
 - Should the deck use the existing `Designing-Cybersecurity-in-Regulated-Environments-for-ProfWu(2).pptx` as the editable base?
 - Does CDE want PowerPoint, PDF, or both by `2026-06-08`?
 - Should the three pre/post-test questions be submitted as a separate Word file, email body, or inside the slide deck?
