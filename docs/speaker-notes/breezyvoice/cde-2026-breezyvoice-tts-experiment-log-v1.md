@@ -48,6 +48,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-06` | full-render-stop-gate | Machine-enforced full-render gate check before any next TTS run | stop_for_human_review_enforced_by_machine_gate | Wait for human listening review; if rejected again, record the review and apply only the next minimal pilot fix |
 | `EXP-20260528-07` | artifact-hygiene | Quarantine stale orphan pilot WAV before next human package | orphan_audio_quarantined_no_render | Refresh metadata, gate reports, objective verification, and Downloads package without rendering |
 | `EXP-20260528-08` | expert-review-ingestion | Add guarded expert-review ingestion path | ingestion_path_ready_gate_still_closed | Wait for completed expert review CSV; ingest it when returned |
+| `EXP-20260528-09` | guarded-full-render-template | Add guarded full-render template without running TTS | full_render_template_ready_but_gate_closed | Wait for returned expert review CSV; ingest it, then rerun the gate checker |
 
 ## Detailed Records
 
@@ -672,3 +673,71 @@ Next action:
 Additional observations:
 
 - This closes a process gap: the return path from human review now has the same rigor as export and rendering gates
+
+### EXP-20260528-09 - Add guarded full-render template without running TTS
+
+- Timestamp: `2026-05-28T00:55:00+08:00`
+- Stage: `guarded-full-render-template`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `all`
+
+Reason:
+
+- After human review accepts all pilot chunks, the workflow needs a single safe command for full render
+- The command must not allow manual full-batch rendering while full_batch_allowed=false
+
+Hypothesis:
+
+- A generated run_full_render_template.sh that calls the full-render gate checker before rendering all subclips will preserve the human-review boundary and standardize the final stitch path
+
+Change summary:
+
+- Added guarded full-render command template generation and aligned all-selection stitch output to cde-2026-breezyvoice-80min-v1.wav
+
+Commands:
+
+- python3 tools/prepare_breezyvoice_render_package.py
+- bash .local/breezyvoice/commands/v1/run_full_render_template.sh
+
+Logs:
+
+- .local/breezyvoice/review/v1/full_render_gate_check.json
+- .local/breezyvoice/commands/v1/run_full_render_template.sh
+
+Outputs:
+
+- tools/prepare_breezyvoice_render_package.py
+- tools/stitch_breezyvoice_outputs.py
+- docs/speaker-notes/breezyvoice/README.md
+- docs/speaker-notes/breezyvoice/model-ready/README.md
+
+Machine result:
+
+- Guarded full-render template exited 2 at the gate checker; no full TTS render ran and cde-2026-breezyvoice-80min-v1.wav was not created
+
+Human result:
+
+- No new human review received
+
+Decision: `full_render_template_ready_but_gate_closed`
+
+Fix applied:
+
+- No TTS text or audio change; added guarded future command path
+
+Downloads package:
+
+- none recorded
+
+Stop rule:
+
+- Do not run full render unless run_full_render_template.sh reaches rendering after check_breezyvoice_full_render_gate.py exits 0
+
+Next action:
+
+- Wait for returned expert review CSV; ingest it, then rerun the gate checker
+
+Additional observations:
+
+- The final full WAV path is now explicit and matches audio_output_spec.json, reducing post-accept command ambiguity

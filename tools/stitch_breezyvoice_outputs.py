@@ -131,6 +131,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--subclip-manifest", default="")
     parser.add_argument("--pilot-manifest", default="")
     parser.add_argument("--render-manifest", default="")
+    parser.add_argument("--full-output", default="", help="Optional full stitched output WAV path.")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -199,7 +200,12 @@ def main() -> None:
     }
 
     if args.stitch_full:
-        full_output = LOCAL_ROOT / f"output/{args.version}/full/cde-2026-breezyvoice-{args.selection}-stitched-v1.wav"
+        if args.full_output:
+            full_output = repo_relative(args.full_output)
+        elif args.selection == "all":
+            full_output = LOCAL_ROOT / f"output/{args.version}/full/cde-2026-breezyvoice-80min-v1.wav"
+        else:
+            full_output = LOCAL_ROOT / f"output/{args.version}/full/cde-2026-breezyvoice-{args.selection}-stitched-v1.wav"
         full_result = stitch_wavs(parent_paths, full_output, args.silence_ms)
         summary["full_stitch"] = full_result
         print(f"stitched_full: {full_result['output_wav']}")

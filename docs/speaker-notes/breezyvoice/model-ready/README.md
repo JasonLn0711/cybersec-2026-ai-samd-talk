@@ -49,6 +49,12 @@ Before a full render command, run
 must exit `0`; otherwise the full render remains closed and the next action is
 human listening review or the next expert-specified pilot repair.
 
+Once the gate opens, run
+`bash .local/breezyvoice/commands/v1/run_full_render_template.sh`. The template
+checks the gate again before rendering, renders all manifest-listed subclips,
+and stitches the final WAV to
+`.local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.wav`.
+
 Returned expert review CSVs should be ingested with
 `tools/ingest_breezyvoice_expert_review.py`. The tool requires explicit
 `accept` or `reject` decisions for the four pilot parent chunks before it will
