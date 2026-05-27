@@ -35,6 +35,9 @@ REVIEW_FILES = [
     "pilot_audio_inventory.csv",
     "pilot_status.json",
     "render_review_log.csv",
+    "pilot_correction_matrix.csv",
+    "pilot_correction_matrix.md",
+    "pilot_correction_matrix.json",
     "orphan_audio_inventory.csv",
     "full_render_gate_check.json",
     "objective_verification.json",
@@ -226,7 +229,8 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
 1. `README_FOR_TTS_EXPERT.md`
 2. `review/pilot_listening_review.md`
 3. `review/experiment_log/cde-2026-breezyvoice-tts-experiment-log-v1.md`
-4. `forms/expert_pilot_review_form.csv`
+4. `review/pilot_correction_matrix.md`
+5. `forms/expert_pilot_review_form.csv`
 
 ## 請優先聽的音檔
 
@@ -383,6 +387,10 @@ For context on why the current pilot exists and what was already changed, read
 `review/experiment_log/cde-2026-breezyvoice-tts-experiment-log-v1.md`. That log
 is the authority for previous render attempts, text-conditioning rationale,
 machine results, expert feedback, and current stop rules.
+
+For chunk-level repair traceability, read `review/pilot_correction_matrix.md`.
+It maps each expert issue to the model-facing conditioning already applied and
+the exact listening question that still needs human judgement.
 
 Use `decision_accept_or_reject` values:
 

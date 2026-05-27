@@ -83,6 +83,7 @@ def main() -> int:
         "pilot_review": LOCAL_ROOT / f"review/{VERSION}/pilot_listening_review.csv",
         "gate_check": LOCAL_ROOT / f"review/{VERSION}/full_render_gate_check.json",
         "review_log": LOCAL_ROOT / f"review/{VERSION}/render_review_log.csv",
+        "correction_matrix": LOCAL_ROOT / f"review/{VERSION}/pilot_correction_matrix.csv",
         "reference_gate": LOCAL_ROOT / f"prompts/{VERSION}/reference_audio_gate.json",
         "audio_spec": LOCAL_ROOT / f"specs/{VERSION}/audio_output_spec.json",
         "experiment_log": REPO_ROOT / "docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.jsonl",
@@ -102,6 +103,7 @@ def main() -> int:
     pilot_review = read_csv(paths["pilot_review"])
     gate_check = read_json(paths["gate_check"])
     review_log = read_csv(paths["review_log"])
+    correction_matrix = read_csv(paths["correction_matrix"])
     reference_gate = read_json(paths["reference_gate"])
     audio_spec = read_json(paths["audio_spec"])
     experiment_records = [
@@ -234,6 +236,12 @@ def main() -> int:
             "completed" if len(experiment_records) >= 7 else "failed",
             [rel(paths["experiment_log"])],
             [f"records={len(experiment_records)}"],
+        ),
+        row(
+            "15. pilot correction matrix",
+            "completed" if len(correction_matrix) == 4 and all(row_.get("current_fix_status") for row_ in correction_matrix) else "failed",
+            [rel(paths["correction_matrix"])],
+            [f"rows={len(correction_matrix)}"],
         ),
     ]
 

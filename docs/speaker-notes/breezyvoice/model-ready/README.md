@@ -34,10 +34,12 @@ On RTX 5080, run `bash tools/setup_breezyvoice_rtx5080_runtime.sh` before render
 After pilot rendering, use `tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full` to verify the subclip-to-parent and parent-to-combined stitch path before any full batch render.
 
 Then run `tools/build_breezyvoice_pilot_review.py` and
-`tools/build_breezyvoice_render_review_log.py`. The first tool creates the local
-listening decision table and `full_batch_gate.json`; the second consolidates
-manifest rows, parent WAV runtime, pronunciation issue, fix status, accepted
-state, and review source into `render_review_log.csv`. The full batch stays
+`tools/build_breezyvoice_render_review_log.py`, followed by
+`tools/build_breezyvoice_pilot_correction_matrix.py`. The first tool creates
+the local listening decision table and `full_batch_gate.json`; the second
+consolidates manifest rows, parent WAV runtime, pronunciation issue, fix
+status, accepted state, and review source into `render_review_log.csv`; the
+third gives reviewers a chunk-level issue-to-fix matrix. The full batch stays
 blocked until all four pilot parent rows are accepted by listening.
 
 To hand the current pilot outputs to a TTS expert, run `python3 tools/export_breezyvoice_expert_review_package.py --overwrite`. The exporter copies the four required parent WAVs, the stitched pilot WAV, the manifest-listed pilot subclips, matching model text, manifests, ASR notes, the expert prompt, experiment log, and a fillable review CSV into `~/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/`, then creates a `.tar.gz` next to it.

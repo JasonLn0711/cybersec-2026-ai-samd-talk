@@ -1145,10 +1145,12 @@ def prepare_package() -> None:
                 "",
                 "python3 tools/build_breezyvoice_pilot_review.py",
                 "python3 tools/build_breezyvoice_render_review_log.py",
+                "python3 tools/build_breezyvoice_pilot_correction_matrix.py",
                 "",
                 "echo \"Review: .local/breezyvoice/review/v1/pilot_listening_review.md\"",
                 "echo \"Decision CSV: .local/breezyvoice/review/v1/pilot_listening_review.csv\"",
                 "echo \"Render review log: .local/breezyvoice/review/v1/render_review_log.csv\"",
+                "echo \"Pilot correction matrix: .local/breezyvoice/review/v1/pilot_correction_matrix.md\"",
                 "echo \"Full batch gate: .local/breezyvoice/review/v1/full_batch_gate.json\"",
             ]
         ),
@@ -1224,6 +1226,7 @@ def prepare_package() -> None:
                 "",
                 "python3 tools/build_breezyvoice_pilot_review.py",
                 "python3 tools/build_breezyvoice_render_review_log.py",
+                "python3 tools/build_breezyvoice_pilot_correction_matrix.py",
                 "python3 tools/verify_breezyvoice_objective.py --write-report || true",
             ]
         ),

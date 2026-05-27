@@ -50,6 +50,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-08` | expert-review-ingestion | Add guarded expert-review ingestion path | ingestion_path_ready_gate_still_closed | Wait for completed expert review CSV; ingest it when returned |
 | `EXP-20260528-09` | guarded-full-render-template | Add guarded full-render template without running TTS | full_render_template_ready_but_gate_closed | Wait for returned expert review CSV; ingest it, then rerun the gate checker |
 | `EXP-20260528-10` | review-log-traceability | Build consolidated render review log before next human gate | render_review_log_builder_ready_gate_still_closed | Export refreshed Downloads review package and wait for completed expert review CSV or specific minimal pilot-fix instruction |
+| `EXP-20260528-11` | human-review-traceability | Add pilot correction matrix to human review package | correction_matrix_ready_gate_still_closed | Wait for completed expert review CSV or a specific minimal pilot-fix instruction; do not run full render |
 
 ## Detailed Records
 
@@ -817,3 +818,80 @@ Next action:
 Additional observations:
 
 - FIRST PRINCIPLE: audio generation is a controlled manufacturing step; the review log is the batch record that binds source, chunk, runtime, defect, fix, and gate decision before scale-up
+
+### EXP-20260528-11 - Add pilot correction matrix to human review package
+
+- Timestamp: `2026-05-28T01:06:00+08:00`
+- Stage: `human-review-traceability`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case, cde_full_16_k8s_review_controls, cde_full_20_crowdstrike_update_524b, cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- The gate package needed a compact per-chunk map from expert-reported issue to already-applied text conditioning and the remaining listening question
+
+Hypothesis:
+
+- A correction matrix will reduce review ambiguity while preserving the stop rule that human listening must accept all four pilot chunks before full render
+
+Change summary:
+
+- Added tools/build_breezyvoice_pilot_correction_matrix.py
+- Generated pilot_correction_matrix.csv, .md, and .json under local review evidence
+- Updated expert package export and README instructions so reviewers see the issue-to-fix matrix
+
+Commands:
+
+- python3 tools/prepare_breezyvoice_render_package.py
+- python3 tools/build_breezyvoice_pilot_review.py
+- python3 tools/build_breezyvoice_render_review_log.py
+- python3 tools/build_breezyvoice_pilot_correction_matrix.py
+- python3 tools/check_breezyvoice_full_render_gate.py --write-report
+- python3 tools/verify_breezyvoice_objective.py --write-report
+- python3 tools/export_breezyvoice_expert_review_package.py --overwrite
+
+Logs:
+
+- .local/breezyvoice/review/v1/pilot_correction_matrix.md
+- .local/breezyvoice/review/v1/pilot_correction_matrix.csv
+- .local/breezyvoice/review/v1/objective_verification.json
+
+Outputs:
+
+- tools/build_breezyvoice_pilot_correction_matrix.py
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/review/pilot_correction_matrix.md
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Machine result:
+
+- Correction matrix generated four pilot rows with runtime, gate decision, expert issue, applied conditioning, fix status, next listener question, and stop rule
+- Objective verifier now reports pilot correction matrix completed while overall status remains gated_waiting_human_review
+- Full-render gate checker still exits 2 with allowed=false, as expected
+
+Human result:
+
+- No new human listening review received in this step
+
+Decision: `correction_matrix_ready_gate_still_closed`
+
+Fix applied:
+
+- Review traceability only; no model-facing text change, no TTS render, no full batch run
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- If human listening is required, keep the package in Downloads and stop until accept/reject decisions or specific minimal pilot fixes return
+
+Next action:
+
+- Wait for completed expert review CSV or a specific minimal pilot-fix instruction; do not run full render
+
+Additional observations:
+
+- FIRST PRINCIPLE: the pilot gate is a quality-control batch record; reviewers need to know whether they are judging an unresolved defect or a fix that still needs acceptance
