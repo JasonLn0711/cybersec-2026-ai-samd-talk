@@ -1,0 +1,458 @@
+#!/usr/bin/env python3
+"""Export a local BreezyVoice pilot review package for human TTS experts.
+
+The package is intentionally written outside git-tracked paths by default.
+It copies only the current pilot audio, traceability text, manifests, review
+gates, and expert-facing instructions needed before the full render gate.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import shutil
+import tarfile
+import wave
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+LOCAL_ROOT = REPO_ROOT / ".local/breezyvoice"
+VERSION = "v1"
+DEFAULT_OUTPUT_DIR = Path.home() / "Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28"
+
+REVIEW_FILES = [
+    "pilot_listening_review.md",
+    "pilot_listening_review.csv",
+    "pilot_review_checklist.md",
+    "full_render_acceptance_gate.md",
+    "full_batch_gate.json",
+    "pilot_machine_review.md",
+    "pilot_machine_review.json",
+    "pilot_stitch_summary.json",
+    "pilot_parent_stitch_inventory.csv",
+    "pilot_audio_inventory.csv",
+    "pilot_status.json",
+    "render_review_log.csv",
+]
+
+MANIFEST_FILES = [
+    "render_manifest.csv",
+    "render_manifest.jsonl",
+    "subclip_manifest.csv",
+    "subclip_manifest.jsonl",
+    "pilot_manifest.csv",
+    "pilot_manifest.jsonl",
+    "package_summary.json",
+]
+
+
+def read_csv(path: Path) -> list[dict[str, str]]:
+    with path.open(encoding="utf-8", newline="") as fh:
+        return list(csv.DictReader(fh))
+
+
+def write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.rstrip() + "\n", encoding="utf-8")
+
+
+def rel(path: Path, base: Path = REPO_ROOT) -> str:
+    return str(path.relative_to(base))
+
+
+def copy_file(src: Path, dst: Path) -> None:
+    if not src.exists():
+        raise FileNotFoundError(src)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
+
+
+def wav_duration(path: Path) -> float:
+    with wave.open(str(path), "rb") as wav:
+        return wav.getnframes() / float(wav.getframerate())
+
+
+def load_state() -> tuple[dict[str, object], dict[str, object], dict[str, object], list[dict[str, str]]]:
+    summary = json.loads((LOCAL_ROOT / f"manifests/{VERSION}/package_summary.json").read_text(encoding="utf-8"))
+    gate = json.loads((LOCAL_ROOT / f"review/{VERSION}/full_batch_gate.json").read_text(encoding="utf-8"))
+    machine = json.loads((LOCAL_ROOT / f"review/{VERSION}/pilot_machine_review.json").read_text(encoding="utf-8"))
+    review_rows = read_csv(LOCAL_ROOT / f"review/{VERSION}/pilot_listening_review.csv")
+    return summary, gate, machine, review_rows
+
+
+def package_path_from_repo_value(value: str, package: Path, kind: str) -> Path:
+    name = Path(value).name
+    if kind == "parent_audio":
+        return package / "audio/parent_chunks" / name
+    if kind == "normalized_text":
+        return package / "text/normalized_segments" / name
+    raise ValueError(kind)
+
+
+def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> None:
+    full_wav = LOCAL_ROOT / f"output/{VERSION}/full/cde-2026-breezyvoice-pilot-stitched-v1.wav"
+    copy_file(full_wav, package / "audio/full" / full_wav.name)
+
+    for row in review_rows:
+        prefix = row["output_prefix"]
+        copy_file(REPO_ROOT / row["parent_wav"], package / "audio/parent_chunks" / Path(row["parent_wav"]).name)
+        copy_file(REPO_ROOT / row["normalized_text_path"], package / "text/normalized_segments" / Path(row["normalized_text_path"]).name)
+        clean_text = LOCAL_ROOT / f"inputs/{VERSION}/segments/{prefix}.txt"
+        copy_file(clean_text, package / "text/segments" / clean_text.name)
+        for src in sorted((LOCAL_ROOT / f"output/{VERSION}/subclips").glob(f"{prefix}_p*.wav")):
+            copy_file(src, package / "audio/subclips" / src.name)
+        for src in sorted((LOCAL_ROOT / f"inputs/{VERSION}/subclips").glob(f"{prefix}_p*.txt")):
+            copy_file(src, package / "text/subclips" / src.name)
+
+    review_dir = LOCAL_ROOT / f"review/{VERSION}"
+    for filename in REVIEW_FILES:
+        copy_file(review_dir / filename, package / "review" / filename)
+
+    asr_dir = review_dir / "asr"
+    copy_file(asr_dir / "cde-2026-breezyvoice-pilot-stitched-v1.txt", package / "review/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt")
+    copy_file(asr_dir / "pilot_whisper_tiny_after_term_normalization.log", package / "review/asr/pilot_whisper_tiny_after_term_normalization.log")
+
+    manifest_dir = LOCAL_ROOT / f"manifests/{VERSION}"
+    for filename in MANIFEST_FILES:
+        copy_file(manifest_dir / filename, package / "manifests" / filename)
+
+    copy_file(
+        LOCAL_ROOT / f"inputs/{VERSION}/pronunciation_override_policy.md",
+        package / "reference/pronunciation_override_policy.md",
+    )
+    copy_file(
+        REPO_ROOT / "docs/speaker-notes/breezyvoice/model-ready/cde-2026-breezyvoice-pronunciation-notes.md",
+        package / "reference/cde-2026-breezyvoice-pronunciation-notes.md",
+    )
+
+
+def expert_rows(package: Path, review_rows: list[dict[str, str]]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for row in review_rows:
+        parent_audio = package_path_from_repo_value(row["parent_wav"], package, "parent_audio")
+        normalized_text = package_path_from_repo_value(row["normalized_text_path"], package, "normalized_text")
+        rows.append(
+            {
+                "output_prefix": row["output_prefix"],
+                "package_audio_path": rel(parent_audio, package),
+                "subclip_count": row["subclip_count"],
+                "runtime_seconds": f"{wav_duration(parent_audio):.2f}",
+                "target_seconds": row["target_seconds"],
+                "runtime_to_target_ratio": row["runtime_to_target_ratio"],
+                "review_status": row["review_status"],
+                "normalized_text_path": rel(normalized_text, package),
+                "expert_check_acronyms": "",
+                "expert_check_key_terms": "",
+                "expert_check_pacing": "",
+                "expert_check_fatigue": "",
+                "expert_check_opening_handoff_close": "",
+                "expert_check_no_markup_spoken": "",
+                "decision_accept_or_reject": "",
+                "pronunciation_issue": "",
+                "fix_recommendation": "",
+                "notes": "",
+            }
+        )
+    return rows
+
+
+def write_expert_form(package: Path, rows: list[dict[str, object]]) -> None:
+    write_csv(package / "forms/expert_pilot_review_form.csv", rows, list(rows[0].keys()))
+
+
+def write_playlist(package: Path, rows: list[dict[str, object]]) -> None:
+    full = package / "audio/full/cde-2026-breezyvoice-pilot-stitched-v1.wav"
+    lines = [
+        "#EXTM3U",
+        "# Combined pilot first",
+        f"#EXTINF:{int(wav_duration(full))},cde-2026-breezyvoice-pilot-stitched-v1",
+        "audio/full/cde-2026-breezyvoice-pilot-stitched-v1.wav",
+        "",
+    ]
+    for row in rows:
+        lines.append(f"#EXTINF:{int(float(str(row['runtime_seconds'])))},{row['output_prefix']}")
+        lines.append(str(row["package_audio_path"]))
+    write_text(package / "review/package_relative_playlist.m3u", "\n".join(lines))
+
+
+def expert_prompt() -> str:
+    return """# Prompt For TTS Expert
+
+請協助審查這份 CDE 2026 BreezyVoice pilot TTS 音檔包。目標不是重寫講稿，而是在進入完整 80 分鐘 full render 前，判斷目前四段 pilot 音檔是否已經達到可接受品質，或指出最小必要修正。
+
+## 背景
+
+這是 80 分鐘醫療資安課程的 BreezyVoice TTS pilot review package。完整工程稿已凍結為 v1 source：
+
+- 26 個 chunks
+- 80:00 timing plan
+- 約 28053 model-text characters
+- 93 個 planned subclips
+- 本次 pilot 使用 no-reference / default voice mode
+- full render 目前尚未開放，必須等四段 pilot 都通過人工聽審
+
+請先閱讀：
+
+1. `README_FOR_TTS_EXPERT.md`
+2. `review/pilot_listening_review.md`
+3. `forms/expert_pilot_review_form.csv`
+
+## 請優先聽的音檔
+
+請先聽整體連續感：
+
+- `audio/full/cde-2026-breezyvoice-pilot-stitched-v1.wav`
+
+接著逐段審查這四個 parent chunk，這四段是正式 gate decision unit：
+
+- `audio/parent_chunks/cde_full_01_opening_positioning_crazyhunter_entry_case.wav`
+- `audio/parent_chunks/cde_full_16_k8s_review_controls.wav`
+- `audio/parent_chunks/cde_full_20_crowdstrike_update_524b.wav`
+- `audio/parent_chunks/cde_full_26_shared_close_test_anchors.wav`
+
+如果某段有問題，再用 `audio/subclips/` 內的對應 p01, p02, p03, p04 小段定位問題。
+
+## 審查重點
+
+請針對每個 parent chunk 判斷：
+
+1. 英文縮寫是否可懂且沒有嚴重連讀或亂唸：
+   - C D E
+   - A I
+   - P A C S
+   - H I S
+   - E M R
+   - F D A
+   - T F D A
+   - S B O M
+
+2. 關鍵術語是否穩定：
+   - K eight S
+   - FD&C Act Section 524B / 五二四 B
+   - Channel File 二九一
+   - Log four Shell
+   - White box Testing
+   - PACS downtime / 臨床連續性 / evidence chain
+
+3. 語速與 pacing：
+   - 是否像 80 分鐘講課，而不是太趕的逐字稿朗讀？
+   - 特別注意 `cde_full_16_k8s_review_controls`，目前機器 gate 標示為 `needs_pacing_review`，因為 runtime ratio 約 0.73。
+
+4. 長句聽感：
+   - 是否疲勞？
+   - 是否有明顯喘不過氣、斷句不自然、資訊密度太高的地方？
+
+5. 開場、技術段與結尾：
+   - 開場是否穩定可信？
+   - K8S / CrowdStrike / 524B 這類技術段是否仍可懂？
+   - 結尾是否有 CDE 講課需要的收束感與權威感？
+
+6. 控制標籤安全：
+   - 是否聽到 BV26、Markdown、註解、括號、奇怪符號、檔名或其他不應被念出的內容？
+
+## 請回填的檔案
+
+請回填：
+
+- `forms/expert_pilot_review_form.csv`
+
+每一列代表一個 parent chunk。請在 `decision_accept_or_reject` 填：
+
+- `accept`：此段可進入 full render gate
+- `reject`：此段需要修正後重跑
+
+如果填 `reject`，請補：
+
+- `pronunciation_issue`：實際聽到的問題
+- `fix_recommendation`：建議的最小修正
+- `notes`：時間點、subclip filename、或精確問題片語
+
+## 修正建議請依照這個優先順序
+
+請不要直接大改全文。若要修，請優先建議最小改動：
+
+1. 標點與斷句
+2. 英文詞 spacing
+3. 單一術語替換
+4. subclip 切更短
+5. 單段 preset / pause 調整
+6. 最後才建議改口播內容
+
+## 重要判斷原則
+
+這份 ASR transcript 只能當輔助，不能當主要判斷依據。請以實際聽感為準。
+
+通過標準是：
+
+- 可懂
+- 穩定
+- 沒有控制標籤誤讀
+- 專有名詞可接受
+- 段落不疲勞
+- 語氣符合 CDE 醫療資安講課
+
+只要四段 parent chunk 都被人工審查為 `accept`，才會進入完整 80 分鐘 full render。"""
+
+
+def readme(summary: dict[str, object], gate: dict[str, object], rows: list[dict[str, object]]) -> str:
+    table = "\n".join(
+        [
+            "| Output prefix | Audio | Runtime | Target | Ratio | Current status |",
+            "| --- | --- | ---: | ---: | ---: | --- |",
+            *[
+                f"| `{row['output_prefix']}` | `{row['package_audio_path']}` | {row['runtime_seconds']} | {row['target_seconds']} | {row['runtime_to_target_ratio']} | {row['review_status']} |"
+                for row in rows
+            ],
+        ]
+    )
+    return f"""# CDE 2026 BreezyVoice Pilot Human Review Package
+
+Prepared for human listening review before any full 80-minute BreezyVoice render. The current gate intentionally keeps full rendering closed until all four pilot parent chunks are accepted by listening.
+
+## Current Machine State
+
+- Source version: v1 80-minute engineering source
+- Frozen chunks: {summary['segments']}
+- Full planned timing: {summary['duration_seconds']} seconds / 80:00
+- Model text characters: {summary['model_text_characters']}
+- Planned full subclips: {summary['subclips']}
+- Pilot parent chunks: {summary['pilot_segments']}
+- Reference audio required: {summary['reference_audio_required']}
+- Pilot execution mode: {summary['pilot_execution_mode']}
+- Full batch allowed now: {gate['full_batch_allowed']}
+- Machine review status: {gate['machine_review_status']}
+
+Important: ASR is only an auxiliary signal. Judge by listening to the WAV files.
+
+## What To Listen To First
+
+1. `audio/full/cde-2026-breezyvoice-pilot-stitched-v1.wav`
+2. The four parent chunks in `audio/parent_chunks/`
+3. The 15 files in `audio/subclips/` only when a parent chunk needs defect localization
+
+## Required Parent-Chunk Decisions
+
+{table}
+
+Special attention:
+
+- `cde_full_16_k8s_review_controls` is currently marked `needs_pacing_review` because its runtime ratio is about 0.73.
+- The ASR machine check found no forbidden control markup, but it still missed or distorted several technical terms.
+
+## How To Fill The Review
+
+Fill `forms/expert_pilot_review_form.csv`.
+
+Use `decision_accept_or_reject` values:
+
+- `accept`: usable for full-batch gate
+- `reject`: needs a small repair before full render
+
+If rejected, fill `pronunciation_issue`, `fix_recommendation`, and `notes`.
+
+Full render should remain blocked until all four required parent chunks are accepted by human listening.
+"""
+
+
+def write_package_summary(package: Path, gate: dict[str, object], summary: dict[str, object], rows: list[dict[str, object]]) -> None:
+    payload = {
+        "package": str(package),
+        "created_for": "CDE 2026 BreezyVoice pilot human review",
+        "required_review_units": [row["output_prefix"] for row in rows],
+        "full_pilot_audio": "audio/full/cde-2026-breezyvoice-pilot-stitched-v1.wav",
+        "expert_prompt": "PROMPT_FOR_TTS_EXPERT.md",
+        "expert_form": "forms/expert_pilot_review_form.csv",
+        "full_batch_allowed_before_review": gate["full_batch_allowed"],
+        "reference_audio_required": summary["reference_audio_required"],
+        "pilot_execution_mode": summary["pilot_execution_mode"],
+    }
+    (package / "PACKAGE_SUMMARY.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def create_archive(package: Path) -> Path:
+    archive_path = package.with_suffix(".tar.gz")
+    if archive_path.exists():
+        archive_path.unlink()
+    with tarfile.open(archive_path, "w:gz") as tar:
+        tar.add(package, arcname=package.name)
+    return archive_path
+
+
+def validate_package(package: Path) -> dict[str, object]:
+    counts = {
+        "full_wavs": len(list((package / "audio/full").glob("*.wav"))),
+        "parent_wavs": len(list((package / "audio/parent_chunks").glob("*.wav"))),
+        "subclip_wavs": len(list((package / "audio/subclips").glob("*.wav"))),
+        "normalized_segment_txt": len(list((package / "text/normalized_segments").glob("*.txt"))),
+        "subclip_txt": len(list((package / "text/subclips").glob("*.txt"))),
+        "expert_prompt_exists": (package / "PROMPT_FOR_TTS_EXPERT.md").exists(),
+        "expert_readme_exists": (package / "README_FOR_TTS_EXPERT.md").exists(),
+        "expert_form_exists": (package / "forms/expert_pilot_review_form.csv").exists(),
+    }
+    expected = {
+        "full_wavs": 1,
+        "parent_wavs": 4,
+        "subclip_wavs": 15,
+        "normalized_segment_txt": 4,
+        "subclip_txt": 15,
+        "expert_prompt_exists": True,
+        "expert_readme_exists": True,
+        "expert_form_exists": True,
+    }
+    failures = {key: (counts[key], value) for key, value in expected.items() if counts[key] != value}
+    if failures:
+        raise RuntimeError(f"Package validation failed: {failures}")
+    return counts
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Export BreezyVoice pilot audio and review files for expert listening.")
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--no-archive", action="store_true")
+    args = parser.parse_args()
+
+    package = args.output_dir.expanduser().resolve()
+    if package.exists():
+        if not args.overwrite:
+            raise SystemExit(f"Output directory exists; pass --overwrite: {package}")
+        shutil.rmtree(package)
+    package.mkdir(parents=True)
+
+    summary, gate, _machine, review_rows = load_state()
+    copy_package_inputs(package, review_rows)
+    rows = expert_rows(package, review_rows)
+    write_expert_form(package, rows)
+    write_playlist(package, rows)
+    write_text(package / "PROMPT_FOR_TTS_EXPERT.md", expert_prompt())
+    write_text(package / "README_FOR_TTS_EXPERT.md", readme(summary, gate, rows))
+    write_package_summary(package, gate, summary, rows)
+    counts = validate_package(package)
+    archive = None if args.no_archive else create_archive(package)
+
+    print(
+        json.dumps(
+            {
+                "package": str(package),
+                "archive": str(archive) if archive else "",
+                "counts": counts,
+                "full_batch_allowed": gate["full_batch_allowed"],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()
