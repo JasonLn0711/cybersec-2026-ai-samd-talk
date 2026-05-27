@@ -12,19 +12,20 @@ This folder owns the tracked, syncable text inputs for BreezyVoice production.
 
 | File | Role |
 | --- | --- |
+| `model-ready/` | Current expert-delivered full-session BreezyVoice transcript, batch CSV, and pronunciation notes. This is the baseline for pilot rendering. |
 | `source/講稿.docx` | 靖中的 original speaker-script DOCX with slide labels and timing structure. |
 | `source/純文字板.docx` | 靖中的 original clean-text DOCX. |
 | `cde-2026-jingzhong-section-clean.txt` | First BreezyVoice text base extracted from `source/純文字板.docx`. |
 | `cde-2026-jingzhong-section-timed-source.txt` | Timing and slide-reference text extracted from `source/講稿.docx`. |
 | `cde-2026-jingzhong-section-batch-plan.csv` | Planned output groups for batch rendering and review. |
-| `cde-2026-breezyvoice-merged-transcript-workfile.md` | Current merge-status file for the all-session BreezyVoice transcript. It is not model-ready yet. |
+| `cde-2026-breezyvoice-merged-transcript-workfile.md` | Merge-status and delivery-intake file for the all-session BreezyVoice transcript. |
 | `expert-package-source/` | TTS expert handoff notes, full transcript source bundle, and full-session batch outline. |
 
 ## Production Rule
 
-Use the clean text as the spoken source. Use the timed source to recover slide boundaries, pacing, and section ownership. Keep the LINE transcript and collaboration notes in the CDE prep note, not in the spoken audio script.
+Use `model-ready/cde-2026-breezyvoice-merged-transcript-batch.csv` as the current rendering baseline. Use the `text` column as BreezyVoice input and keep metadata columns for review, routing, and regeneration.
 
-The full BreezyVoice transcript is not merged yet. Build it as `cde-2026-breezyvoice-merged-transcript-clean.txt` after Jason's first-half spoken draft and the shared close are written.
+Use the earlier clean and timed source files as traceability companions. Keep the LINE transcript and collaboration notes in the CDE prep note, not in the spoken audio script.
 
 Generated audio should go to:
 

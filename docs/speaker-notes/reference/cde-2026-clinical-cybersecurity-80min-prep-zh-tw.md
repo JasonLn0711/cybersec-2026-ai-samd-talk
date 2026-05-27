@@ -935,9 +935,24 @@ Recommended local-safe workspace:
 
 Merge status:
 
-- The full BreezyVoice transcript is not merged yet.
-- Current tracked model-facing content covers 靖中的 section only.
-- The merged transcript should become `docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-merged-transcript-clean.txt` after Jason's first-half spoken draft and the shared close are written.
+- The full BreezyVoice transcript has been merged by the TTS expert and is now tracked as the current model-ready baseline.
+- Current tracked model-facing content covers Jason's first half, 靖中的 second half, the natural handoff, and the shared close.
+- The expert delivery lives under `docs/speaker-notes/breezyvoice/model-ready/`.
+
+Expert delivery received on `2026-05-27`:
+
+| File | Role |
+| --- | --- |
+| `docs/speaker-notes/breezyvoice/model-ready/cde-2026-breezyvoice-merged-transcript-clean.txt` | Complete clean transcript for human review before rendering. |
+| `docs/speaker-notes/breezyvoice/model-ready/cde-2026-breezyvoice-merged-transcript-batch.csv` | BreezyVoice batch CSV with `26` segments and stable `output_prefix` values. |
+| `docs/speaker-notes/breezyvoice/model-ready/cde-2026-breezyvoice-pronunciation-notes.md` | Pronunciation notes for acronyms, technical terms, event names, and product names. |
+
+Expert-return notes:
+
+- The transcript follows the final PPT order and rhythm rather than mechanically concatenating source text.
+- Jason's front half, 靖中的 back half, and the shared close are unified into formal Taiwan Mandarin lecture voice.
+- The batch CSV `text` column contains only BreezyVoice-readable narration, without slide labels, Markdown headings, table fields, source notes, or planning notes.
+- Pronunciation notes stay focused on likely TTS misreads and avoid over-annotation.
 
 Transcript preparation rule:
 
@@ -978,11 +993,12 @@ BreezyVoice settings:
 
 Pilot gate:
 
-1. Render one short paragraph from slide `36`.
-2. Listen for pacing, pronunciation of English terms, and long-sentence fatigue.
-3. Add minimal punctuation or 注音 hints only where the pilot shows a real issue.
-4. Render one case-heavy paragraph from slide `43` or `44`.
-5. If both clips are clear, generate the six batch groups.
+1. Render `cde_full_01_opening_positioning_crazyhunter_entry_case`.
+2. Render one acronym-heavy middle row from the batch CSV.
+3. Render `cde_full_26_shared_close_test_anchors`.
+4. Listen for pacing, pronunciation of English terms, long-sentence fatigue, and handoff smoothness.
+5. Add minimal punctuation or pronunciation hints only where the pilot shows a real issue.
+6. Regenerate affected rows by stable `output_prefix`, then generate the remaining rows.
 
 ## Open Questions
 

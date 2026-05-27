@@ -1,29 +1,49 @@
 # CDE 2026 BreezyVoice Merged Transcript Workfile
 
-Status: `not model-ready yet`
+Status: `model-ready expert delivery received`
 
-This file tracks the merge path for the full BreezyVoice transcript. The current repo has 靖中的 section extracted and synced, but the full all-session BreezyVoice transcript has not been merged yet.
+This file tracks the merge path for the full BreezyVoice transcript and records the `2026-05-27` expert delivery now stored under `model-ready/`.
 
 ## Current State
 
 | Segment | Slides / Time | Current source | Model-ready status |
 | --- | --- | --- | --- |
-| Opening / Prof. Wu framing | `1-5`, about `0-7` min | CDE prep note slide design and speaker lines | Needs spoken draft |
-| Jason hospital and regulation section | `6-20`, about `7-31` min | CDE prep note slide design and Jason content spine | Needs spoken draft |
-| Jason attack surface and testing section | `21-34`, about `31-55` min | CDE prep note slide design and Jason content spine | Needs spoken draft |
-| Handoff to 靖中 | `34-36`, about `55` min | CDE prep note plus 靖中 clean text opening | Needs bridge edit |
-| 靖中 white-box / deployment section | source deck says `36-final`; CDE plan maps this to about `55-74` min | `cde-2026-jingzhong-section-clean.txt` and `cde-2026-jingzhong-section-timed-source.txt` | Usable as first TTS base after slide-boundary cleanup |
-| Shared close / evidence map | final `4-6` min | CDE prep note slide `45`, draft pre/post-test questions, and 靖中 final summary | Needs spoken draft |
+| Opening / Prof. Wu framing | `1-5`, about `0-7` min | Expert-delivered clean transcript and batch CSV | Model-ready baseline available |
+| Jason hospital and regulation section | `6-20`, about `7-31` min | Expert-delivered clean transcript and batch CSV | Model-ready baseline available |
+| Jason attack surface and testing section | `21-34`, about `31-55` min | Expert-delivered clean transcript and batch CSV | Model-ready baseline available |
+| Handoff to 靖中 | `34-36`, about `55` min | Expert-delivered clean transcript and batch CSV | Model-ready baseline available |
+| 靖中 white-box / deployment section | source deck says `36-final`; CDE plan maps this to about `55-74` min | Expert-delivered clean transcript and batch CSV, with original 靖中 source retained for traceability | Model-ready baseline available |
+| Shared close / evidence map | final `4-6` min | Expert-delivered clean transcript and batch CSV | Model-ready baseline available |
 
-## Recommended Merge Output
+## 2026-05-27 Expert Delivery Intake
 
-Create these files when the merge is ready:
+The TTS expert returned three delivery files, now tracked under `model-ready/`:
 
 | File | Role |
 | --- | --- |
-| `cde-2026-breezyvoice-merged-transcript-clean.txt` | Final plain text to review before BreezyVoice batching. |
-| `cde-2026-breezyvoice-merged-transcript-batch.csv` | Batch input mapped to output filenames. |
-| `cde-2026-breezyvoice-pronunciation-notes.md` | Pronunciation and bopomofo hints discovered during pilot renders. |
+| `model-ready/cde-2026-breezyvoice-merged-transcript-clean.txt` | Complete clean transcript. |
+| `model-ready/cde-2026-breezyvoice-merged-transcript-batch.csv` | Batch CSV with `26` rows and stable `output_prefix` values. |
+| `model-ready/cde-2026-breezyvoice-pronunciation-notes.md` | Focused pronunciation notes for likely TTS misreads. |
+
+Expert-return summary:
+
+- The transcript was rebuilt according to the final PPT order and rhythm, not mechanically concatenated from the source files.
+- Jason's first half, Jingzhong's second half, and the shared close are unified into formal Taiwan Mandarin lecture style.
+- The handoff between speakers is preserved as a natural transition.
+- The CSV `text` field contains only BreezyVoice-readable narration, without slide labels, Markdown headings, tables, source notes, or planning notes.
+- Pronunciation notes focus on likely TTS failure points: acronyms, technical terms, event names, and product names.
+
+The current working baseline is the expert-delivered `model-ready/` package. Treat the previous sections in this workfile as traceability for how the source packet was prepared.
+
+## Recommended Merge Output
+
+The merge output now exists in `model-ready/`:
+
+| File | Role |
+| --- | --- |
+| `model-ready/cde-2026-breezyvoice-merged-transcript-clean.txt` | Final plain text to review before BreezyVoice batching. |
+| `model-ready/cde-2026-breezyvoice-merged-transcript-batch.csv` | Batch input mapped to output filenames. |
+| `model-ready/cde-2026-breezyvoice-pronunciation-notes.md` | Pronunciation notes for pilot renders and correction. |
 
 ## Merge Rule
 
@@ -41,35 +61,27 @@ Use this order:
 
 ## Practical Recommendation
 
-Do not generate one `80` minute audio file from one transcript. Keep the merged transcript as a single canonical text file for review, then split it into small batch rows for BreezyVoice.
+Do not generate one `80` minute audio file from one transcript. Keep the merged transcript as a single canonical text file for review and render from the batch rows.
 
-Build the batch rows after checking the final PPT. A concept slide, a case slide, and a closing slide should not use the same spoken rhythm.
+The expert batch already follows the final PPT rhythm. A concept slide, a case slide, and a closing slide should still be checked by listening because TTS pacing can shift after synthesis.
 
-First batch structure:
+Expert-delivered batch structure:
 
-| Group | Segment | Status |
-| --- | --- | --- |
-| `00` | Opening / session positioning | draft needed |
-| `01` | Jason hospital reality | draft needed |
-| `02` | Jason FDA / TFDA lifecycle logic | draft needed |
-| `03` | Jason attack surface paths | draft needed |
-| `04` | Jason testing / finding / threat-model handoff | draft needed |
-| `05` | Handoff to 靖中 | draft needed |
-| `06` | 靖中 white-box scope | source available |
-| `07` | 靖中 device / FDA evidence examples | source available |
-| `08` | 靖中 deployment / K8S / Change Healthcare | source available |
-| `09` | 靖中 traceability / testing / 524B | source available |
-| `10` | 靖中 remediation / SBOM / vulnerability response | source available |
-| `11` | 靖中 logging / recovery / close | source available |
-| `12` | Shared final close and test-question bridge | draft needed |
+| Check | Value |
+| --- | --- |
+| CSV rows | `26` |
+| Unique `output_prefix` values | `26` |
+| First row | `cde_full_01_opening_positioning_crazyhunter_entry_case` |
+| Last row | `cde_full_26_shared_close_test_anchors` |
+| Model-facing field | `text` |
+| Review / regeneration fields | `group`, `segment`, `output_prefix`, `notes` |
 
 ## Readiness Gate
 
-The transcript becomes BreezyVoice-ready only when:
+The transcript is BreezyVoice-ready as a text baseline. Production readiness now depends on pilot audio review:
 
-- every segment is written as spoken prose;
-- slide labels, planning bullets, tables, and source notes are removed from the model input;
-- the whole script has one consistent speaking voice;
-- English technical terms are intentionally retained or given pronunciation hints;
-- batch rows are short enough to regenerate individually;
-- the final clean transcript and batch CSV are both tracked in git.
+- render the opening row, one acronym-heavy middle row, and the shared close row;
+- listen for pacing, pronunciation of English terms, and long-sentence fatigue;
+- apply focused punctuation or pronunciation-note changes only where listening evidence shows a problem;
+- regenerate affected rows by stable `output_prefix`;
+- keep generated audio in `.local/breezyvoice/output/`.

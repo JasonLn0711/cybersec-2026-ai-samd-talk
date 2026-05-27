@@ -20,7 +20,7 @@ The output-practice capture is the preferred temporary workspace when rough spok
 | Folder | Contents |
 | --- | --- |
 | `reference/` | Canonical `v1.3` prep readers and role-based Q&A that remain useful for rehearsal depth. |
-| `breezyvoice/` | Syncable BreezyVoice text inputs, small source DOCX files, and batch-render plans. Generated audio stays in `.local/breezyvoice/`. |
+| `breezyvoice/` | Syncable BreezyVoice text inputs, small source DOCX files, expert-delivered model-ready transcript, and batch-render plans. Generated audio stays in `.local/breezyvoice/`. |
 | `change-log/` | Replacement tables and change logs explaining how older scripts were rewritten. |
 | `archive/` | Superseded drafts, older tone variants, legacy baselines, and older style guidance retained for traceability. |
 
