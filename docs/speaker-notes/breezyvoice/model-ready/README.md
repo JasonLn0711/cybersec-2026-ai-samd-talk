@@ -49,6 +49,11 @@ Before a full render command, run
 must exit `0`; otherwise the full render remains closed and the next action is
 human listening review or the next expert-specified pilot repair.
 
+Returned expert review CSVs should be ingested with
+`tools/ingest_breezyvoice_expert_review.py`. The tool requires explicit
+`accept` or `reject` decisions for the four pilot parent chunks before it will
+update the local gate.
+
 ## Next Gate
 
 Run a pilot render before producing the full set:

@@ -47,6 +47,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-05` | expert-conditioning-human-gate | Expert pilot review conditioning and refreshed Downloads package | stop_for_human_review_before_full_render | Wait for human listening review; if rejected again, record the review, apply smallest fix, export a new Downloads package, and stop again |
 | `EXP-20260528-06` | full-render-stop-gate | Machine-enforced full-render gate check before any next TTS run | stop_for_human_review_enforced_by_machine_gate | Wait for human listening review; if rejected again, record the review and apply only the next minimal pilot fix |
 | `EXP-20260528-07` | artifact-hygiene | Quarantine stale orphan pilot WAV before next human package | orphan_audio_quarantined_no_render | Refresh metadata, gate reports, objective verification, and Downloads package without rendering |
+| `EXP-20260528-08` | expert-review-ingestion | Add guarded expert-review ingestion path | ingestion_path_ready_gate_still_closed | Wait for completed expert review CSV; ingest it when returned |
 
 ## Detailed Records
 
@@ -607,3 +608,67 @@ Next action:
 Additional observations:
 
 - Quarantining stale audio is safer than deleting it because prior experiment logs can still trace the earlier render attempt
+
+### EXP-20260528-08 - Add guarded expert-review ingestion path
+
+- Timestamp: `2026-05-28T00:52:00+08:00`
+- Stage: `expert-review-ingestion`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case, cde_full_16_k8s_review_controls, cde_full_20_crowdstrike_update_524b, cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- The workflow needs a safe way to turn returned human review CSV decisions into local gate state
+- Manual editing of pilot_listening_review.csv or full_batch_gate.json risks opening full render with blank or partial decisions
+
+Hypothesis:
+
+- A guarded ingester that rejects blank or partial forms will preserve the human-review boundary while allowing accepted reviews to open the gate reproducibly
+
+Change summary:
+
+- Added ingest_breezyvoice_expert_review.py and documented the returned-review workflow in BreezyVoice README files and expert package instructions
+
+Commands:
+
+- python3 tools/ingest_breezyvoice_expert_review.py --input /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/forms/expert_pilot_review_form.csv --dry-run
+
+Logs:
+
+- docs/speaker-notes/breezyvoice/README.md
+- docs/speaker-notes/breezyvoice/model-ready/README.md
+
+Outputs:
+
+- tools/ingest_breezyvoice_expert_review.py
+
+Machine result:
+
+- Dry-run against blank Downloads form exited 2 as expected with invalid_or_blank_decisions for all four required prefixes
+
+Human result:
+
+- No new human review received
+
+Decision: `ingestion_path_ready_gate_still_closed`
+
+Fix applied:
+
+- No TTS text or audio change; added guarded review-ingestion workflow only
+
+Downloads package:
+
+- none recorded
+
+Stop rule:
+
+- Do not run full render until ingested expert review has accept for all four chunks and check_breezyvoice_full_render_gate.py exits 0
+
+Next action:
+
+- Wait for completed expert review CSV; ingest it when returned
+
+Additional observations:
+
+- This closes a process gap: the return path from human review now has the same rigor as export and rendering gates

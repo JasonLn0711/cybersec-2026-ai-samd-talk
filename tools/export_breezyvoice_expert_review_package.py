@@ -396,6 +396,15 @@ Full render should remain blocked until all four required parent chunks are acce
 The package also includes `review/orphan_audio_inventory.csv`. Those WAVs, if
 listed, are local artifact-hygiene warnings only and should not be reviewed as
 current pilot deliverables unless they also appear in `manifests/subclip_manifest.csv`.
+
+After the form is returned, the local maintainer should ingest it with:
+
+```bash
+python3 tools/ingest_breezyvoice_expert_review.py --input /path/to/expert_pilot_review_form.csv
+```
+
+The ingester requires explicit `accept` or `reject` values for all four parent
+chunks before it updates the full-render gate.
 """
 
 

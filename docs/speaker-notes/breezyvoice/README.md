@@ -83,3 +83,17 @@ python3 tools/check_breezyvoice_full_render_gate.py --write-report
 Only a zero exit code means the full render gate is open. A non-zero exit means
 the next action is human listening review or the next expert-specified pilot
 repair, not full rendering.
+
+## Returned Expert Review
+
+When the expert returns `forms/expert_pilot_review_form.csv`, ingest it with:
+
+```bash
+python3 tools/ingest_breezyvoice_expert_review.py --input ~/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/forms/expert_pilot_review_form.csv
+```
+
+The ingester refuses blank or partial required decisions by default. It updates
+the local pilot listening table, rebuilds `full_batch_gate.json`, and reruns the
+machine full-render stop gate. Full rendering may start only if all four parent
+chunks have `accept` and `tools/check_breezyvoice_full_render_gate.py` exits
+`0`.
