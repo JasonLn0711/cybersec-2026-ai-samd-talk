@@ -95,9 +95,13 @@ def display_path(path: Path) -> str:
 
 
 def import_runtime():
-    import single_inference as single_inference_mod  # type: ignore
     import torch  # type: ignore
     import torchaudio  # type: ignore
+
+    if not hasattr(torchaudio, "set_audio_backend"):
+        torchaudio.set_audio_backend = lambda *_args, **_kwargs: None  # type: ignore[attr-defined]
+
+    import single_inference as single_inference_mod  # type: ignore
 
     return single_inference_mod, torch, torchaudio
 
@@ -119,6 +123,8 @@ def pick_speaker_id(cosyvoice, requested: str) -> str:
 
 
 def save_stream(torch, torchaudio, stream, output_path: Path, sample_rate: int) -> None:
+    import soundfile as sf  # type: ignore
+
     chunks = []
     if isinstance(stream, dict):
         chunks.append(stream["tts_speech"])
@@ -129,7 +135,8 @@ def save_stream(torch, torchaudio, stream, output_path: Path, sample_rate: int) 
         raise RuntimeError(f"No speech chunks returned for {output_path}")
     speech = chunks[0] if len(chunks) == 1 else torch.concat(chunks, dim=1)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    torchaudio.save(str(output_path), speech.cpu(), sample_rate)
+    audio = speech.squeeze(0).detach().cpu().numpy()
+    sf.write(str(output_path), audio, sample_rate, subtype="PCM_16")
 
 
 def render_default_voice(cosyvoice, torch, torchaudio, text: str, output_path: Path, speaker_id: str) -> None:

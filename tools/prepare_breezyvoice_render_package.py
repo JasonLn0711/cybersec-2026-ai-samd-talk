@@ -17,6 +17,7 @@ import re
 import shutil
 import subprocess
 import sys
+import wave
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -272,6 +273,16 @@ def write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
             fh.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
+def wav_duration_seconds(path: Path) -> float | None:
+    if not path.exists():
+        return None
+    try:
+        with wave.open(str(path), "rb") as wav:
+            return wav.getnframes() / float(wav.getframerate())
+    except wave.Error:
+        return None
+
+
 def command_version(command: str, *args: str) -> dict[str, object]:
     executable = shutil.which(command)
     if not executable:
@@ -294,6 +305,66 @@ def module_available(module_name: str) -> bool:
     return importlib.util.find_spec(module_name) is not None
 
 
+def probe_python_runtime(python_path: Path) -> dict[str, object]:
+    if not python_path.exists():
+        return {"available": False, "path": str(python_path)}
+    code = r"""
+import importlib.util
+import json
+import sys
+
+modules = ["torch", "torchaudio", "transformers", "huggingface_hub", "gradio", "g2pw", "soundfile"]
+payload = {
+    "available": True,
+    "path": sys.executable,
+    "version": sys.version.split()[0],
+    "modules": {name: importlib.util.find_spec(name) is not None for name in modules},
+}
+try:
+    import torch
+    import torchaudio
+
+    payload["torch"] = {
+        "version": torch.__version__,
+        "torchaudio_version": torchaudio.__version__,
+        "cuda_available": torch.cuda.is_available(),
+    }
+    if torch.cuda.is_available():
+        payload["torch"]["device"] = torch.cuda.get_device_name(0)
+        payload["torch"]["capability"] = list(torch.cuda.get_device_capability(0))
+        try:
+            value = (torch.ones((32, 32), device="cuda") @ torch.ones((32, 32), device="cuda"))[0, 0].item()
+            payload["torch"]["cuda_smoke_ok"] = value == 32.0
+        except Exception as exc:
+            payload["torch"]["cuda_smoke_ok"] = False
+            payload["torch"]["cuda_smoke_error"] = repr(exc)
+except Exception as exc:
+    payload["torch_probe_error"] = repr(exc)
+print(json.dumps(payload, ensure_ascii=False))
+"""
+    try:
+        result = subprocess.run(
+            [str(python_path), "-c", code],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except Exception as exc:  # pragma: no cover - defensive runtime probe
+        return {"available": True, "path": str(python_path), "probe_error": repr(exc)}
+    try:
+        payload = json.loads(result.stdout.strip().splitlines()[-1])
+    except Exception:
+        return {
+            "available": True,
+            "path": str(python_path),
+            "probe_error": result.stderr.strip() or result.stdout.strip(),
+        }
+    if result.stderr.strip():
+        payload["stderr_first_line"] = result.stderr.strip().splitlines()[0]
+    return payload
+
+
 def detect_runtime_state(reference_audio_exists: bool) -> dict[str, object]:
     module_names = [
         "torch",
@@ -305,16 +376,36 @@ def detect_runtime_state(reference_audio_exists: bool) -> dict[str, object]:
     ]
     module_state = {name: module_available(name) for name in module_names}
     runner_path = REPO_ROOT / "tools/breezyvoice_render_subclips.py"
+    setup_path = REPO_ROOT / "tools/setup_breezyvoice_rtx5080_runtime.sh"
+    local_venv_python = LOCAL_ROOT / f"runtime/{VERSION}/venv/bin/python"
+    local_venv_probe = probe_python_runtime(local_venv_python)
     breezyvoice_candidates = [
         REPO_ROOT / ".local/BreezyVoice",
         REPO_ROOT.parent / "BreezyVoice",
         Path.home() / "BreezyVoice",
     ]
+    repo_ready = any((path / "single_inference.py").exists() for path in breezyvoice_candidates)
+    venv_modules = local_venv_probe.get("modules", {})
+    venv_torch = local_venv_probe.get("torch", {})
+    local_venv_ready = bool(
+        local_venv_probe.get("available")
+        and repo_ready
+        and isinstance(venv_modules, dict)
+        and all(venv_modules.get(name) for name in ["torch", "torchaudio", "g2pw", "soundfile"])
+    )
+    rtx_5080_ready = bool(
+        local_venv_ready
+        and isinstance(venv_torch, dict)
+        and venv_torch.get("cuda_available")
+        and venv_torch.get("cuda_smoke_ok")
+        and venv_torch.get("capability") == [12, 0]
+    )
     return {
         "reference_audio_required": REFERENCE_AUDIO_REQUIRED,
         "reference_audio_exists": reference_audio_exists,
         "execution_mode_without_audio": "default_sft_voice",
         "no_reference_runner": rel(runner_path),
+        "rtx_5080_runtime_setup": rel(setup_path),
         "pilot_command_template": rel(LOCAL_ROOT / f"commands/{VERSION}/run_pilot_template.sh"),
         "python": {
             "executable": sys.executable,
@@ -332,8 +423,12 @@ def detect_runtime_state(reference_audio_exists: bool) -> dict[str, object]:
             {"path": str(path), "exists": path.exists(), "has_single_inference": (path / "single_inference.py").exists()}
             for path in breezyvoice_candidates
         ],
-        "ready_to_render_locally": all(module_state.values())
-        and any((path / "single_inference.py").exists() for path in breezyvoice_candidates),
+        "local_venv": local_venv_probe,
+        "ready_to_render_locally": local_venv_ready or (
+            all(module_state.values())
+            and repo_ready
+        ),
+        "rtx_5080_ready": rtx_5080_ready,
     }
 
 
@@ -508,6 +603,29 @@ def prepare_package() -> None:
     pilot_rows = [row for row in manifest_rows if row["output_prefix"] in PILOT_PREFIXES]
     write_csv(LOCAL_ROOT / f"manifests/{VERSION}/pilot_manifest.csv", pilot_rows, manifest_fields)
     write_jsonl(LOCAL_ROOT / f"manifests/{VERSION}/pilot_manifest.jsonl", pilot_rows)
+    pilot_prefixes = {row["output_prefix"] for row in pilot_rows}
+    pilot_subclip_rows = [row for row in subclip_rows if row["parent_output_prefix"] in pilot_prefixes]
+    pilot_audio_rows = []
+    for row in pilot_subclip_rows:
+        output_path = REPO_ROOT / str(row["planned_output_wav"])
+        duration = wav_duration_seconds(output_path)
+        pilot_audio_rows.append(
+            {
+                "subclip_id": row["subclip_id"],
+                "parent_output_prefix": row["parent_output_prefix"],
+                "planned_output_wav": row["planned_output_wav"],
+                "exists": output_path.exists(),
+                "duration_seconds": f"{duration:.2f}" if duration is not None else "",
+                "accepted": "",
+            }
+        )
+    write_csv(
+        LOCAL_ROOT / f"review/{VERSION}/pilot_audio_inventory.csv",
+        pilot_audio_rows,
+        ["subclip_id", "parent_output_prefix", "planned_output_wav", "exists", "duration_seconds", "accepted"],
+    )
+    pilot_outputs_existing = sum(1 for row in pilot_audio_rows if row["exists"])
+    pilot_outputs_complete = pilot_outputs_existing == len(pilot_subclip_rows)
 
     write_csv(
         LOCAL_ROOT / f"review/{VERSION}/render_review_log.csv",
@@ -616,6 +734,7 @@ def prepare_package() -> None:
                 "Local execution path:",
                 "",
                 f"- Runner: `{runtime_state['no_reference_runner']}`",
+                f"- RTX 5080 setup script: `{runtime_state['rtx_5080_runtime_setup']}`",
                 f"- Pilot command template: `{runtime_state['pilot_command_template']}`",
                 "- Default behavior: render with a built-in/default SFT speaker id; do not require prompt audio.",
                 "- Optional behavior: a prompt WAV can still be supplied later for zero-shot voice style, with consent and exact prompt transcript.",
@@ -627,11 +746,14 @@ def prepare_package() -> None:
                 f"- BreezyVoice repo candidate ready: `{breezyvoice_repo_ready}`",
                 f"- Missing Python modules: `{', '.join(missing_modules) if missing_modules else 'none'}`",
                 f"- Local ready to render: `{runtime_state['ready_to_render_locally']}`",
+                f"- RTX 5080 ready: `{runtime_state['rtx_5080_ready']}`",
+                f"- Local venv Python: `{runtime_state['local_venv'].get('path', 'not found')}`",
+                f"- Local venv torch: `{runtime_state['local_venv'].get('torch', {}).get('version', 'not found')}`",
                 "",
                 "Important distinction:",
                 "",
                 "- Missing reference audio no longer blocks pilot rendering.",
-                "- Missing BreezyVoice runtime, model files, or compatible default speaker support still blocks real audio synthesis.",
+                "- RTX 5080 requires a CUDA 12.8-capable PyTorch wheel; the official `torch==2.3.1+cu118` wheel does not support `sm_120`.",
             ]
         ),
     )
@@ -728,12 +850,16 @@ def prepare_package() -> None:
         LOCAL_ROOT / f"review/{VERSION}/pilot_status.json",
         {
             "pilot_prefixes": PILOT_PREFIXES,
+            "pilot_subclip_count": len(pilot_subclip_rows),
+            "pilot_outputs_existing": pilot_outputs_existing,
+            "pilot_outputs_complete": pilot_outputs_complete,
             "full_batch_allowed": False,
-            "pilot_render_attempted": False,
+            "pilot_render_attempted": pilot_outputs_existing > 0,
             "reference_audio_required": REFERENCE_AUDIO_REQUIRED,
             "blocked_by_missing_reference_audio": False,
             "reference_audio_path": rel(reference_audio_path),
             "execution_mode": "with_reference_audio" if reference_audio_exists else "no_reference_default_voice",
+            "pilot_audio_inventory": rel(LOCAL_ROOT / f"review/{VERSION}/pilot_audio_inventory.csv"),
             "message": "Pilot TTS may run without reference audio; use optional prompt audio only if present.",
         },
     )
@@ -754,6 +880,14 @@ def prepare_package() -> None:
                 "VOICE_MODE='default'",
                 "MODEL_PATH=\"${BREEZYVOICE_MODEL_PATH:-MediaTek-Research/BreezyVoice}\"",
                 "DEFAULT_SPEAKER_ID=\"${BREEZYVOICE_DEFAULT_SPEAKER_ID:-auto}\"",
+                f"PYTHON_BIN=\"${{BREEZYVOICE_PYTHON:-{rel(LOCAL_ROOT / f'runtime/{VERSION}/venv/bin/python')}}}\"",
+                "BREEZYVOICE_REPO=\"${BREEZYVOICE_REPO:-.local/BreezyVoice}\"",
+                "",
+                "if [[ ! -x \"$PYTHON_BIN\" ]]; then",
+                "  echo \"Missing runtime Python: $PYTHON_BIN\" >&2",
+                "  echo \"Run: bash tools/setup_breezyvoice_rtx5080_runtime.sh\" >&2",
+                "  exit 2",
+                "fi",
                 "",
                 "if [[ -f \"$PROMPT_WAV\" ]]; then",
                 "  echo \"Using optional prompt audio: $PROMPT_WAV\"",
@@ -766,7 +900,7 @@ def prepare_package() -> None:
                 "  VOICE_MODE='default'",
                 "fi",
                 "",
-                "python3 tools/breezyvoice_render_subclips.py \\",
+                "PYTHONUTF8=1 \"$PYTHON_BIN\" tools/breezyvoice_render_subclips.py \\",
                 "  --selection pilot \\",
                 "  --voice-mode \"$VOICE_MODE\" \\",
                 "  --model-path \"$MODEL_PATH\" \\",
@@ -809,11 +943,16 @@ def prepare_package() -> None:
         ("7", "reference audio policy", "completed_optional", "reference_audio_gate.json explicitly sets reference_audio_required=false; no-reference/default voice mode is allowed when jason_reference.wav is absent."),
         ("7a", "no-reference runtime contract", "prepared", "runtime/v1/runtime_readiness.json and run_pilot_template.sh route missing prompt audio to tools/breezyvoice_render_subclips.py --voice-mode default."),
         ("8", "建立音檔輸出規格", "completed", "specs/v1/audio_output_spec.md/json define wav output, loudness, silence, subclip, parent, full, and archive paths."),
-        ("9", "先跑 pilot，不跑 full batch", "prepared", "pilot_manifest.csv identifies four pilot rows; run_pilot_template.sh no longer blocks on missing reference audio."),
+        (
+            "9",
+            "先跑 pilot，不跑 full batch",
+            "completed_pilot_audio" if pilot_outputs_complete else "prepared",
+            f"pilot_manifest.csv identifies four pilot rows and {len(pilot_subclip_rows)} subclips; pilot_audio_inventory.csv shows {pilot_outputs_existing} existing WAV outputs.",
+        ),
         ("10", "Pilot review checklist", "completed", "review/v1/pilot_review_checklist.md records the listening checks."),
         ("11", "修正規則", "completed", "review/v1/pilot_review_checklist.md records correction order."),
         ("12", "Full render 前通過標準", "completed_gate_defined", "review/v1/full_render_acceptance_gate.md defines pass criteria; full_batch_allowed remains false until pilot acceptance."),
-        ("13", "Full render stitch 與紀錄", "prepared_not_executed", "output/v1 directories and review/v1/render_review_log.csv are prepared; no audio exists yet, so stitch/review cannot be completed."),
+        ("13", "Full render stitch 與紀錄", "prepared_not_executed", "output/v1 directories and review/v1/render_review_log.csv are prepared; pilot audio exists, but full render/stitch remains gated by pilot listening acceptance."),
     ]
     audit_lines = [
         "# BreezyVoice V1 Objective Audit",

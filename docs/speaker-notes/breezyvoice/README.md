@@ -40,3 +40,15 @@ Prompt audio should go to:
 ```text
 .local/breezyvoice/prompts/
 ```
+
+## RTX 5080 Runtime
+
+For local RTX 5080 rendering, use:
+
+```bash
+bash tools/setup_breezyvoice_rtx5080_runtime.sh
+python3 tools/prepare_breezyvoice_render_package.py
+bash .local/breezyvoice/commands/v1/run_pilot_template.sh
+```
+
+The setup script keeps the official BreezyVoice clone and Python venv under `.local/`, then replaces the official `torch==2.3.1+cu118` runtime with a CUDA `12.8` PyTorch build that supports RTX 5080 / `sm_120`.
