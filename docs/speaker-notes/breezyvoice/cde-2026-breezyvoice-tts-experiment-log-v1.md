@@ -67,6 +67,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-23` | v3-text-conditioning-policy | Set v3 delivery target to 70 minutes and story-condition case passages | proceed_to_v3_smoke_then_full_render | Run v3 prompt-mode smoke on RTX 5080, then full render, stitch, normalize to approximately 70 minutes, loudness normalize, and run Breeze-ASR-25. |
 | `EXP-20260528-24` | v3-full-render-70min-final | v3 70-minute full render with ConvNet prompt and Breeze-ASR-25 final check | completed_local_70min_master_with_asr_warning_notes | Package the 70-minute audio and model-facing transcript for stakeholder handoff when requested. |
 | `EXP-20260528-25` | v3-wu-teacher-handoff-package | Wu teacher reference package with M4A and transcript | downloads_handoff_package_created | Share the Downloads folder or tar.gz package with Wu teacher; keep auxiliary ASR as warning signal only. |
+| `EXP-20260528-26` | v3-wu-teacher-handoff-postprocess | Wu teacher package 0.9x M4A listening copy | downloads_handoff_package_updated | Use the 0.9x M4A when a slower reference-listening copy is preferred; original M4A remains preserved. |
 
 ## Detailed Records
 
@@ -2002,6 +2003,66 @@ Additional observations:
 Next action:
 
 - Share the folder or tarball with Wu teacher.
+
+Stop rule:
+
+- Do not start another human-review cycle unless the owner requests it.
+- Do not use Whisper for auxiliary ASR in this project; continue using Breeze-ASR-25 only.
+
+## EXP-20260528-26 — Wu teacher package 0.9x M4A listening copy
+
+Timestamp: `2026-05-28T20:35:00+08:00`
+
+Stage: `v3-wu-teacher-handoff-postprocess`
+
+Decision: `downloads_handoff_package_updated`
+
+Reason:
+
+- Owner requested the TTS audio already stored in the Downloads handoff package be post-processed once more at `0.9x` speed.
+- Longer audio duration is acceptable, and the original audio should remain preserved.
+
+Fix applied:
+
+- Preserved the original `target-70min.m4a`.
+- Created a new `target-70min.0_9x.m4a` copy using ffmpeg `atempo=0.9`.
+- Updated the handoff README, package metadata, checksum file, and tar.gz archive.
+
+Commands:
+
+- `ffmpeg -y -i /home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.m4a -filter:a atempo=0.9 -c:a aac -b:a 128k -movflags +faststart /home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.0_9x.m4a`
+- `ffprobe -v error -show_entries format=duration,size,bit_rate -of json /home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.0_9x.m4a`
+- `tar -czf /home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28.tar.gz -C /home/jnln3799/Downloads cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28`
+
+Logs:
+
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/ffmpeg_m4a_0_9x_conversion.log`
+
+Outputs:
+
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.0_9x.m4a`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28.tar.gz`
+
+Machine result:
+
+- Input M4A duration: `4199.983s` / `70.000min`.
+- 0.9x M4A duration: `4666.670s` / `77.778min`; size `47742788` bytes; reported bit rate `81844`; SHA256 `bf5d631363d3add989895fc441e45b91dc2f852682c9f58a5b13a1003eca7799`.
+- Updated tar.gz package size: approximately `87M`.
+- No GPU generation and no ASR pass were run for this post-processing step.
+
+Human result:
+
+- No new human review was requested or initiated.
+- This is a slower stakeholder listening copy in the same Downloads package.
+
+Additional observations:
+
+- `atempo=0.9` slows playback and lengthens the audio while preserving pitch better than simple sample-rate reinterpretation.
+- The original M4A remains available in the package for comparison.
+
+Next action:
+
+- Use the `0_9x.m4a` file when a slower listening reference is preferred.
 
 Stop rule:
 
