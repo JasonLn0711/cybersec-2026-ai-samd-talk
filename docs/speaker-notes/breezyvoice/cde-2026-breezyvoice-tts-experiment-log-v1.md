@@ -65,6 +65,8 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-17` | final6b-human-review-repair-final7 | Mixed-gate final7 pilot repair with 白箱 terminology | final7_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the expert; ingest the returned review CSV; only if every required pilot chunk is accepted should the full render gate open. |
 | `EXP-20260528-18` | owner-release-full-render-final7 | Owner-overridden full render after final7 repair | full_render_completed_owner_release_post_render_logging | Prepare the deliverable package or handoff copy from the full WAV and loudnorm copy; use Breeze-ASR-25 transcript only to prioritize future repair candidates. |
 | `EXP-20260528-23` | v3-text-conditioning-policy | Set v3 delivery target to 70 minutes and story-condition case passages | proceed_to_v3_smoke_then_full_render | Run v3 prompt-mode smoke on RTX 5080, then full render, stitch, normalize to approximately 70 minutes, loudness normalize, and run Breeze-ASR-25. |
+| `EXP-20260528-24` | v3-full-render-70min-final | v3 70-minute full render with ConvNet prompt and Breeze-ASR-25 final check | completed_local_70min_master_with_asr_warning_notes | Package the 70-minute audio and model-facing transcript for stakeholder handoff when requested. |
+| `EXP-20260528-25` | v3-wu-teacher-handoff-package | Wu teacher reference package with M4A and transcript | downloads_handoff_package_created | Share the Downloads folder or tar.gz package with Wu teacher; keep auxiliary ASR as warning signal only. |
 
 ## Detailed Records
 
@@ -1935,4 +1937,73 @@ Next action:
 Stop rule:
 
 - Do not start another human-review cycle unless the user requests it.
+- Do not use Whisper for auxiliary ASR in this project; continue using Breeze-ASR-25 only.
+
+## EXP-20260528-25 — Wu teacher reference package with M4A and transcript
+
+Timestamp: `2026-05-28T20:28:00+08:00`
+
+Stage: `v3-wu-teacher-handoff-package`
+
+Decision: `downloads_handoff_package_created`
+
+Reason:
+
+- Owner requested a reference package for Wu teacher containing the `cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.wav` audio converted to M4A and placed together with the transcript.
+- This is a handoff/export step only; no new TTS generation and no new human review cycle were requested.
+
+Fix applied:
+
+- Converted the specified v3 target-70min WAV to M4A with AAC audio.
+- Assembled the model-facing TTS transcript from the v3 subclip manifest in render order.
+- Included the Breeze-ASR-25 auxiliary transcript as a warning-signal reference, not as acceptance authority.
+- Added package metadata, SHA256 checksums, and the ffmpeg conversion log.
+- Created both a folder and a compressed tarball in `Downloads`.
+
+Commands:
+
+- `ffmpeg -y -i .local/breezyvoice/output/v3/full/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.wav -c:a aac -b:a 128k -movflags +faststart /home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.m4a`
+- `ffprobe -v error -show_entries format=duration,size,bit_rate -of json /home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.m4a`
+- `tar -czf /home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28.tar.gz -C /home/jnln3799/Downloads cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28`
+
+Logs:
+
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/ffmpeg_m4a_conversion.log`
+
+Outputs:
+
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28.tar.gz`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.m4a`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-model-facing-transcript-zh-tw.md`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-model-facing-transcript-zh-tw.txt`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/auxiliary-breeze-asr-25-transcript-warning-signal.txt`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/README_FOR_WU_TEACHER.md`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/package_metadata.json`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/SHA256SUMS.txt`
+
+Machine result:
+
+- Source WAV duration: `4199.983s` / `70.000min`; SHA256 `3a0b9e8dc9aec85c69e4703713cddaec70bd96db130733460c822e014eac1905`.
+- M4A duration: `4199.983s` / `70.000min`; size `43565886` bytes; reported bit rate `82982`; SHA256 `09d7043190d2285f39fffecac3ff7605c0a246581f93e5925bad9430da7eec86`.
+- Package archive size: approximately `42M`.
+- No GPU generation or ASR pass was run for this package step.
+
+Human result:
+
+- No new human review was requested or initiated.
+- Package is a stakeholder reference/handoff copy for Wu teacher.
+
+Additional observations:
+
+- The package uses the non-loudness-normalized `target-70min.wav` requested by the owner, converted to M4A.
+- The included model-facing transcript is the authoritative text used for TTS conditioning; the included Breeze-ASR-25 transcript is only a warning signal for future repair.
+
+Next action:
+
+- Share the folder or tarball with Wu teacher.
+
+Stop rule:
+
+- Do not start another human-review cycle unless the owner requests it.
 - Do not use Whisper for auxiliary ASR in this project; continue using Breeze-ASR-25 only.
