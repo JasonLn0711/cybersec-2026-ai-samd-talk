@@ -28,8 +28,11 @@ the traceable decision record and local evidence paths.
 
 - Source version: `v1`
 - Current state: pilot rendered and stitched; full render is closed.
-- Current blocker: four pilot parent chunks still require accepted human
-  listening decisions after expert-conditioning rerender.
+- Current blocker: `cde_full_01`, `cde_full_16`, and `cde_full_20`
+  require accepted human listening decisions after partial-accept repair;
+  `cde_full_26` is preserved as the accepted baseline.
+- Current auxiliary ASR policy: use `MediaTek-Research/Breeze-ASR-25`
+  only; do not use Whisper for current BreezyVoice review gates.
 - Current review package:
   `/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/`
 - Current review archive:
@@ -55,6 +58,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-12` | pilot-repair-rerender | Round-2 pilot rerender after all-reject contamination review | round2_pilot_rendered_stop_for_human_review | Export refreshed Downloads package and wait for round-2 human listening review |
 | `EXP-20260528-13` | reference-audio-cuda-telemetry | Reference-audio pilot render with ONNX CUDA telemetry | reference_prompt_pilot_rendered_stop_for_human_review | Export refreshed Downloads review package with telemetry and wait for expert listening review. |
 | `EXP-20260528-15` | final4-human-reject-repair | Total-reject pilot repair with jargon-safe substitutions | final5b_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the TTS expert; ingest the returned forms/expert_pilot_review_form.csv; if any row is reject, apply only the next minimal expert-specified pilot fix and rerender affected pilot chunks. |
+| `EXP-20260528-16` | final5b-partial-review-repair | Partial-accept pilot repair for cde01 cde16 cde20 with Breeze-ASR-25 auxiliary check | final6b_exported_full_render_blocked_for_human_review | Send refreshed Downloads review package to expert, ingest returned form, and either open the full-render gate or apply the next minimal repair. |
 
 ## Detailed Records
 
@@ -1245,3 +1249,109 @@ Next action:
 Additional observations:
 
 - GPU energy is a GPU-only nvidia-smi power.draw estimate and excludes CPU, storage, display, PSU loss, and monitor energy; observable engineering intervention time includes one interrupted final5 render plus the 507.566s final5b render, post-processing, ASR, gate checks, export, and documentation; hidden model reasoning is not measurable, so the log records observable command chronology, timestamps, runtimes, and decision evidence instead. cde01 current subclips are 12 pieces, approximately 60-122 model-text chars each; observed generated audio lengths were roughly 11-26s with average about 18s before stitching. Full render remains closed even though a new package exists.
+
+### EXP-20260528-16 - Partial-accept pilot repair for cde01 cde16 cde20 with Breeze-ASR-25 auxiliary check
+
+- Timestamp: `2026-05-28T12:24:00+08:00`
+- Stage: `final5b-partial-review-repair`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case, cde_full_16_k8s_review_controls, cde_full_20_crowdstrike_update_524b`
+
+Reason:
+
+- Returned final5b review accepted cde26 but rejected cde01 for trust-sentence loop and filler hallucination, cde16 for tight RBAC/CI-CD/K8S boundaries, and cde20 for SBOM/Rollback/524B phrasing drift.
+- User specified that all auxiliary ASR for this workflow must use Breeze-ASR-25 rather than Whisper.
+
+Hypothesis:
+
+- Repairing only the three rejected parent chunks while preserving accepted cde26 audio will reduce review churn and keep the full render gate conservative.
+- Breeze-ASR-25 gives a project-aligned auxiliary transcript for current review packages, while human listening remains the acceptance authority.
+
+Change summary:
+
+- cde01 trust sentence isolated to a short subclip and opening split increased to 19 subclips.
+- cde01 question list converted from short question bursts to declarative sentence boundaries.
+- cde16 RBAC/CI-CD/application endpoint boundaries strengthened and cde16 post-synthesis atempo=0.88 applied.
+- cde20 rollback replaced with 回滾 and cde20 SBOM occurrence expanded to 軟體物料清單，英文四個字母，S，B，O，M.
+- cde26 accepted review preserved and not selected for rerender.
+- Current canonical auxiliary ASR regenerated with MediaTek-Research/Breeze-ASR-25; the attempted Whisper tiny final6b transcript was archived as superseded and is not used for current review.
+
+Commands:
+
+- python3 tools/ingest_breezyvoice_expert_review.py --input .local/breezyvoice/review/v1/expert_review_returned_20260528_final5b_partial_accept.csv
+- python3 tools/prepare_breezyvoice_render_package.py
+- python3 tools/run_with_gpu_telemetry.py --telemetry-jsonl .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_partial_accept_repair_final6_gpu.jsonl --summary-json .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_partial_accept_repair_final6_summary.json --stdout-log .local/breezyvoice/runtime/v1/pilot_reference_after_partial_accept_repair_final6.log --sample-interval-s 1 -- .local/breezyvoice/runtime/v1/venv/bin/python tools/breezyvoice_render_subclips.py --selection pilot --voice-mode prompt --model-path MediaTek-Research/BreezyVoice --speaker-id auto --prompt-audio .local/breezyvoice/prompts/v1/jason_reference.wav --prompt-text-file .local/breezyvoice/prompts/v1/jason_reference.txt --subclip-manifest .local/breezyvoice/manifests/v1/subclip_manifest.csv --pilot-manifest .local/breezyvoice/manifests/v1/pilot_manifest_rejects_final6.csv --output-dir .local/breezyvoice/output/v1/subclips --overwrite
+- python3 tools/apply_breezyvoice_audio_pacing.py --parent-prefix cde_full_16_k8s_review_controls --tempo 0.88 --label 20260528-partial-accept-repair-final6 --overwrite
+- python3 tools/run_with_gpu_telemetry.py --telemetry-jsonl .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_partial_accept_repair_final6b_cde20_gpu.jsonl --summary-json .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_partial_accept_repair_final6b_cde20_summary.json --stdout-log .local/breezyvoice/runtime/v1/pilot_reference_after_partial_accept_repair_final6b_cde20.log --sample-interval-s 1 -- .local/breezyvoice/runtime/v1/venv/bin/python tools/breezyvoice_render_subclips.py --selection pilot --voice-mode prompt --model-path MediaTek-Research/BreezyVoice --speaker-id auto --prompt-audio .local/breezyvoice/prompts/v1/jason_reference.wav --prompt-text-file .local/breezyvoice/prompts/v1/jason_reference.txt --subclip-manifest .local/breezyvoice/manifests/v1/subclip_manifest.csv --pilot-manifest .local/breezyvoice/manifests/v1/pilot_manifest_cde20_final6b.csv --output-dir .local/breezyvoice/output/v1/subclips --overwrite
+- python3 tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full --overwrite --silence-ms 700
+- PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .local/breezyvoice/runtime/v1/venv/bin/python tools/run_breeze_asr25.py --audio .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav --output-txt .local/breezyvoice/review/v1/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt --output-json .local/breezyvoice/review/v1/asr/breeze_asr25_after_partial_accept_repair_final6b.json --output-timestamped .local/breezyvoice/review/v1/asr/breeze_asr25_after_partial_accept_repair_final6b_timestamped.txt --log .local/breezyvoice/review/v1/asr/breeze_asr25_after_partial_accept_repair_final6b.log --language zh --chunk-length-s 15 --batch-size 1 --num-beams 1
+- python3 tools/build_breezyvoice_pilot_review.py
+- python3 tools/build_breezyvoice_render_review_log.py
+- python3 tools/build_breezyvoice_pilot_correction_matrix.py
+- python3 tools/verify_breezyvoice_objective.py --write-report
+- python3 tools/check_breezyvoice_full_render_gate.py --write-report
+- python3 tools/export_breezyvoice_expert_review_package.py --overwrite
+
+Logs:
+
+- .local/breezyvoice/runtime/v1/pilot_reference_after_partial_accept_repair_final6.log
+- .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_partial_accept_repair_final6_summary.json
+- .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_partial_accept_repair_final6_gpu.jsonl
+- .local/breezyvoice/runtime/v1/pacing_partial_accept_repair_final6.log
+- .local/breezyvoice/runtime/v1/pilot_reference_after_partial_accept_repair_final6b_cde20.log
+- .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_partial_accept_repair_final6b_cde20_summary.json
+- .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_partial_accept_repair_final6b_cde20_gpu.jsonl
+- .local/breezyvoice/review/v1/asr/breeze_asr25_after_partial_accept_repair_final6b.log
+- .local/breezyvoice/review/v1/asr/breeze_asr25_after_partial_accept_repair_final6b.json
+- .local/breezyvoice/review/v1/objective_verification.json
+- .local/breezyvoice/review/v1/full_render_gate_check.json
+
+Outputs:
+
+- .local/breezyvoice/manifests/v1/subclip_manifest.csv
+- .local/breezyvoice/output/v1/subclips
+- .local/breezyvoice/output/v1/parent_chunks
+- .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav
+- .local/breezyvoice/review/v1/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt
+- .local/breezyvoice/review/v1/pilot_listening_review.csv
+- .local/breezyvoice/review/v1/render_review_log.csv
+- .local/breezyvoice/review/v1/pilot_correction_matrix.md
+
+Machine result:
+
+- final6 completed 39 selected prompt-mode subclips with exit_code=0; elapsed_s=407.155, avg_gpu_power_w=192.923, estimated_gpu_energy_wh=21.819338, avg_gpu_utilization_pct=65.404, max_gpu_memory_used_mb=15474.
+- cde20 final6b completed 11 selected prompt-mode subclips with exit_code=0; elapsed_s=126.252, avg_gpu_power_w=186.973, estimated_gpu_energy_wh=6.557122, avg_gpu_utilization_pct=65.35, max_gpu_memory_used_mb=15683.
+- cde16 pacing atempo=0.88 produced stitched runtime 168.96/190=0.89.
+- Final stitched pilot duration is 743.57s: cde01 232.09/185=1.25 with 19 subclips; cde16 168.96/190=0.89 with 9 subclips; cde20 168.19/190=0.89 with 11 subclips; cde26 172.23/155=1.11 with 14 accepted baseline subclips.
+- Breeze-ASR-25 auxiliary ASR ran on RTX 5080 CUDA with model_load_elapsed_s=3.111, asr_elapsed_s=41.487, text_characters=3692, chunk_count=216.
+- Objective verifier exits 2 with gated_waiting_human_review; full-render gate exits 2 with full_render_blocked; export exits 0 and copied 1 full WAV, 4 parent WAVs, 53 subclip WAVs, and 53 subclip text files.
+
+Human result:
+
+- Final5b expert review accepted cde26 and rejected cde01/cde16/cde20. Final6/final6b repaired audio requires fresh human listening for those three chunks.
+
+Decision: `final6b_exported_full_render_blocked_for_human_review`
+
+Fix applied:
+
+- Model-facing partial-accept repairs, cde16 atempo=0.88 pacing, cde20-only final6b SBOM repair, Breeze-ASR-25 auxiliary ASR replacement, refreshed review log/matrix, and Downloads review package export.
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- Do not run the 80-minute full render until cde01, cde16, and cde20 receive explicit human accept decisions and tools/check_breezyvoice_full_render_gate.py exits 0. Use Breeze-ASR-25 for any auxiliary ASR; do not use Whisper for current review gates.
+
+Next action:
+
+- Send refreshed Downloads review package to expert, ingest returned form, and either open the full-render gate or apply the next minimal repair.
+
+Additional observations:
+
+- An initial Whisper tiny final6b ASR command was run before the user clarified the ASR policy; it is archived as superseded and is not used for current review.
+- Breeze-ASR-25 is still auxiliary only: it can flag term drift and repeated phrases, but human listening owns acceptance.
+- GPU energy is a GPU-only nvidia-smi estimate and excludes CPU, storage, display, PSU loss, and monitor energy.

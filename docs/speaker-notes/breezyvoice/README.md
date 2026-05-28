@@ -72,23 +72,29 @@ wall time, peak memory, and GPU-only Wh estimates are captured with the render.
 The current reference-audio telemetry appendix is
 `cde-2026-breezyvoice-reference-audio-telemetry-2026-05-28.md`.
 
-Current pilot package after the total-reject returned expert review is
-`EXP-20260528-15`: `127` full-session subclips, `47` pilot subclips, prompt
-mode with the local reference audio, final5b GPU telemetry, a reproducible
-post-synthesis `atempo=0.82` pacing override only for
-`cde_full_16_k8s_review_controls`, and a `0.8` second tail trim on
-`cde_full_26_shared_close_test_anchors_p14`. The exported human-review package
-is:
+Current pilot package after the partial-accept returned expert review is
+`EXP-20260528-16`: `133` full-session subclips, `53` pilot subclips, prompt
+mode with the local reference audio, final6 GPU telemetry for `cde01`,
+`cde16`, and `cde20`, a cde20-only final6b rerender, a reproducible
+post-synthesis `atempo=0.88` pacing override only for
+`cde_full_16_k8s_review_controls`, and the accepted
+`cde_full_26_shared_close_test_anchors` baseline preserved without rerender.
+The exported human-review package is:
 
 ```text
 /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
 /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
 ```
 
-The full render remains closed because final5b has no returned human acceptance
-decisions yet. ASR tiny is included only as an auxiliary warning signal and is
-not an acceptance source for mixed Mandarin/English medical cybersecurity
-audio.
+The full render remains closed because `cde_full_01`, `cde_full_16`, and
+`cde_full_20` need fresh returned human acceptance decisions. `cde_full_26` is
+accepted and preserved as the continuity baseline.
+
+All current auxiliary ASR for this project must use
+`MediaTek-Research/Breeze-ASR-25`; do not use Whisper for current BreezyVoice
+review gates. Breeze-ASR-25 output is still only an auxiliary warning signal
+and is not an acceptance source for mixed Mandarin/English medical
+cybersecurity audio.
 
 Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, `pilot_machine_review.md`, `pilot_listening_review.csv`, `render_review_log.csv`, `pilot_correction_matrix.md`, and `full_batch_gate.json`. Rebuild `render_review_log.csv` and `pilot_correction_matrix.md` after any stitch, expert-review ingestion, or rerender so runtime, issue, fix, accepted status, and stop-gate source stay aligned.
 

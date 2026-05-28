@@ -219,3 +219,43 @@ Package validation: `1` full WAV, `4` parent WAVs, `47` subclip WAVs, `4`
 normalized segment text files, `47` subclip text files, expert prompt, README,
 and expert CSV form. The full 80-minute render remains blocked until all four
 final5b parent chunks receive explicit human `accept` decisions.
+
+## Partial-Accept Repair And Breeze-ASR-25 Addendum
+
+`EXP-20260528-16` supersedes final5b for the next listening gate. The returned
+review accepted `cde_full_26_shared_close_test_anchors` and kept
+`cde_full_01`, `cde_full_16`, and `cde_full_20` in repair status. The current
+package preserves the accepted close as the continuity baseline and rerenders
+only the three rejected parent chunks.
+
+Current final6/final6b telemetry:
+
+| Run | Exit | Rendered | Wall time | Avg GPU power | GPU Wh estimate | Avg GPU util | Peak GPU memory | Notes |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `pilot_reference_after_partial_accept_repair_final6` | `0` | `39` | `407.155 s` | `192.923 W` | `21.819338 Wh` | `65.404%` | `15474 MB` | Rerendered `cde01`, `cde16`, and initial `cde20` repair in prompt mode. |
+| `pilot_reference_after_partial_accept_repair_final6b_cde20` | `0` | `11` | `126.252 s` | `186.973 W` | `6.557122 Wh` | `65.350%` | `15683 MB` | Rerendered only `cde20` after the SBOM phrase was expanded to `軟體物料清單，英文四個字母，S，B，O，M`. |
+
+Current final6/final6b stitched pilot metrics:
+
+| Parent chunk | Subclips | Stitched audio | Target | Ratio | Status |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `cde_full_01_opening_positioning_crazyhunter_entry_case` | `19` | `232.09 s` | `185 s` | `1.25` | repaired; needs human relisten |
+| `cde_full_16_k8s_review_controls` | `9` | `168.96 s` | `190 s` | `0.89` | repaired with `atempo=0.88`; needs human relisten |
+| `cde_full_20_crowdstrike_update_524b` | `11` | `168.19 s` | `190 s` | `0.89` | final6b repaired; needs human relisten |
+| `cde_full_26_shared_close_test_anchors` | `14` | `172.23 s` | `155 s` | `1.11` | accepted baseline preserved |
+| Full pilot stitch | `4 parent WAVs` | `743.57 s` | n/a | n/a | full render still blocked |
+
+Current auxiliary ASR policy: use `MediaTek-Research/Breeze-ASR-25` only. Do
+not use Whisper for current BreezyVoice review gates. A Whisper tiny command was
+run before this policy correction during final6b handling; that output is
+archived as superseded and is not used for the current package.
+
+Breeze-ASR-25 auxiliary run:
+
+| Model | Device | Model load | ASR time | Text chars | Timestamp chunks | Output |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| `MediaTek-Research/Breeze-ASR-25` | RTX 5080 CUDA | `3.111 s` | `41.487 s` | `3692` | `216` | `.local/breezyvoice/review/v1/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt` |
+
+Breeze-ASR-25 remains an auxiliary warning signal. It can surface possible term
+drift and repeated phrases, but it does not replace human listening for CDE TTS
+acceptance.
