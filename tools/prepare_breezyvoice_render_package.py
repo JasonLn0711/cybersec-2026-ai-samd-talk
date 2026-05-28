@@ -248,23 +248,30 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "醫療 人工智慧": "醫療人工智慧",
         "醫療影像 人工智慧": "醫療影像人工智慧",
         "人工智慧 派克斯": "人工智慧派克斯",
-        "要怎麼判斷此系統可以被信任。今天會": "要怎麼判斷此系統可以被信任。現在，今天會",
+        "當醫療器材、人工智慧系統、派克斯， H I S， E M R、雲端服務與廠商維護通道全部連在一起時，醫院要怎麼判斷此系統可以被信任。": "當醫療器材、人工智慧系統、派克斯，H I S，E M R、雲端服務與廠商維護通道全部連在一起時。醫院端需要判斷：系統是否可信。",
+        "要怎麼判斷這個系統可以被信任。今天會": "需要判斷系統是否可信。今天會",
+        "要怎麼判斷此系統可以被信任。今天會": "需要判斷系統是否可信。今天會",
+        "醫院會問：這個系統接到哪裡？誰可以登入？資料怎麼流？廠商如何維護？弱點誰負責？修補多久？修完怎麼證明？事件後如何調查與恢復？": "醫院會依序確認。此系統接到哪裡。誰可以登入。資料如何流動。廠商如何維護。弱點由誰負責。修補需要多久。修完之後如何證明。事件後如何調查與恢復。",
+        "醫院會問：此系統接到哪裡？誰可以登入？資料怎麼流？廠商如何維護？弱點誰負責？修補多久？修完怎麼證明？事件後如何調查與恢復？": "醫院會依序確認。此系統接到哪裡。誰可以登入。資料如何流動。廠商如何維護。弱點由誰負責。修補需要多久。修完之後如何證明。事件後如何調查與恢復。",
         "掛號、檢查、影像、報告、病歷查詢、轉診、用藥與收費": "掛號流程、檢查流程、影像流程、報告流程、病歷查詢、轉診、用藥與收費",
         "戴康 DICOM 工作流程": "戴康影像流程",
         "戴康 DICOM router": "戴康路由器",
         "戴康 工作流程": "戴康影像流程",
         "戴康 router": "戴康路由器",
-        "verify R B A C、service accounts、namespace isolation": "驗證角色權限控管，R B A C。再看服務帳號。再看命名空間隔離。",
-        "第二，要 verify， R B A C， service accounts， namespace isolation。": "第二，要驗證角色權限控管，R B A C。先看服務帳號。再看命名空間隔離。",
-        "第二，要驗證，R B A C。再看 service accounts。再看 namespace isolation。": "第二，要驗證角色權限控管，R B A C。再看服務帳號。再看命名空間隔離。",
+        "verify R B A C、service accounts、namespace isolation": "驗證角色權限控管。R B A C。接著，看服務帳號。再看命名空間隔離。",
+        "第二，要 verify， R B A C， service accounts， namespace isolation。": "第二，要驗證角色權限控管。R B A C。接著，看服務帳號。再看命名空間隔離。",
+        "第二，要驗證，R B A C。再看 service accounts。再看 namespace isolation。": "第二，要驗證角色權限控管。R B A C。接著，看服務帳號。再看命名空間隔離。",
+        "第二，要驗證角色權限控管， R B A C。再看服務帳號。再看命名空間隔離。": "第二，要驗證角色權限控管。R B A C。接著，看服務帳號。再看命名空間隔離。",
         "每個 workload 的權限是否最小化？ service account 是否被共用？ namespace 是否真的隔離？": "每個 workload 的權限是否最小化？服務帳號是否被共用？namespace 是否真的隔離？",
         "service account 是否被共用": "服務帳號是否被共用",
         "secrets handling and cloud credential exposure": "secrets handling，以及 cloud credential exposure",
-        "Secret 是否被放在 environment variable？是否被寫進 image？ C I C D variables 是否外洩？": "Secret 是否被放在 environment variable 裡？是否被寫進 image？C I 與 C D 變數是否外洩？",
-        "C I C D variables 是否外洩": "C I 與 C D 變數是否外洩",
+        "Secret 是否被放在 environment variable？是否被寫進 image？ C I C D variables 是否外洩？": "Secret 是否被放在 environment variable 裡？是否被寫進 image？C I，與 C D 變數是否外洩？",
+        "C I C D variables 是否外洩": "C I，與 C D 變數是否外洩",
+        "C I 與 C D 變數是否外洩": "C I，與 C D 變數是否外洩",
         "哪個 應用程式介面 call 被使用": "哪一個應用程式介面呼叫被使用",
         "Network Policy、ingress rules、exposed services": "Network Policy，ingress rules，exposed services",
-        "不是只有 application endpoint， Kubernetes API， dashboard， internal service 也都可能成為攻擊面。": "不是只有 application endpoint。K 八 S 管理介面、dashboard、internal service，也都可能成為攻擊面。",
+        "不是只有 application endpoint， Kubernetes API， dashboard， internal service 也都可能成為攻擊面。": "不是只有 application endpoint。K 八 S 應用程式介面，dashboard，internal service，也都可能成為攻擊面。",
+        "不是只有 application endpoint， K 八 S 應用程式介面、 dashboard、 internal service 也都可能成為攻擊面。": "不是只有 application endpoint。K 八 S 應用程式介面，dashboard，internal service，也都可能成為攻擊面。",
         "application endpoint，K eight S A P I、dashboard、internal service": "application endpoint，K 八 S 管理介面，dashboard，internal service",
         "image provenance、 container privileges、 admission controls": "image provenance，container privileges，admission controls",
         "哪個 pod、哪個 service account、哪個 A P I call": "哪一個 Pod、哪一個服務帳號、哪一個應用程式介面呼叫",
@@ -286,6 +293,9 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "Pod 中存在 credential，使攻擊者能進一步存取 A W S 基礎設施": "Pod 裡的憑證外洩，使攻擊者能進一步存取 A W S 基礎設施",
         "cloud resource 進行 cryptocurrency mining": "雲端資源進行加密貨幣挖礦",
         "faulty security content update": "CrowdStrike Falcon 安全內容更新",
+        "rollback 機制": "回滾機制",
+        "rollback evidence": "回滾證據",
+        "staged rollout": "分階段 rollout",
         "test update validators and malformed inputs": "test update validators，以及異常輸入測試",
         "treat update infrastructure": "threat update infrastructure",
         "treat update": "threat update",
@@ -294,6 +304,8 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "malformed inputs": "異常輸入",
         "Security updates are also software supply chain，供應鏈 that require white box validation，白箱驗證.": "安全更新本身也是 software supply chain，供應鏈；因此需要白盒驗證。",
         "Security updates are also software supply chain，供應鏈 that require 白盒驗證.": "安全更新本身也是 software supply chain，供應鏈；因此需要白盒驗證。",
+        "並管理 軟體物料清單，S B O M 與元件風險": "並管理軟體物料清單，英文四個字母，S，B，O，M，以及元件風險",
+        "並管理 軟體物料清單， S B O M 與元件風險": "並管理軟體物料清單，英文四個字母，S，B，O，M，以及元件風險",
         "F D and C Act Section 五 二 四 B": "F D C Act，Section 五二四，英文字母 B 款",
         "F D and C Act Section 五二四 B": "F D C Act，Section 五二四，英文字母 B 款",
         "F D and C Act，Section 五二四 B": "F D C Act，Section 五二四，英文字母 B 款",
@@ -332,6 +344,28 @@ def apply_pilot_review_conditioning(text: str) -> str:
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
+    text = re.sub(
+        r"當醫療器材、人工智慧系統、派克斯.*?醫院要怎麼判斷此系統可以被信任。",
+        "當醫療器材、人工智慧系統、派克斯，H I S，E M R、雲端服務與廠商維護通道全部連在一起時。醫院端需要判斷：系統是否可信。",
+        text,
+    )
+    text = re.sub(
+        r"醫院會問：此系統接到哪裡？\s*誰可以登入？\s*資料怎麼流？\s*廠商如何維護？\s*弱點誰負責？\s*修補多久？\s*修完怎麼證明？\s*事件後如何調查與恢復？",
+        "醫院會依序確認。此系統接到哪裡。誰可以登入。資料如何流動。廠商如何維護。弱點由誰負責。修補需要多久。修完之後如何證明。事件後如何調查與恢復。",
+        text,
+    )
+    text = text.replace(
+        "不是只有 application endpoint， K 八 S 應用程式介面、 dashboard、 internal service",
+        "不是只有 application endpoint。K 八 S 應用程式介面，dashboard，internal service",
+    )
+    text = text.replace("醫院要怎麼判斷這個系統可以被信任", "醫院端需要判斷：系統是否可信")
+    text = text.replace("醫院要怎麼判斷此系統可以被信任", "醫院端需要判斷：系統是否可信")
+    text = text.replace(
+        "醫院會問：此系統接到哪裡？ 誰可以登入？ 資料怎麼流？ 廠商如何維護？ 弱點誰負責？ 修補多久？ 修完怎麼證明？ 事件後如何調查與恢復？",
+        "醫院會依序確認。此系統接到哪裡。誰可以登入。資料如何流動。廠商如何維護。弱點由誰負責。修補需要多久。修完之後如何證明。事件後如何調查與恢復。",
+    )
+    text = text.replace("application endpoint，", "application endpoint。")
+    text = text.replace("應用程式介面、 dashboard、 internal service", "應用程式介面，dashboard，internal service")
     text = text.replace("要 驗證", "要驗證")
     text = text.replace("exposed K 八 S console", "暴露在外、未受保護的 K 八 S 管理主控台")
     text = text.replace("exposed K八S console", "暴露在外、未受保護的 K 八 S 管理主控台")
@@ -452,9 +486,7 @@ def split_long_chunks(chunks: list[str], max_chars: int) -> list[str]:
 
 def split_subclips(text: str, output_prefix: str = "") -> list[str]:
     if output_prefix == "cde_full_01_opening_positioning_crazyhunter_entry_case":
-        clips = split_long_chunks([text], 120)
-        if 8 <= len(clips) <= 12 and all(len(item) <= 160 for item in clips):
-            return clips
+        return split_long_chunks([text], 80)
 
     if output_prefix == "cde_full_26_shared_close_test_anchors":
         closing_clips = split_long_chunks([text], 80)
@@ -977,7 +1009,7 @@ def prepare_package() -> None:
             "asr_forbidden_markup_hits": pilot_asr_forbidden_hits,
             "status": pilot_machine_review_status,
             "interpretation": (
-                "ASR is an auxiliary signal only. Missing term hits or odd substitutions require human listening before full batch approval."
+                "Breeze-ASR-25 ASR is an auxiliary signal only. Missing term hits or odd substitutions require human listening before full batch approval."
             ),
         },
     )
@@ -1001,7 +1033,7 @@ def prepare_package() -> None:
                 "",
                 "Machine interpretation:",
                 "",
-                "- ASR is not a substitute for human listening.",
+                "- ASR must be generated with Breeze-ASR-25 and is not a substitute for human listening.",
                 "- No forbidden orchestration markup should appear in the ASR transcript.",
                 "- Missing expected terms or strange substitutions are treated as a pilot-review risk, not as proof that the raw audio itself is unusable.",
                 "- Keep `full_batch_allowed=false` until the pilot listening checklist is accepted.",

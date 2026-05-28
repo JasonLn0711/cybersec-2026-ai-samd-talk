@@ -168,12 +168,9 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
     asr_dir = review_dir / "asr"
     copy_file(asr_dir / "cde-2026-breezyvoice-pilot-stitched-v1.txt", package / "review/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt")
     for log_name in [
-        "pilot_whisper_tiny_after_total_reject_repair_final5b.log",
-        "pilot_whisper_tiny_after_confident_speech_final4.log",
-        "pilot_whisper_tiny_after_reference_cuda_ort_clause90.log",
-        "pilot_whisper_tiny_after_round2_repair.log",
-        "pilot_whisper_tiny_after_expert_conditioning.log",
-        "pilot_whisper_tiny_after_term_normalization.log",
+        "breeze_asr25_after_partial_accept_repair_final6b.log",
+        "breeze_asr25_after_partial_accept_repair_final6b.json",
+        "breeze_asr25_after_partial_accept_repair_final6b_timestamped.txt",
     ]:
         log_path = asr_dir / log_name
         if log_path.exists():
@@ -181,6 +178,9 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
 
     runtime_dir = LOCAL_ROOT / f"runtime/{VERSION}"
     for log_name in [
+        "pilot_reference_after_partial_accept_repair_final6b_cde20.log",
+        "pilot_reference_after_partial_accept_repair_final6.log",
+        "pacing_partial_accept_repair_final6.log",
         "pilot_reference_after_total_reject_repair_final5b.log",
         "pilot_reference_after_total_reject_repair_final5.log",
         "pacing_total_reject_repair_final5b.log",
@@ -205,6 +205,10 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
             copy_file(log_path, package / "review/runtime" / log_name)
     telemetry_dir = runtime_dir / "telemetry"
     for telemetry_name in [
+        "pilot_reference_after_partial_accept_repair_final6b_cde20_summary.json",
+        "pilot_reference_after_partial_accept_repair_final6b_cde20_gpu.jsonl",
+        "pilot_reference_after_partial_accept_repair_final6_summary.json",
+        "pilot_reference_after_partial_accept_repair_final6_gpu.jsonl",
         "pilot_reference_after_total_reject_repair_final5b_summary.json",
         "pilot_reference_after_total_reject_repair_final5b_gpu.jsonl",
         "pilot_reference_after_total_reject_repair_final5_summary.json",
@@ -304,7 +308,7 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
 - {summary['subclips']} 個 planned full-render subclips
 - 本次 pilot 有 {pilot_subclip_count} 個 subclips
 - 本次 pilot 使用 {summary['pilot_execution_mode']}
-- full render 目前尚未開放，必須等四段 pilot 都通過人工聽審
+- full render 目前尚未開放；本包保留已接受的 `cde_full_26`，其餘三段必須等人工聽審通過
 
 請先閱讀：
 
@@ -320,7 +324,7 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
 
 - `audio/full/cde-2026-breezyvoice-pilot-stitched-v1.wav`
 
-接著逐段審查這四個 parent chunk，這四段是正式 gate decision unit：
+接著逐段審查這四個 parent chunk，這四段是正式 gate decision unit。`cde_full_26` 已由上一輪人工審查標記為接受並保留原音檔，仍放入本包供整體連續感比對；請優先審查其餘三段修正版：
 
 - `audio/parent_chunks/cde_full_01_opening_positioning_crazyhunter_entry_case.wav`
 - `audio/parent_chunks/cde_full_16_k8s_review_controls.wav`
@@ -397,7 +401,7 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
 
 ## 重要判斷原則
 
-這份 ASR transcript 只能當輔助，不能當主要判斷依據。請以實際聽感為準。
+這份 ASR transcript 由 Breeze-ASR-25 產生，只能當輔助，不能當主要判斷依據。請以實際聽感為準。
 
 通過標準是：
 
@@ -408,7 +412,7 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
 - 段落不疲勞
 - 語氣符合 CDE 醫療資安講課
 
-只要四段 parent chunk 都被人工審查為 `accept`，才會進入完整 80 分鐘 full render。"""
+只要四段 parent chunk 都維持或取得人工審查 `accept`，才會進入完整 80 分鐘 full render。"""
 
 
 def readme(
@@ -444,7 +448,7 @@ Prepared for human listening review before any full 80-minute BreezyVoice render
 - Full batch allowed now: {gate['full_batch_allowed']}
 - Machine review status: {gate['machine_review_status']}
 
-Important: ASR is only an auxiliary signal. Judge by listening to the WAV files.
+Important: ASR is generated with Breeze-ASR-25 and is only an auxiliary signal. Judge by listening to the WAV files.
 
 ## What To Listen To First
 
@@ -458,10 +462,11 @@ Important: ASR is only an auxiliary signal. Judge by listening to the WAV files.
 
 Special attention:
 
-- `cde_full_16_k8s_review_controls` was previously rejected for runtime compression around 0.73. The current package applies finer subclip splitting plus a reproducible post-synthesis pacing override; use the current WAV, current review CSV, and listening judgement rather than the old runtime.
-- `cde_full_26_shared_close_test_anchors` had a prior tail-residue report after `謝謝大家`; the current package trims the last subclip tail by 0.8 seconds and archives the pre-trim local artifact outside this package.
+- The latest returned human review accepted `cde_full_26_shared_close_test_anchors`; that audio is preserved and included as the accepted continuity baseline.
+- `cde_full_01_opening_positioning_crazyhunter_entry_case`, `cde_full_16_k8s_review_controls`, and `cde_full_20_crowdstrike_update_524b` were repaired and rerendered for this package after the partial-accept review.
+- `cde_full_16_k8s_review_controls` was previously rejected for runtime compression around 0.73. The current package applies finer subclip splitting plus a reproducible post-synthesis `atempo=0.88` pacing override; use the current WAV, current review CSV, and listening judgement rather than the old runtime.
 - The model-facing text now removes low-confidence fillers such as `這個`, `那個`, `嗯`, `呃`, explicit breath cues, and known hallucination residues before synthesis. Small confident natural vocalization is acceptable; hesitant filler delivery is not.
-- The ASR machine check is only an auxiliary signal and can miss or distort technical terms.
+- The ASR machine check uses Breeze-ASR-25 only. It is an auxiliary signal and can still miss or distort technical terms.
 
 ## How To Fill The Review
 

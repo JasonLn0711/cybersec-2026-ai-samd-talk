@@ -20,72 +20,73 @@ VERSION = "v1"
 CORRECTIONS = {
     "cde_full_01_opening_positioning_crazyhunter_entry_case": {
         "expert_issue": (
-            "Opening chunk was returned as total-reject for trust-question "
-            "looping, bracket/control-like wording leakage, DICOM/PACS "
-            "instability, and ASR-like filler residue."
+            "Latest partial-accept review kept this opening chunk rejected for "
+            "trust-question looping around whether the system can be trusted "
+            "and for hallucinated filler or fragment sounds in the clinical "
+            "question sequence."
         ),
         "conditioning_applied": (
-            "Removed repeated trust-question pressure in model-facing text, "
-            "replaced DICOM with a safer Chinese reading, normalized fillers "
-            "and hesitant phrasing, and increased the opening split to 12 "
-            "shorter subclips. Frozen source remains unchanged."
+            "Converted the trust question into a short declarative checkpoint, "
+            "rewrote the clinical question list into cleaner declarative "
+            "sentences, removed hesitant fillers, and split the opening into "
+            "19 short subclips with an 80-character ceiling. Frozen source "
+            "remains unchanged."
         ),
         "next_listener_question": (
-            "Does final5b recover a stable CDE opening without loop, bracket "
-            "leakage, or hesitant filler delivery?"
+            "Does final6/final6b recover a stable CDE opening without trust-loop "
+            "repetition or hesitant filler delivery?"
         ),
     },
     "cde_full_16_k8s_review_controls": {
         "expert_issue": (
-            "K8S/RBAC/API and Tesla case section was returned as total-reject "
-            "for K8S/Kubernetes collapse, robotic acronym spelling, API "
-            "repetition, symbol leakage risk, and runtime compression."
+            "Latest partial-accept review kept this K8S controls chunk rejected "
+            "for tight RBAC and CI/CD boundaries, small clipping around the "
+            "K8S application interface transition, and mechanical pacing in "
+            "the Tesla case."
         ),
         "conditioning_applied": (
-            "Localized high-risk K8S/API passages, rewrote RBAC with a Chinese "
-            "role-control anchor, removed dash/slash symbol risks, localized "
-            "the Tesla exposed-console phrase, split to 10 subclips, and "
-            "applied a reproducible 0.82 tempo pacing pass."
+            "Inserted stronger punctuation around RBAC, service accounts, "
+            "namespace isolation, CI/CD, and application endpoint transitions; "
+            "kept the chunk at 9 manifest subclips; then applied a "
+            "reproducible post-synthesis atempo=0.88 pacing pass."
         ),
         "next_listener_question": (
-            "Does final5b make RBAC, K8S, service accounts, API calls, and the "
-            "Tesla credential path intelligible at the corrected 0.91 runtime "
-            "ratio?"
+            "Does final6/final6b make RBAC, CI/CD, K8S endpoint wording, and "
+            "the Tesla credential path intelligible at the corrected 0.89 "
+            "runtime ratio?"
         ),
     },
     "cde_full_20_crowdstrike_update_524b": {
         "expert_issue": (
-            "CrowdStrike/524B section was returned as total-reject for FD&C "
-            "symbol misreading, white-box homophone drift, threat/update drift, "
-            "and filler-like phrasing in the regulatory bridge."
+            "Latest partial-accept review kept this CrowdStrike/524B chunk "
+            "rejected for SBOM being heard as SDOM, Rollback being heard as "
+            "roll-bai, update-channel wording drift, 字母/子母 drift, and "
+            "filler or stutter risk in the regulatory bridge."
         ),
         "conditioning_applied": (
-            "Replaced FD&C with an explicit F D C Act reading, replaced 524B "
-            "with a Chinese/letter anchor, moved white-box wording to 白盒, "
-            "localized interpreter and threat-update pressure, and split to 11 "
-            "subclips."
+            "Replaced rollback with 回滾 where appropriate, kept F D C Act and "
+            "五二四/英文字母B款 anchors, retained 白盒 wording, removed filler "
+            "pressure, and rerendered cde20-only final6b after ASR auxiliary "
+            "warning by expanding SBOM to 軟體物料清單，英文四個字母，S，B，O，M."
         ),
         "next_listener_question": (
-            "Does final5b preserve CrowdStrike, Falcon, supply-chain, 白盒, "
-            "Section 524B, and SBOM credibility without filler-like stumbles?"
+            "Does final6b preserve CrowdStrike, supply-chain, 白盒, Section "
+            "524B, 回滾, and SBOM credibility without filler-like stumbles?"
         ),
     },
     "cde_full_26_shared_close_test_anchors": {
         "expert_issue": (
-            "Closing anchors were returned as total-reject for homophone drift "
-            "around PACS downtime, internal program, vulnerability/governance "
-            "phrasing, laughter-like hallucination, 524B/SBOM/root-cause drift, "
-            "and tail residue after thanks."
+            "Latest partial-accept review accepted this closing chunk. The "
+            "only note is to confirm whether 百格斯 is intended by the frozen "
+            "script context."
         ),
         "conditioning_applied": (
-            "Replaced risky homophones with safer Chinese technical wording, "
-            "used 五二四/英文字母B款 and S B O M anchors, replaced root cause "
-            "with 根本原因/根因, preserved 14 fine-grained subclips, and "
-            "trimmed 0.8 seconds from the final thank-you subclip tail."
+            "Preserved the accepted final5b audio as the continuity baseline. "
+            "No final6 rerender was performed for this accepted chunk."
         ),
         "next_listener_question": (
-            "Does final5b close with stable question anchors, no laughter-like "
-            "artifact, correct 524B/SBOM/root-cause terms, and no tail residue?"
+            "Does the accepted cde26 baseline remain suitable when heard "
+            "inside the newly stitched final6/final6b pilot package?"
         ),
     },
 }

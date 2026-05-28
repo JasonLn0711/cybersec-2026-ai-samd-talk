@@ -27,6 +27,11 @@ REQUIRED_PILOT_PREFIXES = [
     "cde_full_26_shared_close_test_anchors",
 ]
 FORBIDDEN_MODEL_TOKENS = ["BV26", "[BV26", "[/BV26]", "<!--", "-->", "```", "\n#"]
+MAX_SUBCLIPS_BY_PARENT = {
+    # cde01 is intentionally finer after the returned loop/filler review.
+    "cde_full_01_opening_positioning_crazyhunter_entry_case": 24,
+}
+DEFAULT_MAX_SUBCLIPS_PER_PARENT = 16
 
 
 def rel(path: Path) -> str:
@@ -128,7 +133,7 @@ def main() -> int:
     bad_parent_counts = {
         prefix: len(items)
         for prefix, items in subclips_by_parent.items()
-        if not (2 <= len(items) <= 16)
+        if not (2 <= len(items) <= MAX_SUBCLIPS_BY_PARENT.get(prefix, DEFAULT_MAX_SUBCLIPS_PER_PARENT))
     }
 
     pilot_prefixes = [row["output_prefix"] for row in pilot_manifest]
