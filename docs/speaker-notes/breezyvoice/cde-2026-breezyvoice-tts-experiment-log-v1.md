@@ -52,6 +52,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-10` | review-log-traceability | Build consolidated render review log before next human gate | render_review_log_builder_ready_gate_still_closed | Export refreshed Downloads review package and wait for completed expert review CSV or specific minimal pilot-fix instruction |
 | `EXP-20260528-11` | human-review-traceability | Add pilot correction matrix to human review package | correction_matrix_ready_gate_still_closed | Wait for completed expert review CSV or a specific minimal pilot-fix instruction; do not run full render |
 | `EXP-20260528-12` | pilot-repair-rerender | Round-2 pilot rerender after all-reject contamination review | round2_pilot_rendered_stop_for_human_review | Export refreshed Downloads package and wait for round-2 human listening review |
+| `EXP-20260528-13` | reference-audio-cuda-telemetry | Reference-audio pilot render with ONNX CUDA telemetry | reference_prompt_pilot_rendered_stop_for_human_review | Export refreshed Downloads review package with telemetry and wait for expert listening review. |
 
 ## Detailed Records
 
@@ -980,3 +981,65 @@ Next action:
 Additional observations:
 
 - FIRST PRINCIPLE: no-reference/default voice may be the underlying instability; round-2 review should decide whether to continue with this voice path or switch voice strategy before full render
+
+### EXP-20260528-13 - Reference-audio pilot render with ONNX CUDA telemetry
+
+- Timestamp: `2026-05-28T09:55:00+08:00`
+- Stage: `reference-audio-cuda-telemetry`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case,cde_full_16_k8s_review_controls,cde_full_20_crowdstrike_update_524b,cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- User supplied 260528_0839_record.mp3 and 260528_0839_record_final.txt as reference audio material; no-reference pilot had repeated hallucination and pacing failures; user requested RTX 5080 GPU usage and ONNX Runtime CUDA provider repair; user requested complete research-grade logging including time and energy.
+
+Hypothesis:
+
+- A short formal-opening reference prompt plus ONNX Runtime CUDA provider and clause-level closing split can render the pilot in prompt mode on RTX 5080 while avoiding zero-shot long-sentence attention failure.
+
+Change summary:
+
+- Copied local-only reference MP3 into .local prompt area; extracted 20s formal-opening WAV from 260528_0839_record.mp3; used transcript from 260528_0839_record_final.txt; preserved reference audio as optional rather than mandatory; patched prompt runner to use soundfile for prompt WAV load/save to bypass torchaudio torchcodec requirement; replaced CPU onnxruntime with onnxruntime-gpu 1.23.2 while pinning numpy 1.26.4 protobuf 4.25.0 packaging 24.2; added GPU telemetry wrapper; split cde_full_26 to clause-level subclips after repeated zero-shot tensor mismatch; ignored local G2PWModel cache.
+
+Commands:
+
+- ffmpeg -ss 10 -t 20 -i /home/jnln3799/Downloads/260528_0839_record.mp3 -ac 1 -ar 16000 .local/breezyvoice/prompts/v1/jason_reference.wav; uv pip uninstall onnxruntime onnxruntime-gpu; uv pip install onnxruntime-gpu==1.23.2 numpy==1.26.4 protobuf==4.25.0 packaging==24.2; python3 tools/prepare_breezyvoice_render_package.py; python3 tools/run_with_gpu_telemetry.py --telemetry-jsonl .local/breezyvoice/runtime/v1/telemetry/pilot_reference_cuda_ort_after_clause90_gpu.jsonl --summary-json .local/breezyvoice/runtime/v1/telemetry/pilot_reference_cuda_ort_after_clause90_summary.json --stdout-log .local/breezyvoice/runtime/v1/pilot_reference_cuda_ort_after_clause90.log -- .local/breezyvoice/runtime/v1/venv/bin/python tools/breezyvoice_render_subclips.py --selection pilot --voice-mode prompt --overwrite; python3 tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full --overwrite --silence-ms 700; .local/breezyvoice/runtime/v1/venv/bin/python -m whisper .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav --model tiny --language zh --output_format txt
+
+Logs:
+
+- .local/breezyvoice/runtime/v1/pilot_reference_cuda_provider_smoke.log,.local/breezyvoice/runtime/v1/pilot_reference_cuda_ort_after_clause_split.log,.local/breezyvoice/runtime/v1/telemetry/pilot_reference_cuda_ort_after_clause_split_summary.json,.local/breezyvoice/runtime/v1/pilot_reference_cuda_ort_after_clause90.log,.local/breezyvoice/runtime/v1/telemetry/pilot_reference_cuda_ort_after_clause90_summary.json,.local/breezyvoice/runtime/v1/telemetry/pilot_reference_cuda_ort_after_clause90_gpu.jsonl,.local/breezyvoice/review/v1/asr/pilot_whisper_tiny_after_reference_cuda_ort_clause90.log,.local/breezyvoice/review/v1/objective_verification.json
+
+Outputs:
+
+- .local/breezyvoice/prompts/v1/jason_reference.wav,.local/breezyvoice/prompts/v1/jason_reference.txt,.local/breezyvoice/manifests/v1/subclip_manifest.csv,.local/breezyvoice/output/v1/subclips,.local/breezyvoice/output/v1/parent_chunks,.local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav,.local/breezyvoice/review/v1/pilot_stitch_summary.json
+
+Machine result:
+
+- ONNX Runtime provider list changed from AzureExecutionProvider/CPUExecutionProvider to TensorRTExecutionProvider/CUDAExecutionProvider/CPUExecutionProvider; GPU smoke render completed; failed clause-split run rendered 14 subclips then failed on cde_full_26 long sentence with tensor size mismatch; failed telemetry elapsed_s=390.217 avg_gpu_power_w=231.341 estimated_gpu_energy_wh=25.075873 max_gpu_memory_used_mb=15720; successful clause90 run rendered 25/25 subclips exit_code=0 elapsed_s=443.357 avg_gpu_power_w=213.898 estimated_gpu_energy_wh=26.342492 avg_gpu_utilization_pct=75.074 max_gpu_memory_used_mb=13673; subclip elapsed sum=347.077s avg=13.883s min=2.320s max=33.128s; stitched pilot duration=682.31s; full render gate remains blocked.
+
+Human result:
+
+- No human listening acceptance yet; tiny ASR remains auxiliary and shows severe recognition errors, so human listening is still mandatory.
+
+Decision: `reference_prompt_pilot_rendered_stop_for_human_review`
+
+Fix applied:
+
+- Reference-audio prompt mode, ONNX Runtime CUDA provider repair, soundfile prompt I/O fallback, 90-character clause-level close split, GPU telemetry capture, pilot-only render and stitch; no full render.
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/,/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- Do not run full render until all four required pilot parent chunks are accepted by human listening review.
+
+Next action:
+
+- Export refreshed Downloads review package with telemetry and wait for expert listening review.
+
+Additional observations:
+
+- Energy figures are GPU-only nvidia-smi power.draw estimates and exclude CPU/system/display/PSU energy; thinking time is recorded as observable engineering intervention chronology rather than hidden model reasoning; ONNX CUDA improved prompt-mode runtime substantially but ASR proxy still suggests clinical listening review is non-negotiable; future renders should always run through tools/run_with_gpu_telemetry.py.

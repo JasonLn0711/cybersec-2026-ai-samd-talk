@@ -31,10 +31,11 @@ For an `80` minute controlled render, use `cde-2026-breezyvoice-80min-engineered
 
 The render package generator keeps the v1 source frozen and applies only
 model-facing sanitation: known stage cues, filler tokens, and hallucination
-residue are removed from generated TTS inputs. After the round-2 expert review,
-the pilot plan uses `97` full-session subclips and `16` pilot subclips; the
-pilot template overwrites pilot WAVs to avoid pairing revised text with stale
-audio.
+residue are removed from generated TTS inputs. After the reference-audio CUDA
+pilot repair, the plan uses `106` full-session subclips and `25` pilot subclips;
+the prompt-mode close is split into conservative clause-level subclips to avoid
+zero-shot long-sentence attention failures. The pilot template overwrites pilot
+WAVs to avoid pairing revised text with stale audio.
 
 On RTX 5080, run `bash tools/setup_breezyvoice_rtx5080_runtime.sh` before rendering. The official BreezyVoice requirement uses a CUDA `11.8` PyTorch wheel that does not support RTX 5080 / `sm_120`; the local setup script replaces it with a CUDA `12.8` PyTorch runtime and keeps all runtime files under `.local/`.
 

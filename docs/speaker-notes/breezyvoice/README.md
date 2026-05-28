@@ -64,6 +64,13 @@ residue are removed from TTS inputs while the frozen source stays unchanged.
 The generated pilot template overwrites pilot WAVs so revised text cannot be
 silently paired with stale audio.
 
+When reference audio is present, the generated templates use prompt mode by
+default while keeping no-reference mode available. Prompt-mode experiments
+should be run through `tools/run_with_gpu_telemetry.py` so stdout, GPU samples,
+wall time, peak memory, and GPU-only Wh estimates are captured with the render.
+The current reference-audio telemetry appendix is
+`cde-2026-breezyvoice-reference-audio-telemetry-2026-05-28.md`.
+
 Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, `pilot_machine_review.md`, `pilot_listening_review.csv`, `render_review_log.csv`, `pilot_correction_matrix.md`, and `full_batch_gate.json`. Rebuild `render_review_log.csv` and `pilot_correction_matrix.md` after any stitch, expert-review ingestion, or rerender so runtime, issue, fix, accepted status, and stop-gate source stay aligned.
 
 ## Experiment Logging Rule
