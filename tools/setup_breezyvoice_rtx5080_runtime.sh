@@ -40,12 +40,26 @@ UV_HTTP_TIMEOUT="${UV_HTTP_TIMEOUT:-600}" uv pip install \
   'torch==2.11.0+cu128' \
   'torchaudio==2.11.0+cu128'
 
+# Prompt-audio rendering uses BreezyVoice ONNX frontend components. The CPU
+# wheel shadows the GPU wheel when both are installed, so replace it explicitly
+# and keep NumPy on the 1.x ABI required by the local audio stack.
+uv pip uninstall --python "$PYTHON_BIN" onnxruntime onnxruntime-gpu || true
+UV_HTTP_TIMEOUT="${UV_HTTP_TIMEOUT:-600}" uv pip install \
+  --python "$PYTHON_BIN" \
+  'onnxruntime-gpu==1.23.2' \
+  'numpy==1.26.4' \
+  'protobuf==4.25.0' \
+  'packaging==24.2'
+
 "$PYTHON_BIN" - <<'PY'
+import onnxruntime as ort
 import torch
 import torchaudio
 
 print("torch", torch.__version__)
 print("torchaudio", torchaudio.__version__)
+print("onnxruntime", ort.__version__)
+print("onnxruntime_providers", ort.get_available_providers())
 print("cuda_available", torch.cuda.is_available())
 if torch.cuda.is_available():
     print("device", torch.cuda.get_device_name(0))

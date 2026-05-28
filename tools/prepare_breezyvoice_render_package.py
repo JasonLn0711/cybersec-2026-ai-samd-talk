@@ -346,11 +346,41 @@ def split_by_markers(text: str, markers: list[str]) -> list[str]:
     return [text[start:end].strip() for start, end in zip(starts, ends) if text[start:end].strip()]
 
 
+def split_long_chunks(chunks: list[str], max_chars: int) -> list[str]:
+    expanded: list[str] = []
+    for chunk in chunks:
+        needs_clause_split = any(len(sentence) > max_chars for sentence in split_sentences(chunk))
+        if len(chunk) <= max_chars and not needs_clause_split:
+            expanded.append(chunk)
+            continue
+        current: list[str] = []
+        current_len = 0
+        sentences: list[str] = []
+        for sentence in split_sentences(chunk):
+            if len(sentence) <= max_chars:
+                sentences.append(sentence)
+                continue
+            sentences.extend([part.strip() for part in re.findall(r".+?(?:[，；：、]|$)", sentence) if part.strip()])
+        for sentence in sentences:
+            if current and current_len + len(sentence) > max_chars:
+                expanded.append(" ".join(current).strip())
+                current = [sentence]
+                current_len = len(sentence)
+            else:
+                current.append(sentence)
+                current_len += len(sentence)
+        if current:
+            expanded.append(" ".join(current).strip())
+    return expanded
+
+
 def split_subclips(text: str, output_prefix: str = "") -> list[str]:
     if output_prefix == "cde_full_26_shared_close_test_anchors":
         anchored = split_by_markers(text, ["第一題問：", "第二題問：", "第三題問："])
-        if 2 <= len(anchored) <= 4 and all(len(item) <= 500 for item in anchored):
-            return anchored
+        if anchored:
+            anchored = split_long_chunks(anchored, 90)
+            if 2 <= len(anchored) <= 14 and all(len(item) <= 140 for item in anchored):
+                return anchored
 
     sentences = split_sentences(text)
     if output_prefix in {"cde_full_16_k8s_review_controls", "cde_full_20_crowdstrike_update_524b"}:
@@ -931,15 +961,19 @@ def prepare_package() -> None:
         ),
     )
 
-    prompt_text = (
+    default_prompt_text = (
         "各位好，今天這場課程會把醫療資安放回臨床 workflow。"
         "我們會用產品生命週期來看證據，用醫院部署現實來看責任分工，"
         "讓法規條文變成可以行動、可以交接、可以驗證的治理語言。"
         "請用穩定、清楚、台灣華語的醫療資安講課語氣朗讀。"
     )
-    write_text(LOCAL_ROOT / f"prompts/{VERSION}/jason_reference.txt", prompt_text)
     reference_audio_path = LOCAL_ROOT / f"prompts/{VERSION}/jason_reference.wav"
     reference_text_path = LOCAL_ROOT / f"prompts/{VERSION}/jason_reference.txt"
+    if reference_audio_path.exists() and reference_text_path.exists():
+        prompt_text = reference_text_path.read_text(encoding="utf-8").strip()
+    else:
+        prompt_text = default_prompt_text
+        write_text(reference_text_path, prompt_text)
     reference_audio_exists = reference_audio_path.exists()
     reference_gate = {
         "reference_audio_required": REFERENCE_AUDIO_REQUIRED,
@@ -1176,7 +1210,7 @@ def prepare_package() -> None:
                 "if [[ -f \"$PROMPT_WAV\" ]]; then",
                 "  echo \"Using optional prompt audio: $PROMPT_WAV\"",
                 "  test -f \"$PROMPT_TXT\" || { echo \"Missing prompt transcript: $PROMPT_TXT\" >&2; exit 2; }",
-                "  VOICE_MODE=\"${BREEZYVOICE_VOICE_MODE:-default}\"",
+                "  VOICE_MODE=\"${BREEZYVOICE_VOICE_MODE:-prompt}\"",
                 "else",
                 "  echo \"No prompt audio found; proceeding in no-reference/default voice mode.\"",
                 "  PROMPT_WAV=''",
@@ -1277,7 +1311,7 @@ def prepare_package() -> None:
                 "if [[ -f \"$PROMPT_WAV\" ]]; then",
                 "  echo \"Using optional prompt audio: $PROMPT_WAV\"",
                 "  test -f \"$PROMPT_TXT\" || { echo \"Missing prompt transcript: $PROMPT_TXT\" >&2; exit 2; }",
-                "  VOICE_MODE=\"${BREEZYVOICE_VOICE_MODE:-default}\"",
+                "  VOICE_MODE=\"${BREEZYVOICE_VOICE_MODE:-prompt}\"",
                 "else",
                 "  echo \"No prompt audio found; proceeding in no-reference/default voice mode.\"",
                 "  PROMPT_WAV=''",

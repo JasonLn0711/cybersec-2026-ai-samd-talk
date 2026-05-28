@@ -111,6 +111,7 @@ def main() -> int:
         for line in paths["experiment_log"].read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
+    reference_audio_exists = reference_gate.get("audio_exists") is True
 
     segment_texts = sorted((LOCAL_ROOT / f"inputs/{VERSION}/segments").glob("*.txt"))
     normalized_segment_texts = sorted((LOCAL_ROOT / f"inputs/{VERSION}/normalized_segments").glob("*.txt"))
@@ -127,7 +128,7 @@ def main() -> int:
     bad_parent_counts = {
         prefix: len(items)
         for prefix, items in subclips_by_parent.items()
-        if not (2 <= len(items) <= 4)
+        if not (2 <= len(items) <= 14)
     }
 
     pilot_prefixes = [row["output_prefix"] for row in pilot_manifest]
@@ -187,7 +188,9 @@ def main() -> int:
         ),
         row(
             "7. reference audio policy",
-            "completed_no_reference_mode" if reference_gate.get("reference_audio_required") is False else "failed",
+            ("completed_with_reference_audio_optional" if reference_audio_exists else "completed_no_reference_mode")
+            if reference_gate.get("reference_audio_required") is False
+            else "failed",
             [rel(paths["reference_gate"])],
             [
                 "reference audio is optional by current user policy",

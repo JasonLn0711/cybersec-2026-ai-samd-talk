@@ -50,6 +50,28 @@ def target_seconds(value: str) -> int:
     return int(minutes) * 60 + int(seconds)
 
 
+def current_decision(existing: dict[str, str], runtime_seconds: str, subclip_count: int) -> tuple[str, str]:
+    decision = existing.get("decision", "")
+    notes = existing.get("notes", "")
+    if decision not in {"accept", "reject"}:
+        return decision, notes
+
+    previous_runtime = existing.get("runtime_seconds", "")
+    previous_subclip_count = existing.get("subclip_count", "")
+    if previous_runtime == runtime_seconds and previous_subclip_count == str(subclip_count):
+        return decision, notes
+
+    stale_note = (
+        f"Prior decision `{decision}` invalidated by new render metadata "
+        f"(previous runtime={previous_runtime or 'unknown'}, previous subclips={previous_subclip_count or 'unknown'}; "
+        f"current runtime={runtime_seconds or 'unknown'}, current subclips={subclip_count}). "
+        "Fresh human listening review required."
+    )
+    if stale_note in notes:
+        return "", notes
+    return "", f"{notes} | {stale_note}" if notes else stale_note
+
+
 def main() -> None:
     manifest_rows = read_csv(LOCAL_ROOT / f"manifests/{VERSION}/render_manifest.csv")
     pilot_rows = read_csv(LOCAL_ROOT / f"manifests/{VERSION}/pilot_manifest.csv")
@@ -115,7 +137,8 @@ def main() -> None:
         elif ratio and (ratio < 0.75 or ratio > 1.45):
             status = "needs_pacing_review"
         existing = existing_reviews.get(prefix, {})
-        decision = existing.get("decision", "")
+        runtime_value = f"{duration:.2f}" if duration is not None else ""
+        decision, notes = current_decision(existing, runtime_value, len(subclips))
         if decision == "accept":
             status = "accepted_by_listening"
 
@@ -124,7 +147,7 @@ def main() -> None:
                 "output_prefix": prefix,
                 "parent_wav": rel(parent_wav),
                 "subclip_count": len(subclips),
-                "runtime_seconds": f"{duration:.2f}" if duration is not None else "",
+                "runtime_seconds": runtime_value,
                 "target_seconds": target,
                 "runtime_to_target_ratio": f"{ratio:.2f}" if ratio is not None else "",
                 "normalized_text_path": manifest["normalized_text_path"],
@@ -137,7 +160,7 @@ def main() -> None:
                 "check_no_markup_spoken": existing.get("check_no_markup_spoken", ""),
                 "decision": decision,
                 "review_status": status,
-                "notes": existing.get("notes", ""),
+                "notes": notes,
             }
         )
         playlist_lines.append(f"#EXTINF:{int(duration or 0)},{prefix}")

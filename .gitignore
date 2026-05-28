@@ -4,6 +4,7 @@ node_modules/
 tools/node_modules
 outputs/deck/previews/
 .local/
+G2PWModel/
 *.tmp
 *.bak
 ~$*

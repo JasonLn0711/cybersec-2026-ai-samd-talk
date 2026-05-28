@@ -106,6 +106,28 @@ def import_runtime():
     return single_inference_mod, torch, torchaudio
 
 
+def load_wav_with_soundfile(torch, torchaudio, wav: str, target_sr: int):
+    import soundfile as sf  # type: ignore
+
+    data, sample_rate = sf.read(wav, dtype="float32", always_2d=True)
+    speech = torch.from_numpy(data.T).float()
+    speech = speech.mean(dim=0, keepdim=True)
+    if sample_rate != target_sr:
+        if sample_rate < target_sr:
+            raise ValueError(f"wav sample rate {sample_rate} must be at least {target_sr}")
+        speech = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=target_sr)(speech)
+    return speech
+
+
+def save_wav_with_soundfile(path: str, waveform, sample_rate: int, **_kwargs) -> None:
+    import soundfile as sf  # type: ignore
+
+    audio = waveform.detach().cpu()
+    if audio.ndim == 2:
+        audio = audio.squeeze(0)
+    sf.write(path, audio.numpy(), sample_rate, subtype="PCM_16")
+
+
 def pick_speaker_id(cosyvoice, requested: str) -> str:
     if not hasattr(cosyvoice, "list_avaliable_spks"):
         raise SystemExit("BreezyVoice runtime does not expose list_avaliable_spks; cannot choose a default speaker.")
@@ -167,6 +189,13 @@ def render_prompt_voice(
     converter_factory = getattr(single_inference_mod, "G2PWConverter", None)
     converter = converter_factory() if converter_factory else None
     prompt_text = prompt_text_path.read_text(encoding="utf-8").strip()
+    single_inference_mod.load_wav = lambda wav, target_sr: load_wav_with_soundfile(
+        __import__("torch"),
+        __import__("torchaudio"),
+        wav,
+        target_sr,
+    )
+    single_inference_mod.torchaudio.save = save_wav_with_soundfile
     output_path.parent.mkdir(parents=True, exist_ok=True)
     single_inference_mod.single_inference(
         str(prompt_audio_path),

@@ -47,6 +47,7 @@ REVIEW_FILES = [
 EXPERIMENT_LOG_FILES = [
     REPO_ROOT / "docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.md",
     REPO_ROOT / "docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.jsonl",
+    REPO_ROOT / "docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-reference-audio-telemetry-2026-05-28.md",
 ]
 
 MANIFEST_FILES = [
@@ -99,7 +100,30 @@ def load_state() -> tuple[dict[str, object], dict[str, object], dict[str, object
     gate = json.loads((LOCAL_ROOT / f"review/{VERSION}/full_batch_gate.json").read_text(encoding="utf-8"))
     machine = json.loads((LOCAL_ROOT / f"review/{VERSION}/pilot_machine_review.json").read_text(encoding="utf-8"))
     review_rows = read_csv(LOCAL_ROOT / f"review/{VERSION}/pilot_listening_review.csv")
-    return summary, gate, machine, review_rows
+    return summary, gate, machine, refresh_review_rows(review_rows)
+
+
+def review_subclip_counts() -> dict[str, int]:
+    pilot_rows = read_csv(LOCAL_ROOT / f"manifests/{VERSION}/pilot_manifest.csv")
+    pilot_prefixes = {row["output_prefix"] for row in pilot_rows}
+    counts = {prefix: 0 for prefix in pilot_prefixes}
+    for row in read_csv(LOCAL_ROOT / f"manifests/{VERSION}/subclip_manifest.csv"):
+        prefix = row["parent_output_prefix"]
+        if prefix in counts:
+            counts[prefix] += 1
+    return counts
+
+
+def refresh_review_rows(review_rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    counts = review_subclip_counts()
+    refreshed: list[dict[str, str]] = []
+    for row in review_rows:
+        current = dict(row)
+        prefix = current["output_prefix"]
+        if prefix in counts:
+            current["subclip_count"] = str(counts[prefix])
+        refreshed.append(current)
+    return refreshed
 
 
 def package_path_from_repo_value(value: str, package: Path, kind: str) -> Path:
@@ -144,6 +168,7 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
     asr_dir = review_dir / "asr"
     copy_file(asr_dir / "cde-2026-breezyvoice-pilot-stitched-v1.txt", package / "review/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt")
     for log_name in [
+        "pilot_whisper_tiny_after_reference_cuda_ort_clause90.log",
         "pilot_whisper_tiny_after_round2_repair.log",
         "pilot_whisper_tiny_after_expert_conditioning.log",
         "pilot_whisper_tiny_after_term_normalization.log",
@@ -151,6 +176,29 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
         log_path = asr_dir / log_name
         if log_path.exists():
             copy_file(log_path, package / "review/asr" / log_name)
+
+    runtime_dir = LOCAL_ROOT / f"runtime/{VERSION}"
+    for log_name in [
+        "pilot_reference_cuda_ort_after_clause90.log",
+        "pilot_reference_cuda_ort_after_clause_split.log",
+        "pilot_gpu_render_with_reference_audio_cuda_ort_after_close_split.log",
+        "pilot_gpu_render_with_reference_audio_cuda_ort.log",
+        "pilot_reference_cuda_provider_smoke.log",
+        "pilot_gpu_render_with_reference_audio.log",
+    ]:
+        log_path = runtime_dir / log_name
+        if log_path.exists():
+            copy_file(log_path, package / "review/runtime" / log_name)
+    telemetry_dir = runtime_dir / "telemetry"
+    for telemetry_name in [
+        "pilot_reference_cuda_ort_after_clause90_summary.json",
+        "pilot_reference_cuda_ort_after_clause90_gpu.jsonl",
+        "pilot_reference_cuda_ort_after_clause_split_summary.json",
+        "pilot_reference_cuda_ort_after_clause_split_gpu.jsonl",
+    ]:
+        telemetry_path = telemetry_dir / telemetry_name
+        if telemetry_path.exists():
+            copy_file(telemetry_path, package / "review/runtime/telemetry" / telemetry_name)
 
     manifest_dir = LOCAL_ROOT / f"manifests/{VERSION}"
     for filename in MANIFEST_FILES:
