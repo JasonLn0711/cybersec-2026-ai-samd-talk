@@ -20,64 +20,72 @@ VERSION = "v1"
 CORRECTIONS = {
     "cde_full_01_opening_positioning_crazyhunter_entry_case": {
         "expert_issue": (
-            "Opening chunk was rejected again for stutters, filler-like vocal "
-            "artifacts, acronym instability, and loss of professional authority."
+            "Opening chunk was returned as total-reject for trust-question "
+            "looping, bracket/control-like wording leakage, DICOM/PACS "
+            "instability, and ASR-like filler residue."
         ),
         "conditioning_applied": (
-            "Applied model-facing sanitizer for stage cues, fillers, and known "
-            "hallucination residues; kept frozen source unchanged; retained "
-            "short opening subclips and PACS/HIS/EMR/DICOM isolation."
+            "Removed repeated trust-question pressure in model-facing text, "
+            "replaced DICOM with a safer Chinese reading, normalized fillers "
+            "and hesitant phrasing, and increased the opening split to 12 "
+            "shorter subclips. Frozen source remains unchanged."
         ),
         "next_listener_question": (
-            "Does the round-2 rerendered opening recover clinical authority, or "
-            "does no-reference/default voice remain unstable for this lecture?"
+            "Does final5b recover a stable CDE opening without loop, bracket "
+            "leakage, or hesitant filler delivery?"
         ),
     },
     "cde_full_16_k8s_review_controls": {
         "expert_issue": (
-            "K8S/RBAC/service-account section was rejected for compressed pacing, "
-            "technical acronym collapse, and no-reference hallucination."
+            "K8S/RBAC/API and Tesla case section was returned as total-reject "
+            "for K8S/Kubernetes collapse, robotic acronym spelling, API "
+            "repetition, symbol leakage risk, and runtime compression."
         ),
         "conditioning_applied": (
-            "Forced this parent chunk to four shorter subclips; increased stitch "
-            "silence to 700ms; normalized high-risk K8S phrases toward "
-            "Kubernetes API / Kubernetes console where the prior K eight S path "
-            "was unstable."
+            "Localized high-risk K8S/API passages, rewrote RBAC with a Chinese "
+            "role-control anchor, removed dash/slash symbol risks, localized "
+            "the Tesla exposed-console phrase, split to 10 subclips, and "
+            "applied a reproducible 0.82 tempo pacing pass."
         ),
         "next_listener_question": (
-            "Is the round-2 K8S section understandable enough, or should this "
-            "workflow switch away from no-reference/default voice before any "
-            "further render work?"
+            "Does final5b make RBAC, K8S, service accounts, API calls, and the "
+            "Tesla credential path intelligible at the corrected 0.91 runtime "
+            "ratio?"
         ),
     },
     "cde_full_20_crowdstrike_update_524b": {
         "expert_issue": (
-            "CrowdStrike/524B section was rejected for emotional leakage, sighing "
-            "artifacts, and hallucination around law and supply-chain terms."
+            "CrowdStrike/524B section was returned as total-reject for FD&C "
+            "symbol misreading, white-box homophone drift, threat/update drift, "
+            "and filler-like phrasing in the regulatory bridge."
         ),
         "conditioning_applied": (
-            "Kept CrowdStrike/Falcon/supply-chain/Section 524B boundaries, forced "
-            "four subclips, rebuilt the ASR auxiliary transcript after rerender, "
-            "and preserved the frozen source."
+            "Replaced FD&C with an explicit F D C Act reading, replaced 524B "
+            "with a Chinese/letter anchor, moved white-box wording to 白盒, "
+            "localized interpreter and threat-update pressure, and split to 11 "
+            "subclips."
         ),
         "next_listener_question": (
-            "Does Section 524B now sound steady and professional, or does the "
-            "default voice still leak emotion/hallucinated words around this term?"
+            "Does final5b preserve CrowdStrike, Falcon, supply-chain, 白盒, "
+            "Section 524B, and SBOM credibility without filler-like stumbles?"
         ),
     },
     "cde_full_26_shared_close_test_anchors": {
         "expert_issue": (
-            "Closing anchors were rejected for tail-end breakdown, fatigue, and "
-            "word-salad hallucination."
+            "Closing anchors were returned as total-reject for homophone drift "
+            "around PACS downtime, internal program, vulnerability/governance "
+            "phrasing, laughter-like hallucination, 524B/SBOM/root-cause drift, "
+            "and tail residue after thanks."
         ),
         "conditioning_applied": (
-            "Split the close into anchor-based subclips around first, second, and "
-            "third questions; sanitized model-facing text; added 700ms stitch "
-            "silence; kept the closing trust-chain content intact."
+            "Replaced risky homophones with safer Chinese technical wording, "
+            "used 五二四/英文字母B款 and S B O M anchors, replaced root cause "
+            "with 根本原因/根因, preserved 14 fine-grained subclips, and "
+            "trimmed 0.8 seconds from the final thank-you subclip tail."
         ),
         "next_listener_question": (
-            "Does anchor-based rerendering prevent the closing tail collapse, or "
-            "does the project need a different voice path before full render?"
+            "Does final5b close with stable question anchors, no laughter-like "
+            "artifact, correct 524B/SBOM/root-cause terms, and no tail residue?"
         ),
     },
 }

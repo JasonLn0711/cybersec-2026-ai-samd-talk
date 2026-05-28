@@ -46,7 +46,7 @@ TERM_NORMALIZATIONS = {
     "510(k)": "五一零 K",
     "510(K)": "五一零 K",
     "SaMD": "S A M D",
-    "SBOM": "S B O M",
+    "SBOM": "軟體物料清單，S B O M",
     "SCA": "S C A",
     "PACS": "派克斯",
     "HIS": "H I S",
@@ -54,8 +54,8 @@ TERM_NORMALIZATIONS = {
     "RIS": "R I S",
     "LIS": "L I S",
     "FHIR": "F H I R",
-    "DICOM": "戴康 DICOM",
-    "API": "A P I",
+    "DICOM": "戴康",
+    "API": "應用程式介面",
     "VPN": "V P N",
     "MFA": "M F A",
     "RBAC": "R B A C",
@@ -63,15 +63,16 @@ TERM_NORMALIZATIONS = {
     "HL7": "H L seven",
     "SIEM": "S I E M",
     "EDR": "E D R",
-    "K8S API": "K eight S，A P I",
-    "K8S": "K eight S",
+    "K8S API": "K 八 S 管理介面",
+    "K8S": "K 八 S",
+    "K8s": "K 八 S",
     "CI/CD": "C I C D",
     "AWS": "A W S",
-    "FD&C Act Section 524B": "F D and C Act Section 五、二、四，B",
-    "FD&C Act，Section 524B": "F D and C Act，Section 五、二、四，B",
-    "FD&C Act Section 五二四 B": "F D and C Act Section 五、二、四，B",
-    "FD&C Act": "F D and C Act",
-    "524B": "五、二、四，B",
+    "FD&C Act Section 524B": "F D C Act，Section 五二四，英文字母 B 款",
+    "FD&C Act，Section 524B": "F D C Act，Section 五二四，英文字母 B 款",
+    "FD&C Act Section 五二四 B": "F D C Act，Section 五二四，英文字母 B 款",
+    "FD&C Act": "F D C Act",
+    "524B": "五二四，英文字母 B 款",
     "Log4Shell": "Log four Shell",
     "MOVEit Transfer": "Move it Transfer",
     "Channel File 291": "Channel File 二九一",
@@ -80,13 +81,13 @@ TERM_NORMALIZATIONS = {
     "clinical continuity": "臨床連續性",
     "Clinical": "臨床",
     "ransomware": "勒索軟體",
-    "downtime": "停機",
+    "downtime": "停機時間",
     "vendor access": "廠商存取",
     "patching limitation": "修補限制",
     "credential risk": "憑證風險",
-    "White-box Testing": "White box testing，白箱測試",
-    "White box Testing": "White box testing，白箱測試",
-    "white-box validation": "white box validation，白箱驗證",
+    "White-box Testing": "白盒測試",
+    "White box Testing": "白盒測試",
+    "white-box validation": "白盒驗證",
     "software supply paths": "software supply chain，供應鏈",
     "supply path": "supply chain，供應鏈",
     "CrazyHunter": "Crazy Hunter",
@@ -214,6 +215,7 @@ def sanitize_tts_text(text: str) -> str:
         previous = sanitized
         sanitized = FILLER_RE.sub(lambda match: match.group(1), sanitized)
     sanitized = re.sub(r"[，、]\s*[，、]+", "，", sanitized)
+    sanitized = re.sub(r"。+\s*。+", "。", sanitized)
     sanitized = re.sub(r"\s+", " ", sanitized)
     sanitized = re.sub(r"\s+([，。！？；：、])", r"\1", sanitized)
     sanitized = re.sub(r"([，。！？；：、])([A-Za-z0-9])", r"\1 \2", sanitized)
@@ -239,67 +241,101 @@ def apply_pilot_review_conditioning(text: str) -> str:
     replacements = {
         "P A C S、H I S、E M R": "派克斯，H I S，E M R",
         "派克斯、H I S、E M R": "派克斯，H I S，E M R",
+        "K eight S": "K 八 S",
+        "要 驗證": "要驗證",
+        "要 驗證角色": "要驗證角色",
         "人工智慧 系統": "人工智慧系統",
         "醫療 人工智慧": "醫療人工智慧",
         "醫療影像 人工智慧": "醫療影像人工智慧",
         "人工智慧 派克斯": "人工智慧派克斯",
+        "要怎麼判斷此系統可以被信任。今天會": "要怎麼判斷此系統可以被信任。現在，今天會",
         "掛號、檢查、影像、報告、病歷查詢、轉診、用藥與收費": "掛號流程、檢查流程、影像流程、報告流程、病歷查詢、轉診、用藥與收費",
-        "戴康 DICOM 工作流程": "戴康 DICOM 影像流程",
-        "戴康 DICOM router": "戴康 DICOM router",
-        "verify R B A C、service accounts、namespace isolation": "驗證，R B A C。再看 service accounts。再看 namespace isolation",
-        "第二，要 verify， R B A C， service accounts， namespace isolation。": "第二，要驗證 R B A C。先看 service accounts。再看 namespace isolation。",
+        "戴康 DICOM 工作流程": "戴康影像流程",
+        "戴康 DICOM router": "戴康路由器",
+        "戴康 工作流程": "戴康影像流程",
+        "戴康 router": "戴康路由器",
+        "verify R B A C、service accounts、namespace isolation": "驗證角色權限控管，R B A C。再看服務帳號。再看命名空間隔離。",
+        "第二，要 verify， R B A C， service accounts， namespace isolation。": "第二，要驗證角色權限控管，R B A C。先看服務帳號。再看命名空間隔離。",
+        "第二，要驗證，R B A C。再看 service accounts。再看 namespace isolation。": "第二，要驗證角色權限控管，R B A C。再看服務帳號。再看命名空間隔離。",
         "每個 workload 的權限是否最小化？ service account 是否被共用？ namespace 是否真的隔離？": "每個 workload 的權限是否最小化？服務帳號是否被共用？namespace 是否真的隔離？",
         "service account 是否被共用": "服務帳號是否被共用",
         "secrets handling and cloud credential exposure": "secrets handling，以及 cloud credential exposure",
         "Secret 是否被放在 environment variable？是否被寫進 image？ C I C D variables 是否外洩？": "Secret 是否被放在 environment variable 裡？是否被寫進 image？C I 與 C D 變數是否外洩？",
         "C I C D variables 是否外洩": "C I 與 C D 變數是否外洩",
+        "哪個 應用程式介面 call 被使用": "哪一個應用程式介面呼叫被使用",
         "Network Policy、ingress rules、exposed services": "Network Policy，ingress rules，exposed services",
-        "不是只有 application endpoint， Kubernetes API， dashboard， internal service 也都可能成為攻擊面。": "不是只有 application endpoint。Kubernetes API、dashboard、internal service，也都可能成為攻擊面。",
-        "application endpoint，K eight S A P I、dashboard、internal service": "application endpoint，Kubernetes API，dashboard，internal service",
+        "不是只有 application endpoint， Kubernetes API， dashboard， internal service 也都可能成為攻擊面。": "不是只有 application endpoint。K 八 S 管理介面、dashboard、internal service，也都可能成為攻擊面。",
+        "application endpoint，K eight S A P I、dashboard、internal service": "application endpoint，K 八 S 管理介面，dashboard，internal service",
         "image provenance、 container privileges、 admission controls": "image provenance，container privileges，admission controls",
-        "哪個 pod、哪個 service account、哪個 A P I call": "哪一個 Pod、哪一個服務帳號、哪一個 API call",
-        "In Kubernetes, the security boundary is not the container. The real boundary is identity, configuration, network policy, and deployment governance.": "在 Kubernetes 裡，security boundary 不是 container。真正的 boundary 是 identity、configuration、network policy 與 deployment governance。",
+        "哪個 pod、哪個 service account、哪個 A P I call": "哪一個 Pod、哪一個服務帳號、哪一個應用程式介面呼叫",
+        "哪一個 Pod、哪一個服務帳號、哪一個API call": "哪一個 Pod、哪一個服務帳號、哪一個應用程式介面呼叫",
+        "哪個 pod、哪個 service account、哪一個應用程式介面呼叫": "哪一個 Pod、哪一個服務帳號、哪一個應用程式介面呼叫",
+        "In Kubernetes, the security boundary is not the container. The real boundary is identity, configuration, network policy, and deployment governance.": "在 K 八 S 裡，security boundary 不是 container。真正的 boundary 是 identity、configuration、network policy 與 deployment governance。",
         "Tesla Kubernetes Console Cryptojacking": "Tesla 雲端基礎設施加密貨幣挖礦案例",
         "Tesla 雲端基礎設施加密貨幣挖礦案例 這個真實事件": "Tesla 雲端基礎設施加密貨幣挖礦這個真實事件",
         "exposed K eight S console、pod credentials、A W S access、cryptomining workload": "exposed K eight S console，pod credentials，A W S access，crypto mining workload",
-        "exposed Kubernetes console， pod credentials， A W S access， crypto mining workload": "暴露在外、未受保護的 Kubernetes 管理者主控台，pod credentials，A W S access，crypto mining workload",
-        "exposed Kubernetes console": "暴露在外、未受保護的 Kubernetes 管理者主控台",
-        "Kubernetes administrative console": "Kubernetes 管理者主控台",
+        "exposed K 八 S console、 pod credentials、 A W S access、 cryptomining workload": "暴露在外、未受保護的 K 八 S 管理主控台，Pod 憑證，A W S 存取權限，crypto mining workload",
+        "exposed K 八 S console": "暴露在外、未受保護的 K 八 S 管理主控台",
+        "pod credentials": "Pod 憑證",
+        "A W S access": "A W S 存取權限",
+        "exposed Kubernetes console， pod credentials， A W S access， crypto mining workload": "暴露在外、未受保護的 K 八 S 管理主控台，Pod 憑證，A W S 存取權限，crypto mining workload",
+        "exposed Kubernetes console": "暴露在外、未受保護的 K 八 S 管理主控台",
+        "Kubernetes administrative console": "K 八 S 管理主控台",
+        "Kubernetes 管理者主控台": "K 八 S 管理主控台",
         "Tesla 的 cloud infrastructure": "Tesla 的雲端基礎設施",
         "Pod 中存在 credential，使攻擊者能進一步存取 A W S 基礎設施": "Pod 裡的憑證外洩，使攻擊者能進一步存取 A W S 基礎設施",
         "cloud resource 進行 cryptocurrency mining": "雲端資源進行加密貨幣挖礦",
         "faulty security content update": "CrowdStrike Falcon 安全內容更新",
         "test update validators and malformed inputs": "test update validators，以及異常輸入測試",
+        "treat update infrastructure": "threat update infrastructure",
+        "treat update": "threat update",
+        "threat update infrastructure as a trust boundary": "將更新基礎設施視為 trust boundary",
+        "interpreter": "解釋器",
         "malformed inputs": "異常輸入",
-        "Security updates are also software supply chain，供應鏈 that require white box validation，白箱驗證.": "Security updates are also software supply chain，供應鏈；they require white box validation，白箱驗證。",
-        "F D and C Act Section 五 二 四 B": "F D and C Act，Section 五、二、四，B",
-        "F D and C Act Section 五二四 B": "F D and C Act，Section 五、二、四，B",
-        "F D and C Act，Section 五二四 B": "F D and C Act，Section 五、二、四，B",
-        "F D and C Act， Section 五、二、四，B": "F D and C Act，Section 五、二、四，B",
-        "F D A、T F D A、五、二、四，B、S B O M": "F D A，T F D A，五、二、四，B，S B O M",
-        "F D A， T F D A，五、二、四，B， S B O M": "F D A，T F D A，五、二、四，B，S B O M",
-        "White box Testing 與 system review": "白箱測試與系統審查",
-        "White box testing，白箱測試 與 system review": "白箱測試與系統審查",
-        "White box testing，白箱測試與滲透測試": "White box testing，白箱測試，與滲透測試",
-        "白箱測試從內部程式": "White box testing，白箱測試，從內部程式",
-        "白箱審查": "White box review，白箱審查",
-        "白箱證據": "White box evidence，白箱證據",
-        "白箱可以證明": "White box evidence 可以證明",
+        "Security updates are also software supply chain，供應鏈 that require white box validation，白箱驗證.": "安全更新本身也是 software supply chain，供應鏈；因此需要白盒驗證。",
+        "Security updates are also software supply chain，供應鏈 that require 白盒驗證.": "安全更新本身也是 software supply chain，供應鏈；因此需要白盒驗證。",
+        "F D and C Act Section 五 二 四 B": "F D C Act，Section 五二四，英文字母 B 款",
+        "F D and C Act Section 五二四 B": "F D C Act，Section 五二四，英文字母 B 款",
+        "F D and C Act，Section 五二四 B": "F D C Act，Section 五二四，英文字母 B 款",
+        "F D and C Act， Section 五、二、四，B": "F D C Act，Section 五二四，英文字母 B 款",
+        "F D and C Act Section五、二、四，B": "F D C Act，Section 五二四，英文字母 B 款",
+        "F D A、T F D A、五、二、四，B、S B O M": "F D A，T F D A，五二四，英文字母 B 款，軟體物料清單，S B O M",
+        "F D A， T F D A，五、二、四，B， S B O M": "F D A，T F D A，五二四，英文字母 B 款，軟體物料清單，S B O M",
+        "White box Testing 與 system review": "白盒測試與系統審查",
+        "White box testing，白箱測試 與 system review": "白盒測試與系統審查",
+        "White box testing，白箱測試與滲透測試": "白盒測試與滲透測試",
+        "白箱測試從內部程式": "白盒測試，從程式碼內部",
+        "白箱測試": "白盒測試",
+        "白箱審查": "白盒審查",
+        "白箱證據": "白盒證據",
+        "白箱可以證明": "白盒證據可以證明",
+        "白箱討論點": "白盒測試討論點",
         "派克斯 或 A I 派克斯": "派克斯，或 A I 派克斯",
-        "戴康 DICOM router": "戴康 DICOM 路由器",
-        "K eight S，A P I，dashboard，internal service": "Kubernetes API，dashboard，internal service",
-        "exposed K eight S console": "暴露在外、未受保護的 Kubernetes 管理者主控台",
-        "root cause、 deployment condition、 remediation、 retest、 logging 與 recovery": "root cause 根因、deployment condition 部署條件、remediation 修補、retest 重測、logging 日誌與 recovery 恢復",
-        "root cause、 deployment condition、 remediation、 retest、": "root cause 根因、deployment condition 部署條件、remediation 修補、retest 重測、",
+        "戴康 DICOM router": "戴康路由器",
+        "K eight S，A P I，dashboard，internal service": "K 八 S 管理介面，dashboard，internal service",
+        "exposed K eight S console": "暴露在外、未受保護的 K 八 S 管理主控台",
+        "root cause、 deployment condition、 remediation、 retest、 logging 與 recovery": "根本原因、deployment condition 部署條件、remediation 修補、retest 重測、logging 日誌與 recovery 恢復",
+        "root cause、 deployment condition、 remediation、 retest、": "根本原因、deployment condition 部署條件、remediation 修補、retest 重測、",
+        "Root cause": "根本原因",
+        "root cause": "根本原因",
         "logging 與 recovery": "logging 日誌與 recovery 恢復",
         "pre-test 與 post-test question": "前測 pre-test 與後測 post-test question",
         "finding 要能推動修補": "finding，發現事項，要能推動修補",
         "exploitability 與 control evidence": "可利用性與 control evidence，控制證據",
         "residual risk": "residual risk，剩餘風險",
+        "PACS downtime": "派克斯停機時間",
+        "孤立掃描報告": "單點掃描報告",
+        "漏洞掃描": "弱點掃描",
+        "內部程式": "程式碼內部",
+        "治理框架": "治理判斷架構",
         "請各位把這三題帶回今天的主軸：": "最後請把這三題帶回今天的主軸：",
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
+    text = text.replace("要 驗證", "要驗證")
+    text = text.replace("exposed K 八 S console", "暴露在外、未受保護的 K 八 S 管理主控台")
+    text = text.replace("exposed K八S console", "暴露在外、未受保護的 K 八 S 管理主控台")
+    text = text.replace("K八S", "K 八 S")
     return text
 
 
@@ -416,8 +452,8 @@ def split_long_chunks(chunks: list[str], max_chars: int) -> list[str]:
 
 def split_subclips(text: str, output_prefix: str = "") -> list[str]:
     if output_prefix == "cde_full_01_opening_positioning_crazyhunter_entry_case":
-        clips = split_long_chunks([text], 175)
-        if 4 <= len(clips) <= 8 and all(len(item) <= 220 for item in clips):
+        clips = split_long_chunks([text], 120)
+        if 8 <= len(clips) <= 12 and all(len(item) <= 160 for item in clips):
             return clips
 
     if output_prefix == "cde_full_26_shared_close_test_anchors":
@@ -427,13 +463,13 @@ def split_subclips(text: str, output_prefix: str = "") -> list[str]:
 
     sentences = split_sentences(text)
     if output_prefix == "cde_full_16_k8s_review_controls":
-        clips = split_long_chunks([text], 170)
-        if 5 <= len(clips) <= 8 and all(len(item) <= 220 for item in clips):
+        clips = split_long_chunks([text], 120)
+        if 8 <= len(clips) <= 12 and all(len(item) <= 160 for item in clips):
             return clips
         target_count = 6
     elif output_prefix == "cde_full_20_crowdstrike_update_524b":
-        clips = split_long_chunks([text], 170)
-        if 4 <= len(clips) <= 10 and all(len(item) <= 220 for item in clips):
+        clips = split_long_chunks([text], 130)
+        if 7 <= len(clips) <= 12 and all(len(item) <= 170 for item in clips):
             return clips
         target_count = 5
     elif len(text) <= 850:
