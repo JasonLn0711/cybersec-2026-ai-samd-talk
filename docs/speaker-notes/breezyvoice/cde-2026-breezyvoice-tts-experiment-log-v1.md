@@ -59,6 +59,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-13` | reference-audio-cuda-telemetry | Reference-audio pilot render with ONNX CUDA telemetry | reference_prompt_pilot_rendered_stop_for_human_review | Export refreshed Downloads review package with telemetry and wait for expert listening review. |
 | `EXP-20260528-15` | final4-human-reject-repair | Total-reject pilot repair with jargon-safe substitutions | final5b_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the TTS expert; ingest the returned forms/expert_pilot_review_form.csv; if any row is reject, apply only the next minimal expert-specified pilot fix and rerender affected pilot chunks. |
 | `EXP-20260528-16` | final5b-partial-review-repair | Partial-accept pilot repair for cde01 cde16 cde20 with Breeze-ASR-25 auxiliary check | final6b_exported_full_render_blocked_for_human_review | Send refreshed Downloads review package to expert, ingest returned form, and either open the full-render gate or apply the next minimal repair. |
+| `EXP-20260528-17` | final6b-human-review-repair-final7 | Mixed-gate final7 pilot repair with 白箱 terminology | final7_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the expert; ingest the returned review CSV; only if every required pilot chunk is accepted should the full render gate open. |
 
 ## Detailed Records
 
@@ -1177,7 +1178,7 @@ Change summary:
 - Removed low-confidence filler/demonstrative phrasing such as 這個/那個/嗯/呃 from model-facing text only
 - Changed DICOM to 戴康 and PACS downtime to 派克斯停機時間
 - Localized K8S/API/RBAC pressure with Chinese anchors and K 八 S wording
-- Replaced FD&C/524B/SBOM/white-box/root-cause paths with explicit F D C Act, 五二四英文字母B款, S B O M, 白盒, 根本原因 anchors
+- Replaced FD&C/524B/SBOM/white-box/root-cause paths with explicit F D C Act, 五二四英文字母B款, S B O M, 白箱, 根本原因 anchors
 - Split pilot to 47 subclips: cde01=12 cde16=10 cde20=11 cde26=14
 - Applied cde16 atempo=0.82 after synthesis and trimmed 0.8s from cde26 p14 tail
 
@@ -1355,3 +1356,65 @@ Additional observations:
 - An initial Whisper tiny final6b ASR command was run before the user clarified the ASR policy; it is archived as superseded and is not used for current review.
 - Breeze-ASR-25 is still auxiliary only: it can flag term drift and repeated phrases, but human listening owns acceptance.
 - GPU energy is a GPU-only nvidia-smi estimate and excludes CPU, storage, display, PSU loss, and monitor energy.
+
+### EXP-20260528-17 - Mixed-gate final7 pilot repair with 白箱 terminology
+
+- Timestamp: `2026-05-28T13:23:00+08:00`
+- Stage: `final6b-human-review-repair-final7`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case; cde_full_20_crowdstrike_update_524b; cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- Returned mixed review accepted cde16 but kept cde01, cde20, and cde26 blocked; user required the Chinese white-box term to use 白箱 before continuing; during rerender, runtime G2P printed internal zhuyin annotations, so manifest text cleanliness was verified before proceeding.
+
+Hypothesis:
+
+- Using 白箱 terminology, localizing risky cde20 technical terms, splitting cde01/cde26 more finely, preserving accepted cde16, and trimming the final closing tail should produce a cleaner human-review pilot while keeping the 80-minute full render gate closed.
+
+Change summary:
+
+- Chinese white-box terminology was standardized to 白箱 across tracked docs/tools and current model-facing inputs; a Unicode fallback normalizer converts legacy source wording to 白箱 before TTS. Final7 also applies cde01 trust-question/list cleanup, cde20 Crowd-Strike/Falcon/update-validator/supply-chain/524B/SBOM localization, cde26 life-cycle-trust/final trust-chain cleanup, and cde26 p24 0.8s tail trim.
+
+Commands:
+
+- prepare_breezyvoice_render_package; run_with_gpu_telemetry + breezyvoice_render_subclips for cde01/cde20/cde26 prompt-mode final7; trim_breezyvoice_audio_tail cde26_p24 0.8s; stitch_breezyvoice_outputs pilot/full; build_breezyvoice_pilot_review/render_review_log/pilot_correction_matrix; run_breeze_asr25 on stitched pilot; verify_breezyvoice_objective; check_breezyvoice_full_render_gate; export_breezyvoice_expert_review_package.
+
+Logs:
+
+- .local/breezyvoice/runtime/v1/pilot_reference_after_mixed_gate_repair_final7.log; .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_mixed_gate_repair_final7_summary.json; .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_mixed_gate_repair_final7_gpu.jsonl; .local/breezyvoice/review/v1/asr/breeze_asr25_after_mixed_gate_repair_final7.log; .local/breezyvoice/review/v1/objective_verification.json; .local/breezyvoice/review/v1/full_render_gate_check.json.
+
+Outputs:
+
+- .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav; .local/breezyvoice/output/v1/parent_chunks; .local/breezyvoice/output/v1/subclips; .local/breezyvoice/review/v1/pilot_listening_review.csv; .local/breezyvoice/review/v1/pilot_correction_matrix.md; .local/breezyvoice/review/v1/asr/breeze_asr25_after_mixed_gate_repair_final7.json; Downloads review package.
+
+Machine result:
+
+- Final7 clean render completed 59 selected prompt-mode subclips on RTX 5080: elapsed_s=494.616, avg_gpu_power_w=178.116, estimated_gpu_energy_wh=24.471971, avg_gpu_utilization_pct=61.365, peak GPU memory=13852 MB. Breeze-ASR-25 auxiliary pass used cuda/RTX 5080: model_load_elapsed_s=3.136, asr_elapsed_s=42.729, chunk_count=215, text_characters=3738. Parent runtimes after stitching: cde01=237.48s/22, cde16=168.96s/9 accepted, cde20=167.19s/13, cde26=204.26s/24; stitched pilot duration=779.99s. Objective verifier exit 2 and full-render gate exit 2 because cde01/cde20/cde26 require fresh human listening; cde16 remains accepted.
+
+Human result:
+
+- Latest human state before this run: cde16 accepted; cde01, cde20, and cde26 require renewed human listening after final7 repairs.
+
+Decision: `final7_exported_full_render_blocked_for_human_review`
+
+Fix applied:
+
+- 白箱 terminology standardization, legacy white-box fallback normalization, cde01/cde20/cde26 final7 rerender, cde26 tail trim, Breeze-ASR-25 auxiliary ASR, review package export.
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/; /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- Stop here. Do not run the 80-minute full render until cde01, cde20, and cde26 are accepted by human listening review and tools/check_breezyvoice_full_render_gate.py exits 0.
+
+Next action:
+
+- Send the refreshed Downloads package to the expert; ingest the returned review CSV; only if every required pilot chunk is accepted should the full render gate open.
+
+Additional observations:
+
+- BreezyVoice/G2P prints internal annotations like [:ㄌㄜ4] in runtime stdout. The actual subclip manifest text was checked and is clean; keep this as a watch item for human listening, not as source-text leakage. Current auxiliary ASR policy was followed: Breeze-ASR-25 only; no Whisper was used.

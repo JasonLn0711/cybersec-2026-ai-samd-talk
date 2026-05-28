@@ -178,7 +178,7 @@ inputs and local audio post-processing:
   applies `atempo=0.82` after synthesis.
 - `cde_full_20`: replaces ambiguous FD&C/524B/SBOM/white-box strings with
   explicit spoken anchors and splits to `11` subclips.
-- `cde_full_26`: replaces risky homophones, uses `根本原因` / `白盒` anchors,
+- `cde_full_26`: replaces risky homophones, uses `根本原因` / `白箱` anchors,
   preserves the `14` short closing subclips, and trims `0.8 s` from the final
   thank-you subclip tail.
 
