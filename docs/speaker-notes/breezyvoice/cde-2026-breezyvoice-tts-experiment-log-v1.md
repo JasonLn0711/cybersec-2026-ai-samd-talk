@@ -55,11 +55,16 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-11` | human-review-traceability | Add pilot correction matrix to human review package | correction_matrix_ready_gate_still_closed | Wait for completed expert review CSV or a specific minimal pilot-fix instruction; do not run full render |
 | `EXP-20260528-14` | returned-review-repair | Reference-audio pilot repair with confident-speech sanitization | full_render_blocked_pending_human_listening | Send the Downloads package and PROMPT_FOR_TTS_EXPERT.md to the expert; after returned form, ingest with tools/ingest_breezyvoice_expert_review.py and only then decide the next minimal repair or full-render release |
 | `EXP-20260528-12` | pilot-repair-rerender | Round-2 pilot rerender after all-reject contamination review | round2_pilot_rendered_stop_for_human_review | Export refreshed Downloads package and wait for round-2 human listening review |
+| `EXP-20260528-19` | text-conditioning | v3 ConvNet reference CJK-English boundary rule | restart v3 render after regenerating manifests with CJK-English boundary punctuation | Regenerate BreezyVoice local render package, rebuild v3 manifests against .local/breezyvoice/output/v3, run one smoke subclip, then restart full v3 render with 80-minute global pacing post-process. |
+| `EXP-20260528-20` | pacing-policy | Uniform 0.9x full-session TTS pacing and repeat-removal rule | continue current raw render, then produce 0.9x full-session master | Monitor current v3 render to completion, stitch raw full WAV, apply ffmpeg atempo=0.9 to the full master, then loudness-normalize the 0.9x copy. |
+| `EXP-20260528-21` | text-conditioning | Taiwan Traditional Chinese preferred TTS wording | restart v3 render after regenerating manifests with Taiwan Traditional Chinese preferred model-facing text | Regenerate BreezyVoice local render package, rebuild v3 manifests, smoke test, then restart full v3 render; after stitching, produce uniform 0.9x pacing master. |
+| `EXP-20260528-22` | text-conditioning | Preserve token and namespace in TTS wording | regenerate manifests before restarting v3 render | Regenerate BreezyVoice local render package, rebuild v3 manifests, smoke test one subclip, restart full v3 render, then produce 0.9x master. |
 | `EXP-20260528-13` | reference-audio-cuda-telemetry | Reference-audio pilot render with ONNX CUDA telemetry | reference_prompt_pilot_rendered_stop_for_human_review | Export refreshed Downloads review package with telemetry and wait for expert listening review. |
 | `EXP-20260528-15` | final4-human-reject-repair | Total-reject pilot repair with jargon-safe substitutions | final5b_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the TTS expert; ingest the returned forms/expert_pilot_review_form.csv; if any row is reject, apply only the next minimal expert-specified pilot fix and rerender affected pilot chunks. |
 | `EXP-20260528-16` | final5b-partial-review-repair | Partial-accept pilot repair for cde01 cde16 cde20 with Breeze-ASR-25 auxiliary check | final6b_exported_full_render_blocked_for_human_review | Send refreshed Downloads review package to expert, ingest returned form, and either open the full-render gate or apply the next minimal repair. |
 | `EXP-20260528-17` | final6b-human-review-repair-final7 | Mixed-gate final7 pilot repair with 白箱 terminology | final7_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the expert; ingest the returned review CSV; only if every required pilot chunk is accepted should the full render gate open. |
 | `EXP-20260528-18` | owner-release-full-render-final7 | Owner-overridden full render after final7 repair | full_render_completed_owner_release_post_render_logging | Prepare the deliverable package or handoff copy from the full WAV and loudnorm copy; use Breeze-ASR-25 transcript only to prioritize future repair candidates. |
+| `EXP-20260528-23` | v3-text-conditioning-policy | Set v3 delivery target to 70 minutes and story-condition case passages | proceed_to_v3_smoke_then_full_render | Run v3 prompt-mode smoke on RTX 5080, then full render, stitch, normalize to approximately 70 minutes, loudness normalize, and run Breeze-ASR-25. |
 
 ## Detailed Records
 
@@ -1095,6 +1100,254 @@ Additional observations:
 
 - FIRST PRINCIPLE: no-reference/default voice may be the underlying instability; round-2 review should decide whether to continue with this voice path or switch voice strategy before full render
 
+### EXP-20260528-19 - v3 ConvNet reference CJK-English boundary rule
+
+- Timestamp: `2026-05-28T09:02:28.404428+00:00`
+- Stage: `text-conditioning`
+- Input version: `v3-convnet-reference`
+- Source SHA-256: ``
+- Affected prefixes: `all CDE BreezyVoice v3 subclips`
+
+Reason:
+
+- Owner required every Chinese-English boundary in TTS model-facing text to use an ideographic comma so Mandarin and English do not merge in speech.
+
+Hypothesis:
+
+- Adding audible boundary punctuation before synthesis will reduce code-switching blur, acronym merging, and pacing instability more reliably than audio-only post-processing.
+
+Change summary:
+
+- Stopped the in-progress v3 raw render, added enforce_cjk_latin_breaks() to prepare_breezyvoice_render_package.py, documented the rule in AGENTS.md and BreezyVoice READMEs, and added a global memory note for future TTS work.
+
+Commands:
+
+- kill -TERM -1273502; python3 -m py_compile tools/prepare_breezyvoice_render_package.py; inline normalize_text smoke test
+
+Logs:
+
+- .local/breezyvoice/runtime/v3/full_convnet_reference_global_28s_v3.log; .local/breezyvoice/runtime/v3/telemetry/full_convnet_reference_global_28s_v3_summary.json
+
+Outputs:
+
+- Updated preprocessing and documentation; previous partial v3 subclips remain local-only evidence and are not the main delivery.
+
+Machine result:
+
+- py_compile passed; normalize_text now inserts ideographic comma at CJK/Latin boundaries.
+
+Human result:
+
+- Owner rule: Chinese and English must be separated by ideographic comma; unstable TTS should be repaired by simpler model-facing text with clear phrase breaks.
+
+Decision: `restart v3 render after regenerating manifests with CJK-English boundary punctuation`
+
+Fix applied:
+
+- Repo rule, global memory note, and preprocessing implementation added.
+
+Downloads package:
+
+- none recorded
+
+Stop rule:
+
+- No additional human review gate requested after this repair; proceed to the next concrete render step unless GPU/runtime fails.
+
+Next action:
+
+- Regenerate BreezyVoice local render package, rebuild v3 manifests against .local/breezyvoice/output/v3, run one smoke subclip, then restart full v3 render with 80-minute global pacing post-process.
+
+Additional observations:
+
+- BreezyVoice runtime G2P stdout annotations such as [:ㄌㄜ4] are internal annotations, not source-script pollution. Use Breeze-ASR-25 only for auxiliary ASR; do not use Whisper.
+
+### EXP-20260528-20 - Uniform 0.9x full-session TTS pacing and repeat-removal rule
+
+- Timestamp: `2026-05-28T09:15:13.014527+00:00`
+- Stage: `pacing-policy`
+- Input version: `v3-convnet-reference-cjk-breaks`
+- Source SHA-256: ``
+- Affected prefixes: `full-session v3 master audio and any affected repeated subclips`
+
+Reason:
+
+- Owner requested the overall TTS pacing speed be adjusted to 0.9x and repeated passages be deleted or repaired through clearer model-facing text before rerendering.
+
+Hypothesis:
+
+- A uniform 0.9x post-synthesis full-session master will make pacing more consistent and bring the v3 course closer to the intended 80-minute delivery, while repeat-removal/model-text repair prevents attention-loop artifacts from becoming final audio.
+
+Change summary:
+
+- Documented uniform 0.9x master pacing and repeated-passage repair in AGENTS.md, BreezyVoice README files, and global memory note.
+
+Commands:
+
+- apply_patch AGENTS.md docs/speaker-notes/breezyvoice/README.md docs/speaker-notes/breezyvoice/model-ready/README.md; add memory note 20260528-171441-breezyvoice-pacing-and-repeat-rule.md
+
+Logs:
+
+- .local/breezyvoice/runtime/v3/full_convnet_cjk_breaks_v3.log; .local/breezyvoice/runtime/v3/telemetry/full_convnet_cjk_breaks_v3_summary.json
+
+Outputs:
+
+- Pending after current v3 render: raw stitched WAV plus uniform atempo=0.9 full-session pacing master and loudness-normalized copy.
+
+Machine result:
+
+- Rule recorded while v3 full render continues; post-synthesis atempo=0.9 will be applied after stitching.
+
+Human result:
+
+- Owner requested 0.9x overall pacing and duplicate-repeat removal or clearer segmented model-facing text before rerendering unstable clips.
+
+Decision: `continue current raw render, then produce 0.9x full-session master`
+
+Fix applied:
+
+- Policy added to repo docs and global memory note.
+
+Downloads package:
+
+- none recorded
+
+Stop rule:
+
+- If repeated same-passage audio is detected, remove the duplicated repeated portion or revise and rerender affected model-facing text before treating the master as final.
+
+Next action:
+
+- Monitor current v3 render to completion, stitch raw full WAV, apply ffmpeg atempo=0.9 to the full master, then loudness-normalize the 0.9x copy.
+
+Additional observations:
+
+- The 0.9x rule supersedes the earlier variable-duration normalization plan unless owner explicitly requests a different target duration.
+
+### EXP-20260528-21 - Taiwan Traditional Chinese preferred TTS wording
+
+- Timestamp: `2026-05-28T09:41:46.054127+00:00`
+- Stage: `text-conditioning`
+- Input version: `v3-convnet-reference-cjk-breaks`
+- Source SHA-256: ``
+- Affected prefixes: `all CDE BreezyVoice v3 subclips`
+
+Reason:
+
+- Owner requested TTS model-facing text use Taiwan Traditional Chinese customary wording for all non-proper English, preserving only necessary English proper nouns, product names, event names, and standard acronyms.
+
+Hypothesis:
+
+- Replacing ordinary English phrases with Taiwan Traditional Chinese while preserving proper nouns/acronyms will reduce mixed-language instability and improve learner comprehension without losing technical identity anchors.
+
+Change summary:
+
+- Stopped the active v3 render, added NON_PROPER_ENGLISH_ZHTW_NORMALIZATIONS and SPOKEN_ENGLISH_SENTENCE_REWRITES, documented the rule in AGENTS.md and BreezyVoice READMEs, and added a global memory note.
+
+Commands:
+
+- kill -TERM -1327013; python3 -m py_compile tools/prepare_breezyvoice_render_package.py; inline normalize_text smoke tests
+
+Logs:
+
+- .local/breezyvoice/runtime/v3/full_convnet_cjk_breaks_v3.log; .local/breezyvoice/runtime/v3/telemetry/full_convnet_cjk_breaks_v3_summary.json
+
+Outputs:
+
+- Updated preprocessing and documentation; current partial v3 subclips remain local-only interrupted-run evidence and are not the main delivery.
+
+Machine result:
+
+- py_compile passed; smoke tests converted non-proper English phrases such as story map, lifecycle, patient safety, evidence chain, deployment evidence, and credential handling into Taiwan Traditional Chinese while preserving CrowdStrike and Tesla.
+
+Human result:
+
+- Owner rule: except for English proper nouns, rewrite TTS wording into Taiwan Traditional Chinese customary phrasing.
+
+Decision: `restart v3 render after regenerating manifests with Taiwan Traditional Chinese preferred model-facing text`
+
+Fix applied:
+
+- Repo rule, global memory note, and preprocessing dictionary/sentence rewrites added.
+
+Downloads package:
+
+- none recorded
+
+Stop rule:
+
+- If remaining non-proper English causes unstable TTS, add a targeted Taiwan Traditional Chinese rewrite and rerender the affected subclip.
+
+Next action:
+
+- Regenerate BreezyVoice local render package, rebuild v3 manifests, smoke test, then restart full v3 render; after stitching, produce uniform 0.9x pacing master.
+
+Additional observations:
+
+- Use Breeze-ASR-25 only for auxiliary ASR; do not use Whisper. Keep CJK-English ideographic comma boundary rule active for preserved English names/acronyms.
+
+### EXP-20260528-22 - Preserve token and namespace in TTS wording
+
+- Timestamp: `2026-05-28T09:45:17.077688+00:00`
+- Stage: `text-conditioning`
+- Input version: `v3-convnet-reference-zh-tw-preferred`
+- Source SHA-256: ``
+- Affected prefixes: `all CDE BreezyVoice v3 subclips containing token or namespace`
+
+Reason:
+
+- Owner clarified that token and namespace should remain English technical terms and should not be translated under the Taiwan Traditional Chinese preferred wording rule.
+
+Hypothesis:
+
+- Preserving token and namespace will keep Kubernetes/security terminology recognizable while the surrounding non-proper English remains Taiwan Traditional Chinese.
+
+Change summary:
+
+- Removed token and namespace from non-proper-English translation; changed service account token to service account token preserving token as English; documented preserved terms in AGENTS.md, BreezyVoice READMEs, and global memory note.
+
+Commands:
+
+- apply_patch; python3 -m py_compile tools/prepare_breezyvoice_render_package.py; inline normalize_text smoke test
+
+Logs:
+
+- .local/breezyvoice/runtime/v3/prepare_for_v3_convnet_zh_tw_preferred_r2.log
+
+Outputs:
+
+- Updated preprocessing and documentation; render not yet restarted after this correction.
+
+Machine result:
+
+- py_compile passed; smoke test emits 服務帳號、token、與、namespace、隔離 while converting deployment evidence and credential handling.
+
+Human result:
+
+- Owner exception: token, namespace should not be translated.
+
+Decision: `regenerate manifests before restarting v3 render`
+
+Fix applied:
+
+- token/namespace preservation added to repo docs and global memory note; service-account-token phrase fixed to preserve token.
+
+Downloads package:
+
+- none recorded
+
+Stop rule:
+
+- Do not translate token or namespace in future TTS model-facing text.
+
+Next action:
+
+- Regenerate BreezyVoice local render package, rebuild v3 manifests, smoke test one subclip, restart full v3 render, then produce 0.9x master.
+
+Additional observations:
+
+- This is an exception to the broader Taiwan Traditional Chinese preferred wording rule.
+
 ### EXP-20260528-13 - Reference-audio pilot render with ONNX CUDA telemetry
 
 - Timestamp: `2026-05-28T09:55:00+08:00`
@@ -1519,3 +1772,167 @@ Additional observations:
 - Energy estimates are GPU-only nvidia-smi power.draw estimates and exclude CPU, display, storage, PSU loss, and monitor energy.
 - BreezyVoice/G2P runtime stdout prints internal zhuyin annotations; these are runtime diagnostics, not source-text leakage.
 - Breeze-ASR-25 uses a WhisperTokenizer internally in Transformers, but the ASR model executed was MediaTek-Research/Breeze-ASR-25; no Whisper ASR command was used.
+
+### EXP-20260528-23 - Set v3 delivery target to 70 minutes and story-condition case passages
+
+- Timestamp: `2026-05-28T17:58:00+08:00`
+- Stage: `v3-text-conditioning-policy`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `all; cde_full_17_tesla_k8s_case; cde_full_20_crowdstrike_update_524b; cde_full_24_logging_synnovis_start`
+
+Reason:
+
+- Owner changed full-session TTS delivery target to approximately 70 minutes; case passages should feel like a concrete story shared with listeners in Taiwan Traditional Chinese.
+
+Hypothesis:
+
+- A single post-stitch tempo normalization to 4200 seconds preserves consistent whole-audio pacing better than section-by-section speed changes. Story-conditioned case passages reduce TTS instability caused by dense English technical lists.
+
+Change summary:
+
+- Updated repo and global TTS rules for 70-minute delivery target; added case-story text conditioning; preserved token and namespace as English technical terms; regenerated v1/v3 manifests from current model-facing text.
+
+Commands:
+
+- python3 -m py_compile tools/prepare_breezyvoice_render_package.py; python3 tools/prepare_breezyvoice_render_package.py; rebuilt .local/breezyvoice/manifests/v3 from current v1 manifests
+
+Logs:
+
+- .local/breezyvoice/runtime/v3/prepare_for_v3_70min_story_rule_r4.log
+
+Outputs:
+
+- .local/breezyvoice/manifests/v3/subclip_manifest.csv; .local/breezyvoice/inputs/v1/subclips
+
+Machine result:
+
+- Package preparation completed; current v3 manifest has 116 subclips; case passages were inspected in model-facing text; no render executed yet for this policy step.
+
+Human result:
+
+- Owner instructed to target about 70 minutes and make case passages feel like story sharing for listeners.
+
+Decision: `proceed_to_v3_smoke_then_full_render`
+
+Fix applied:
+
+- Repo/global rule update; delivery target set to 70 minutes; final case-story polish added after CJK-English boundary punctuation; v3 manifest refreshed.
+
+Downloads package:
+
+- none recorded
+
+Stop rule:
+
+- No additional human review round is required by current owner instruction; after full render, apply one global tempo factor raw_duration_seconds / 4200, then loudness normalize and run Breeze-ASR-25 only as auxiliary warning signal.
+
+Next action:
+
+- Run v3 prompt-mode smoke on RTX 5080, then full render, stitch, normalize to approximately 70 minutes, loudness normalize, and run Breeze-ASR-25.
+
+Additional observations:
+
+- The 80-minute engineering source remains the frozen traceability source; the delivery master target is now the 70-minute post-processed audio.
+
+## EXP-20260528-24 — v3 70-minute full render with ConvNet reference prompt and story-conditioned case passages
+
+Timestamp: `2026-05-28T19:45:00+08:00`
+
+Stage: `v3-full-render-70min-final`
+
+Decision: `completed_local_70min_master_with_asr_warning_notes`
+
+Reason:
+
+- Owner changed the full-session delivery target from the prior 80-minute planning target to approximately 70 minutes.
+- Case passages should sound like a concrete story shared with listeners, while general TTS wording should prefer Taiwan Traditional Chinese except preserved technical terms such as `token` and `namespace`.
+- The whole file should use one consistent pacing transform rather than per-section speed changes.
+
+Hypothesis:
+
+- A representative 28-second prompt extracted from `深度捲積神經網路.mp4`, plus story-conditioned model text and a single post-stitch tempo normalization to 4200 seconds, can produce a stable full-session v3 master while preserving consistent whole-file pacing.
+
+Fix applied:
+
+- Added repo/global rules for 70-minute delivery, case-story phrasing, Taiwan Traditional Chinese TTS wording, CJK/English `、` boundaries, repeat deletion, and `token`/`namespace` preservation.
+- Rebuilt v3 manifests from the current model-facing text.
+- Rendered all v3 subclips with prompt voice mode on RTX 5080.
+- Reran 56 repair subclips, then smaller late-fix selections for ordinary-English remnants and repeated phrases.
+- Re-stitched after the final subclip fixes, then applied one global `atempo=0.827687993` transform to reach 70:00.
+- Produced a loudness-normalized 22.05 kHz mono WAV.
+- Ran auxiliary ASR with `MediaTek-Research/Breeze-ASR-25` only; no Whisper ASR command was used.
+
+Commands:
+
+- `python3 -m py_compile tools/prepare_breezyvoice_render_package.py`
+- `python3 tools/prepare_breezyvoice_render_package.py`
+- `tools/run_with_gpu_telemetry.py ... tools/breezyvoice_render_subclips.py --version v3 --selection all --voice-mode prompt ...`
+- `tools/run_with_gpu_telemetry.py ... tools/breezyvoice_render_subclips.py --subclip-manifest .local/breezyvoice/manifests/v3/subclip_manifest_finalrepair_selection.csv ...`
+- `tools/run_with_gpu_telemetry.py ... tools/breezyvoice_render_subclips.py --subclip-manifest .local/breezyvoice/manifests/v3/subclip_manifest_latefix2_selection.csv ...`
+- `tools/run_with_gpu_telemetry.py ... tools/breezyvoice_render_subclips.py --subclip-manifest .local/breezyvoice/manifests/v3/subclip_manifest_dashboardfix_selection.csv ...`
+- `tools/run_with_gpu_telemetry.py ... tools/breezyvoice_render_subclips.py --subclip-manifest .local/breezyvoice/manifests/v3/subclip_manifest_p08procedures_fix_selection.csv ...`
+- `python3 tools/stitch_breezyvoice_outputs.py --version v3 --selection all --stitch-full --full-output .local/breezyvoice/output/v3/full/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.raw.wav --overwrite --silence-ms 350`
+- `ffmpeg -filter:a atempo=0.827687993`
+- `ffmpeg -af loudnorm=I=-16:TP=-1.5:LRA=11 -ar 22050`
+- `tools/run_with_gpu_telemetry.py ... tools/run_breeze_asr25.py --audio .local/breezyvoice/output/v3/full/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.loudnorm-22050.wav ...`
+
+Logs:
+
+- `.local/breezyvoice/runtime/v3/full_convnet_70min_story_v3.log`
+- `.local/breezyvoice/runtime/v3/finalrepair_convnet_70min_story_v3.log`
+- `.local/breezyvoice/runtime/v3/latefix2_convnet_70min_story_v3.log`
+- `.local/breezyvoice/runtime/v3/dashboardfix_convnet_70min_story_v3.log`
+- `.local/breezyvoice/runtime/v3/p08proceduresfix_convnet_70min_story_v3.log`
+- `.local/breezyvoice/runtime/v3/pacing_to_70min_v3.final.ffmpeg.log`
+- `.local/breezyvoice/runtime/v3/loudnorm_70min_v3.final.ffmpeg.log`
+- `.local/breezyvoice/runtime/v3/asr_breeze25_full_70min_v3_final.stdout.log`
+- `.local/breezyvoice/runtime/v3/telemetry/asr_breeze25_full_70min_v3_final_summary.json`
+
+Outputs:
+
+- `.local/breezyvoice/output/v3/full/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.raw.wav`
+- `.local/breezyvoice/output/v3/full/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.wav`
+- `.local/breezyvoice/output/v3/full/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.loudnorm-22050.wav`
+- `.local/breezyvoice/review/v3/asr/cde-2026-breezyvoice-v3-convnet-reference-zh-tw-story.target-70min.loudnorm-22050.final.breeze-asr-25.txt`
+- `.local/breezyvoice/review/v3/asr/breeze_asr25_full_70min_v3_final.json`
+- `.local/breezyvoice/review/v3/asr/breeze_asr25_full_70min_v3_final_timestamped.txt`
+
+Machine result:
+
+- Full render: `3177.503s`, `exit_code=0`, selected all v3 subclips, avg GPU power `229.422W`, estimated GPU energy `202.496971Wh`, avg GPU utilization `78.244%`, peak GPU memory `9999MB`.
+- Main repair render: `1714.637s`, `exit_code=0`, 56 selected subclips, avg GPU power `231.624W`, estimated GPU energy `110.319859Wh`, avg GPU utilization `77.073%`, peak GPU memory `10480MB`.
+- Late-fix render: `108.401s`, estimated GPU energy `6.689618Wh`.
+- Dashboard-fix render: `109.175s`, estimated GPU energy `6.799862Wh`.
+- p08 procedures-fix render: `58.695s`, estimated GPU energy `3.355616Wh`.
+- Final raw stitch duration: `3476.290s` / `57.938min`, SHA256 `fce051da255142a4d8e1ea45efeb559ff288b01485ba59c1559fa927a5a286c0`.
+- Final tempo-adjusted duration: `4199.983s` / `70.000min`, SHA256 `3a0b9e8dc9aec85c69e4703713cddaec70bd96db130733460c822e014eac1905`.
+- Final loudness-normalized duration: `4199.983s` / `70.000min`, SHA256 `1acf46ee68199c0ed2e396ec5bcf0046f5dcb22dd245b2c8d761cabd17dabb7d`.
+- Final Breeze-ASR-25 auxiliary pass: `242.634s`, model load `3.124s`, ASR `237.223s`, `1060` chunks, `17478` text characters, avg GPU power `150.652W`, estimated GPU energy `10.153708Wh`, peak GPU memory `6523MB`.
+- Observable GPU-only energy for the retained final-render path and required repair/ASR passes is approximately `339.82Wh`. This excludes CPU, storage, PSU loss, display, and monitor energy.
+
+Human result:
+
+- No additional human review round was requested at this step.
+- The current output is a local v3 full-session deliverable candidate, not an expert-accepted final publication master.
+
+ASR warning result:
+
+- Breeze-ASR-25 found no `白盒`, no `那個`, no `吱吱嗚嗚`, no `媽媽`, no `老能`, no `哈哈哈`, and no direct repeated strings for `剩餘風險剩餘風險`, `控制證據控制證據`, or `發現事項發現事項`.
+- Breeze-ASR-25 still reports `dashboard` once and `這個` seven times. Manual interpretation is required because ASR also shows obvious recognition drift around dense K8S and case passages; this is a warning signal, not an acceptance decision.
+
+Additional observations:
+
+- The raw render was shorter than the target. The post-stitch tempo factor slowed the whole master from `57.938min` to exactly `70.000min`, keeping pacing globally consistent.
+- The Transformers warning mentioning `WhisperTokenizer` comes from Breeze-ASR-25 internals; the executed ASR model was `MediaTek-Research/Breeze-ASR-25`.
+- Some runtime stdout still prints internal G2P zhuyin annotations. The model-facing manifest text is clean; these annotations are runtime diagnostics.
+
+Next action:
+
+- If the user wants a handoff package, package the loudness-normalized 70-minute WAV with the corresponding model-facing transcript and Breeze-ASR-25 transcript.
+- If future quality repair is requested, start from the ASR warning regions around K8S/Tesla and 524B/SBOM sections and rerender only those affected subclips.
+
+Stop rule:
+
+- Do not start another human-review cycle unless the user requests it.
+- Do not use Whisper for auxiliary ASR in this project; continue using Breeze-ASR-25 only.
