@@ -27,16 +27,15 @@ the traceable decision record and local evidence paths.
 ## Current Gate
 
 - Source version: `v1`
-- Current state: pilot rendered and stitched; full render is closed.
-- Current blocker: `cde_full_01`, `cde_full_16`, and `cde_full_20`
-  require accepted human listening decisions after partial-accept repair;
-  `cde_full_26` is preserved as the accepted baseline.
+- Current state: determined by the latest experiment record and
+  `.local/breezyvoice/review/v1/full_batch_gate.json`.
+- Current owner policy: after final7 human-review repairs, the owner
+  allowed proceeding to the next concrete step without another listening
+  review round, while preserving the returned review history.
 - Current auxiliary ASR policy: use `MediaTek-Research/Breeze-ASR-25`
   only; do not use Whisper for current BreezyVoice review gates.
-- Current review package:
-  `/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/`
-- Current review archive:
-  `/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz`
+- Generated audio, ASR, telemetry, and review packages remain local-only
+  unless explicitly exported.
 
 ## Experiment Index
 
@@ -60,6 +59,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-15` | final4-human-reject-repair | Total-reject pilot repair with jargon-safe substitutions | final5b_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the TTS expert; ingest the returned forms/expert_pilot_review_form.csv; if any row is reject, apply only the next minimal expert-specified pilot fix and rerender affected pilot chunks. |
 | `EXP-20260528-16` | final5b-partial-review-repair | Partial-accept pilot repair for cde01 cde16 cde20 with Breeze-ASR-25 auxiliary check | final6b_exported_full_render_blocked_for_human_review | Send refreshed Downloads review package to expert, ingest returned form, and either open the full-render gate or apply the next minimal repair. |
 | `EXP-20260528-17` | final6b-human-review-repair-final7 | Mixed-gate final7 pilot repair with 白箱 terminology | final7_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the expert; ingest the returned review CSV; only if every required pilot chunk is accepted should the full render gate open. |
+| `EXP-20260528-18` | owner-release-full-render-final7 | Owner-overridden full render after final7 repair | full_render_completed_owner_release_post_render_logging | Prepare the deliverable package or handoff copy from the full WAV and loudnorm copy; use Breeze-ASR-25 transcript only to prioritize future repair candidates. |
 
 ## Detailed Records
 
@@ -1418,3 +1418,104 @@ Next action:
 Additional observations:
 
 - BreezyVoice/G2P prints internal annotations like [:ㄌㄜ4] in runtime stdout. The actual subclip manifest text was checked and is clean; keep this as a watch item for human listening, not as source-text leakage. Current auxiliary ASR policy was followed: Breeze-ASR-25 only; no Whisper was used.
+
+### EXP-20260528-18 - Owner-overridden full render after final7 repair
+
+- Timestamp: `2026-05-28T14:30:00+08:00`
+- Stage: `owner-release-full-render-final7`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `all 26 parent chunks, 146 full-session subclips`
+
+Reason:
+
+- Owner instructed that after the current human-review repair run, no additional listening review is required before the next concrete step.
+- Preserve the returned review history while opening the full render path through an explicit owner override rather than fake accept rows.
+
+Hypothesis:
+
+- A recorded owner override can move the project from pilot repair to full-session synthesis while preserving traceability and keeping all machine/human review evidence intact.
+- Reference-audio prompt mode plus final7 text conditioning, cde16 pacing, and cde26 tail trim should produce a complete local deliverable for the next packaging step.
+
+Change summary:
+
+- Added explicit full-render owner override gate artifacts and checker support.
+- Rendered all 146 subclips in prompt mode with the local reference audio on RTX 5080.
+- Applied cde16 atempo=0.88 pacing and cde26 p24 0.8s tail trim before stitching.
+- Stitched 26 parent chunks into the full 73.37-minute WAV and created a 22.05 kHz loudness-normalized copy.
+- Ran auxiliary full-audio ASR with MediaTek-Research/Breeze-ASR-25 only; no Whisper ASR was used.
+- Added future-facing normalization so white-box / White-box model inputs become 白箱 terms.
+
+Commands:
+
+- python3 tools/open_breezyvoice_full_render_gate.py --reason <owner instruction>
+- python3 tools/check_breezyvoice_full_render_gate.py --write-report
+- tools/run_with_gpu_telemetry.py --summary-json .local/breezyvoice/runtime/v1/telemetry/full_reference_after_owner_release_final7_summary.json -- breezyvoice_render_subclips.py --selection all --voice-mode prompt --overwrite
+- python3 tools/apply_breezyvoice_audio_pacing.py --parent-prefix cde_full_16_k8s_review_controls --tempo 0.88 --label 20260528-full-owner-release-final7 --overwrite
+- python3 tools/trim_breezyvoice_audio_tail.py --subclip-id cde_full_26_shared_close_test_anchors_p24 --tail-seconds 0.8 --label 20260528-full-owner-release-final7 --overwrite
+- python3 tools/stitch_breezyvoice_outputs.py --selection all --stitch-full --full-output .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.wav --overwrite --silence-ms 350
+- tools/run_with_gpu_telemetry.py --summary-json .local/breezyvoice/runtime/v1/telemetry/asr_breeze25_full_owner_release_final7_summary.json -- tools/run_breeze_asr25.py --audio .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.wav
+- ffmpeg -af loudnorm=I=-16:TP=-1.5:LRA=11 -ar 22050 .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.loudnorm-22050.wav
+- python3 tools/verify_breezyvoice_objective.py --write-report
+
+Logs:
+
+- .local/breezyvoice/runtime/v1/full_reference_after_owner_release_final7.log
+- .local/breezyvoice/runtime/v1/telemetry/full_reference_after_owner_release_final7_summary.json
+- .local/breezyvoice/runtime/v1/telemetry/full_reference_after_owner_release_final7_gpu.jsonl
+- .local/breezyvoice/runtime/v1/asr_breeze25_full_owner_release_final7.stdout.log
+- .local/breezyvoice/runtime/v1/telemetry/asr_breeze25_full_owner_release_final7_summary.json
+- .local/breezyvoice/runtime/v1/telemetry/asr_breeze25_full_owner_release_final7_gpu.jsonl
+- .local/breezyvoice/runtime/v1/loudnorm_22050_full_owner_release_final7.ffmpeg.log
+- .local/breezyvoice/review/v1/objective_verification.json
+- .local/breezyvoice/review/v1/full_render_gate_check.json
+
+Outputs:
+
+- .local/breezyvoice/output/v1/subclips
+- .local/breezyvoice/output/v1/parent_chunks
+- .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.wav
+- .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.loudnorm-22050.wav
+- .local/breezyvoice/review/v1/asr/cde-2026-breezyvoice-80min-v1.txt
+- .local/breezyvoice/review/v1/asr/breeze_asr25_full_owner_release_final7.json
+- .local/breezyvoice/review/v1/all_stitch_summary.json
+
+Machine result:
+
+- Full render exit_code=0; selected/rendered 146 prompt-mode subclips; elapsed_s=2696.62; avg_gpu_power_w=225.037; estimated_gpu_energy_wh=168.566734; avg_gpu_utilization_pct=74.17; max_gpu_memory_used_mb=15636.
+- Full stitch exit_code=0; parent_count=26; full duration=4402.124s (73.37min); raw SHA256=0b7b85f9df3673a56a15143ffa90ddf5a324ad529b5c76aaeacea8c2d4288545.
+- Breeze-ASR-25 auxiliary pass exit_code=0 on CUDA RTX 5080; total elapsed_s=236.101; model_load_elapsed_s=3.256; asr_elapsed_s=230.569; text_characters=26677; chunk_count=1297; avg_gpu_power_w=150.007; estimated_gpu_energy_wh=9.838006; max_gpu_memory_used_mb=6388.
+- Loudnorm 22.05kHz copy completed in 35.14s; SHA256=917592bce31027911509865bb7dd484a4a67bff9ac08a4252f4cc9d8589212f6.
+- Objective verifier exit 0 with overall_status=complete; full-render gate checker exit 0 with accepted_by_owner_override=true.
+
+Human result:
+
+- Latest owner instruction: after this human-review repair run, do not run another review round; proceed to the next concrete step.
+- Returned expert review history remains preserved; no rows were converted to artificial accept decisions.
+
+Decision: `full_render_completed_owner_release_post_render_logging`
+
+Fix applied:
+
+- Owner override gate; full prompt-mode render; cde16 pacing override; cde26 tail trim; all-parent stitch; Breeze-ASR-25 full auxiliary ASR; 22.05kHz loudness-normalized copy; future white-box to 白箱 normalization.
+
+Downloads package:
+
+- none for this step; generated audio remains local-only under .local/breezyvoice unless explicitly exported.
+
+Stop rule:
+
+- No further human review is required for this owner-release step.
+- Do not treat Breeze-ASR-25 output as acceptance; use it only as a warning signal for future revisions.
+- Before any future rerender, keep 白箱 terminology and no hesitant filler policy active.
+
+Next action:
+
+- Prepare the deliverable package or handoff copy from the full WAV and loudnorm copy; use Breeze-ASR-25 transcript only to prioritize future repair candidates.
+
+Additional observations:
+
+- The full stitched audio is 73.37 minutes, shorter than the 80-minute target because the generated 146 subclips synthesize faster than the stochastic timing plan.
+- Energy estimates are GPU-only nvidia-smi power.draw estimates and exclude CPU, display, storage, PSU loss, and monitor energy.
+- BreezyVoice/G2P runtime stdout prints internal zhuyin annotations; these are runtime diagnostics, not source-text leakage.
+- Breeze-ASR-25 uses a WhisperTokenizer internally in Transformers, but the ASR model executed was MediaTek-Research/Breeze-ASR-25; no Whisper ASR command was used.

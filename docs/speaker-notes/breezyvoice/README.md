@@ -72,23 +72,31 @@ wall time, peak memory, and GPU-only Wh estimates are captured with the render.
 The current reference-audio telemetry appendix is
 `cde-2026-breezyvoice-reference-audio-telemetry-2026-05-28.md`.
 
-Current pilot package after the partial-accept returned expert review is
-`EXP-20260528-16`: `133` full-session subclips, `53` pilot subclips, prompt
-mode with the local reference audio, final6 GPU telemetry for `cde01`,
-`cde16`, and `cde20`, a cde20-only final6b rerender, a reproducible
-post-synthesis `atempo=0.88` pacing override only for
-`cde_full_16_k8s_review_controls`, and the accepted
-`cde_full_26_shared_close_test_anchors` baseline preserved without rerender.
-The exported human-review package is:
+Current full-session package is `EXP-20260528-18`. After the final7 repair,
+the owner explicitly allowed proceeding without another listening-review round
+while preserving the returned expert-review history. The local full-render gate
+therefore records `accepted_by_owner_override=true` and
+`accepted_by_listening=false`.
+
+The full run rendered `146` prompt-mode subclips on RTX 5080, then stitched all
+`26` parent chunks into:
 
 ```text
-/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
-/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+.local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.wav
+.local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.loudnorm-22050.wav
 ```
 
-The full render remains closed because `cde_full_01`, `cde_full_16`, and
-`cde_full_20` need fresh returned human acceptance decisions. `cde_full_26` is
-accepted and preserved as the continuity baseline.
+The stitched full WAV is `4402.124 s` (`73.37 min`), mono `22050 Hz`, with
+SHA-256 `0b7b85f9df3673a56a15143ffa90ddf5a324ad529b5c76aaeacea8c2d4288545`.
+The 22.05 kHz loudness-normalized copy has SHA-256
+`917592bce31027911509865bb7dd484a4a67bff9ac08a4252f4cc9d8589212f6`.
+The `cde_full_16_k8s_review_controls` subclips keep the post-synthesis
+`atempo=0.88` pacing override, and the final close subclip keeps the `0.8 s`
+tail trim.
+
+Post-render auxiliary ASR used `MediaTek-Research/Breeze-ASR-25` on CUDA only;
+no Whisper ASR was used for this release step. The ASR output is an auxiliary
+warning signal and does not replace the owner release decision.
 
 All current auxiliary ASR for this project must use
 `MediaTek-Research/Breeze-ASR-25`; do not use Whisper for current BreezyVoice

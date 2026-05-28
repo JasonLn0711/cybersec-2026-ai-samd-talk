@@ -259,3 +259,44 @@ Breeze-ASR-25 auxiliary run:
 Breeze-ASR-25 remains an auxiliary warning signal. It can surface possible term
 drift and repeated phrases, but it does not replace human listening for CDE TTS
 acceptance.
+
+## Owner-Release Full Render Addendum
+
+`EXP-20260528-18` records the next concrete step after the final7 repair. The
+owner instruction was to stop waiting for another human listening-review round
+after this repair and proceed to full render while keeping the review history
+intact. The gate artifacts therefore preserve `accepted_by_listening=false` and
+record `accepted_by_owner_override=true`.
+
+Full prompt-mode render telemetry:
+
+| Run | Exit | Rendered | Wall time | Avg GPU power | GPU Wh estimate | Avg GPU util | Peak GPU memory | Notes |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `full_reference_after_owner_release_final7` | `0` | `146` subclips | `2696.62 s` | `225.037 W` | `168.566734 Wh` | `74.17%` | `15636 MB` | Full v1 subclip render with reference prompt audio on RTX 5080. |
+
+Post-render audio processing:
+
+| Step | Command scope | Wall time | Output |
+| --- | --- | ---: | --- |
+| cde16 pacing | `apply_breezyvoice_audio_pacing.py --tempo 0.88` | logged locally | Updated `9` cde16 subclips; originals archived under `.local/breezyvoice/output/v1/archive/`. |
+| cde26 tail trim | `trim_breezyvoice_audio_tail.py --tail-seconds 0.8` | logged locally | Trimmed `cde_full_26_shared_close_test_anchors_p24` from `4.412 s` to `3.612 s`. |
+| full stitch | `stitch_breezyvoice_outputs.py --selection all --stitch-full --silence-ms 350` | logged locally | Stitched `26` parent chunks into the full WAV. |
+| loudness copy | `ffmpeg loudnorm` with `-ar 22050` | `35.14 s` | Created `.local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.loudnorm-22050.wav`. |
+
+Full audio artifacts:
+
+| Artifact | Duration | Sample rate | Channels | Size | SHA-256 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `.local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.wav` | `4402.124 s` (`73.37 min`) | `22050 Hz` | `1` | `194133712` bytes | `0b7b85f9df3673a56a15143ffa90ddf5a324ad529b5c76aaeacea8c2d4288545` |
+| `.local/breezyvoice/output/v1/full/cde-2026-breezyvoice-80min-v1.loudnorm-22050.wav` | `4402.124 s` (`73.37 min`) | `22050 Hz` | `1` | `194133746` bytes | `917592bce31027911509865bb7dd484a4a67bff9ac08a4252f4cc9d8589212f6` |
+
+Breeze-ASR-25 full-audio auxiliary pass:
+
+| Model | Device | Total elapsed | Model load | ASR time | Text chars | Timestamp chunks | Avg GPU power | GPU Wh estimate | Peak GPU memory |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `MediaTek-Research/Breeze-ASR-25` | RTX 5080 CUDA | `236.101 s` | `3.256 s` | `230.569 s` | `26677` | `1297` | `150.007 W` | `9.838006 Wh` | `6388 MB` |
+
+The ASR transcript surfaced expected mixed Mandarin/English recognition drift
+in places such as medical acronyms, 白箱 / white-box references, and long
+technical case names. This is recorded as a post-render warning signal for any
+future revision, not as a stop condition for the current owner-release path.
