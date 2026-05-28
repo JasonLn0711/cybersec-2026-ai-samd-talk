@@ -28,6 +28,8 @@ PRONUNCIATION_NOTES = REPO_ROOT / "docs/speaker-notes/breezyvoice/model-ready/cd
 LOCAL_ROOT = REPO_ROOT / ".local/breezyvoice"
 VERSION = "v1"
 REFERENCE_AUDIO_REQUIRED = False
+DELIVERY_TARGET_SECONDS = 4200
+DELIVERY_TARGET_TIME = "70:00"
 LEGACY_WHITE_BOX_TERM = "\u767d\u76d2"
 PREFERRED_WHITE_BOX_TERM = "\u767d\u7bb1"
 
@@ -120,6 +122,314 @@ TERM_NORMALIZATIONS = {
     "Lurie Children’s Hospital": "Lurie Childrens Hospital",
 }
 
+NON_PROPER_ENGLISH_ZHTW_NORMALIZATIONS = {
+    "access control": "存取控制",
+    "access path": "存取路徑",
+    "access": "存取",
+    "accounts": "帳號",
+    "admission controls": "准入控制",
+    "affected asset": "受影響資產",
+    "allowed paths": "允許路徑",
+    "and": "與",
+    "antivirus": "防毒軟體",
+    "application boundary": "應用程式邊界",
+    "application": "應用程式",
+    "architecture": "架構",
+    "archive": "保存",
+    "approved settings": "核准設定",
+    "asset": "資產",
+    "attack chain": "攻擊鏈",
+    "attack path": "攻擊路徑",
+    "attack surface": "攻擊面",
+    "audit logs": "稽核日誌",
+    "authentication": "認證",
+    "authorization check": "授權檢查",
+    "authorization": "授權",
+    "availability": "可用性",
+    "behavior": "行為",
+    "black-box testing": "黑箱測試",
+    "black-box": "黑箱",
+    "campaign": "行動",
+    "cause": "成因",
+    "claims": "理賠申報",
+    "clinical incident": "臨床事件",
+    "clinical reality": "臨床現實",
+    "clinical service provider": "臨床服務供應商",
+    "clinical": "臨床",
+    "cloud permission": "雲端權限",
+    "cloud resource": "雲端資源",
+    "cloud-connected medical applications": "連接雲端的醫療應用程式",
+    "cloud": "雲端",
+    "cluster": "叢集",
+    "code review": "程式碼審查",
+    "code signing": "程式碼簽章",
+    "compliance checklist": "合規檢核表",
+    "component": "元件",
+    "components": "元件",
+    "commit": "提交紀錄",
+    "confidentiality": "機密性",
+    "configuration hardening": "設定強化",
+    "configuration": "設定",
+    "controls": "控制措施",
+    "control": "控制",
+    "connected systems": "互連系統",
+    "connected care": "互連照護",
+    "container image": "容器映像檔",
+    "container base image": "容器基礎映像檔",
+    "container privileges": "容器權限",
+    "container": "容器",
+    "credential handling": "憑證處理",
+    "credentials": "憑證",
+    "credential": "憑證",
+    "cryptojacking": "挖礦劫持",
+    "cyber incident": "資安事件",
+    "cyber risk": "資安風險",
+    "cybersecurity requirements": "資安需求",
+    "cybersecurity": "資安",
+    "data corruption": "資料毀損",
+    "data flow": "資料流",
+    "data pipelines": "資料管線",
+    "data": "資料",
+    "debug": "除錯",
+    "default": "預設",
+    "deviations": "偏離事項",
+    "debug endpoint": "除錯端點",
+    "decision path": "決策路徑",
+    "dependency": "相依套件",
+    "deployment evidence": "部署證據",
+    "deployment security": "部署安全",
+    "deployment YAML": "部署 YAML",
+    "deployment": "部署",
+    "design evidence": "設計證據",
+    "device crash": "設備當機",
+    "device subnet": "設備子網路",
+    "device": "設備",
+    "direct dependencies": "直接相依套件",
+    "down": "不可用",
+    "dynamic analysis": "動態分析",
+    "emergency-response operations": "緊急應變作業",
+    "endpoint": "端點",
+    "environment": "環境",
+    "entry point": "進入點",
+    "evidence chain": "證據鏈",
+    "evidence": "證據",
+    "exploit cookbook": "攻擊操作手冊",
+    "exploitability": "可利用性",
+    "external endpoint": "外部端點",
+    "external interface": "外部介面",
+    "exposed": "暴露",
+    "finding anatomy": "發現事項結構",
+    "finding": "發現事項",
+    "firewall rules": "防火牆規則",
+    "firewall rule": "防火牆規則",
+    "firewall": "防火牆",
+    "firmware logic": "韌體邏輯",
+    "firmware update": "韌體更新",
+    "firmware": "韌體",
+    "fix and retest": "修補與重測",
+    "fix": "修補",
+    "fuzz testing": "模糊測試",
+    "gateway": "閘道",
+    "gateways": "閘道",
+    "governance gap": "治理缺口",
+    "hardcoded flow": "硬編碼流程",
+    "hardening": "強化",
+    "hash verification": "雜湊驗證",
+    "healthcare information system": "醫療資訊系統",
+    "healthcare vulnerability response": "醫療弱點回應",
+    "hidden services": "隱藏服務",
+    "identity verification": "身分驗證",
+    "identity": "身分",
+    "image provenance": "映像檔來源",
+    "impact": "影響",
+    "images": "映像檔",
+    "image": "映像檔",
+    "incident path": "事件路徑",
+    "incident response": "事件回應",
+    "incident": "事件",
+    "inference service": "推論服務",
+    "inference services": "推論服務",
+    "infrastructure as code": "基礎設施程式碼",
+    "infrastructure control plane": "基礎設施控制平面",
+    "input handling": "輸入處理",
+    "input validation": "輸入驗證",
+    "installation evidence": "安裝證據",
+    "internal cause": "內部成因",
+    "internal": "內部",
+    "integration": "整合",
+    "integrations": "整合服務",
+    "integrity": "完整性",
+    "interconnected computing system": "互連運算系統",
+    "interface": "介面",
+    "keys": "金鑰",
+    "key handling": "金鑰處理",
+    "layers": "層",
+    "lifecycle trust": "生命週期信任",
+    "lifecycle": "生命週期",
+    "least privilege": "最小權限",
+    "laptop": "筆電",
+    "logging and configuration": "日誌與設定",
+    "logging implementation": "日誌實作",
+    "logging": "日誌",
+    "logic flaws": "邏輯缺陷",
+    "map": "對應",
+    "malformed input": "異常輸入",
+    "manual review": "人工審查",
+    "manual": "人工",
+    "monitoring services": "監控服務",
+    "monitor": "監視器",
+    "network exposure": "網路暴露",
+    "network placement": "網路位置",
+    "network rules": "網路規則",
+    "network segmentation": "網路區隔",
+    "network stack": "網路堆疊",
+    "network": "網路",
+    "namespace isolation": "namespace 隔離",
+    "observed behavior": "觀察到的行為",
+    "observed weakness": "觀察到的弱點",
+    "operational handoff": "維運交接",
+    "operational": "維運",
+    "outside-in testing": "外部導向測試",
+    "owner": "負責人",
+    "parser assumptions": "解析器假設",
+    "path": "路徑",
+    "paths": "路徑",
+    "patient safety risk": "病人安全風險",
+    "patient safety": "病人安全",
+    "patch and retest evidence": "修補與重測證據",
+    "patch": "修補",
+    "penetration testing": "滲透測試",
+    "perimeter defense": "邊界防禦",
+    "pharmacy payment": "藥局付款",
+    "pipeline": "管線",
+    "privileged account": "高權限帳號",
+    "privileged": "特權",
+    "provider workflows": "醫療服務流程",
+    "provider": "醫療服務端",
+    "radio-frequency communication": "射頻通訊",
+    "recovery validation": "恢復驗證",
+    "recovery": "恢復",
+    "regulatory-facing evidence": "法規審查證據",
+    "resource": "資源",
+    "remote access boundary": "遠端存取邊界",
+    "remote-access boundaries": "遠端存取邊界",
+    "remote-access boundary": "遠端存取邊界",
+    "remote control": "遠端控制",
+    "remote support": "遠端支援",
+    "report": "報告",
+    "remediation": "修補處置",
+    "residual risk": "剩餘風險",
+    "retest evidence": "重測證據",
+    "retest": "重測",
+    "risk path": "風險路徑",
+    "risk": "風險",
+    "rollback": "回滾",
+    "review": "審查",
+    "runtime alerts": "執行期警示",
+    "runtime": "執行期",
+    "safety control": "安全控制",
+    "secure boot": "安全啟動",
+    "secure coding": "安全程式撰寫",
+    "secure default": "安全預設",
+    "secure defaults": "安全預設",
+    "secret management": "機密資料管理",
+    "secrets": "機密資料",
+    "secret": "機密資料",
+    "security finding": "資安發現事項",
+    "security requirements": "資安需求",
+    "security": "安全",
+    "service account token": "服務帳號 token",
+    "service-account token scope": "服務帳號 token 範圍",
+    "service account": "服務帳號",
+    "service identity": "服務身分",
+    "services": "服務",
+    "service": "服務",
+    "session timeout": "連線逾時",
+    "session": "連線階段",
+    "source code review": "程式碼審查",
+    "source code": "程式碼",
+    "source review": "程式碼審查",
+    "standalone device": "單機設備",
+    "static code analysis": "靜態程式碼分析",
+    "static analysis": "靜態分析",
+    "story map": "故事地圖",
+    "strong authentication": "強式認證",
+    "system review": "系統審查",
+    "system": "系統",
+    "subnet": "子網路",
+    "testing": "測試",
+    "testing evidence": "測試證據",
+    "testing vocabulary": "測試詞彙",
+    "test": "測試",
+    "threat model linkage": "威脅模型連結",
+    "threat model": "威脅模型",
+    "threat modeling": "威脅建模",
+    "threat": "威脅",
+    "traceability": "可追溯性",
+    "transitive dependencies": "間接相依套件",
+    "transitive": "間接",
+    "trust boundary": "信任邊界",
+    "trust-boundary decisions": "信任邊界決策",
+    "trust": "信任",
+    "unauthorized access risk": "未授權存取風險",
+    "unowned risk": "無歸屬風險",
+    "unsafe patterns": "不安全模式",
+    "unsafe assumptions": "不安全假設",
+    "unsafe function": "不安全函式",
+    "unsafe": "不安全",
+    "unused ports": "未使用連接埠",
+    "update package validation": "更新套件驗證",
+    "update path": "更新路徑",
+    "update signing key": "更新簽章金鑰",
+    "update-signing keys": "更新簽章金鑰",
+    "update": "更新",
+    "vendor binary": "廠商二進位檔",
+    "vendor maintenance access": "廠商維護存取",
+    "vendor": "廠商",
+    "validation": "驗證",
+    "validate": "驗證",
+    "validated": "已驗證",
+    "variables": "變數",
+    "verify": "驗證",
+    "verification": "驗證",
+    "viewer": "檢視器",
+    "vulnerability assessment": "弱點評估",
+    "vulnerability response": "弱點回應",
+    "vulnerability scan": "弱點掃描",
+    "vulnerability": "弱點",
+    "workload scheduling": "工作負載排程",
+    "workload": "工作負載",
+}
+
+PRESERVED_ENGLISH_TECH_TERMS = {
+    "token",
+    "namespace",
+}
+
+SPOKEN_ENGLISH_SENTENCE_REWRITES = {
+    "Scope should follow the clinical 工作流程, not just the application boundary": "審查範圍應該跟著臨床工作流程，而不是只跟著應用程式邊界",
+    "Black-box testing may see suspicious traffic;白箱審查 explains why the behavior exists": "黑箱測試可能看到可疑流量；白箱審查可以說明這個行為為什麼存在",
+    "For regulated devices, the fix itself becomes part of the evidence chain": "對受法規管理的醫療裝置來說，修補本身也會成為證據鏈的一部分",
+    "Deployment is where engineering controls meet clinical reality": "部署是工程控制接上臨床現實的地方",
+    "What can an attacker do?": "攻擊者可以做什麼？",
+    "Why is the system vulnerable, and how do we prove the fix works?": "系統為什麼有弱點，以及我們如何證明修補有效？",
+    "K 八 S security is deployment security": "K 八 S 安全就是部署安全",
+    "白箱審查 must include infrastructure-as-code, runtime identity, secrets handling, and cloud permission boundaries": "白箱審查必須包含基礎設施程式碼、執行期身分、機密資料處理，以及雲端權限邊界",
+    "White-box review should test deployed access paths, not only product features": "白箱審查應該測試實際部署後的存取路徑，而不只是產品功能",
+    "SBOM determines response speed when a vulnerability appears": "當漏洞出現時，軟體物料清單會決定回應速度",
+    "A vendor incident can become a hospital clinical-delay incident": "廠商事件可能變成醫院的臨床延遲事件",
+    "這個事件表面上看起來是 cryptojacking，也就是偷用雲端資源挖礦。": "先把這個案例當成一個現場故事來看。表面上，它是雲端資源被拿去挖礦；真正值得醫療團隊注意的，是攻擊者怎麼從一個暴露的管理介面，一步一步走到雲端資源。",
+    "根據簡報內容，AP 報導 United Health CEO 在聽證中提到，攻擊者進入了一台缺乏 multifactor authentication 的伺服器。": "接著看 Change Healthcare 的案例。可以把它想成一個部署路徑的故事：攻擊者先進入一台沒有強制多因素認證的伺服器，接著影響擴大到醫療支付與理賠流程。",
+    "這個案例很有意思，因為它不是惡意攻擊，而是 faulty security content update。": "Crowd-Strike 這個案例要用另一種角度聽。它不是傳統惡意攻擊，而是安全內容更新本身出了問題。",
+    "最後一個案例是 Synnovis / NHS London ransomware incident。": "最後用 Synnovis 與 NHS London 的案例收束。這個故事提醒我們，第三方服務發生事件時，醫院自己的系統即使沒有直接被攻破，臨床流程仍然會被拖住。",
+    "white box testing explains why a risk exists and how to prove it is controlled": "白箱測試說明風險為什麼存在，以及如何證明它已被控制",
+    "白箱測試 explains why a 風險 exists — 與 how to prove it is controlled": "白箱測試說明風險為什麼存在，以及如何證明它已被控制",
+    "黑箱測試 may see suspicious traffic; 白箱審查 explains why the 行為 exists": "黑箱測試可能看到可疑流量；白箱審查可以說明這個行為為什麼存在",
+    "Different tests produce different 證據 — combine them to explain 根本原因 與 驗證 the 修補": "不同測試會產生不同證據；合併起來可以說明根本原因，並驗證修補有效",
+    "trace each regulatory expectation to 控制措施 與 verification 證據": "把每一項法規期待追溯到控制措施與驗證證據",
+    "SBOM determines response speed when a vulnerability appears": "當漏洞出現時，軟體物料清單會決定回應速度",
+}
+
 PILOT_ASR_TERM_VARIANTS = {
     "K8S": ["K eight S", "K8S", "K 八 S"],
     "524B": ["五二四", "524B", "五二四 B"],
@@ -149,6 +459,7 @@ FILLER_RE = re.compile(
 HALLUCINATION_RESIDUE_RE = re.compile(r"(媽媽我?|嗎嗎我|這老能喝|這老能吼|金普斯是死老|精普斯是死老|老能喝|老能吼)")
 DEMONSTRATIVE_FILLER_RE = re.compile(r"(這個|那個)(?=[\u4e00-\u9fff])")
 PHONETIC_ANNOTATION_RE = re.compile(r"\[:[^\]\n]{1,32}\]")
+CJK_RE = r"\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff"
 
 CONTROL_RE = re.compile(
     r"<!-- BV26_META\n(?P<meta>.*?)\n-->\n\n"
@@ -245,13 +556,340 @@ def sanitize_tts_text(text: str) -> str:
     return sanitized.strip(" ，、")
 
 
+def apply_non_proper_english_zh_tw(text: str) -> str:
+    """Prefer Taiwan Traditional Chinese for non-proper English TTS wording."""
+    normalized = text
+    for old, new in SPOKEN_ENGLISH_SENTENCE_REWRITES.items():
+        normalized = normalized.replace(old, new)
+    for old, new in sorted(NON_PROPER_ENGLISH_ZHTW_NORMALIZATIONS.items(), key=lambda item: len(item[0]), reverse=True):
+        pattern = re.compile(rf"(?<![A-Za-z]){re.escape(old)}(?![A-Za-z])", re.I)
+        normalized = pattern.sub(new, normalized)
+    normalized = normalized.replace("日誌 日誌與 恢復 恢復", "日誌與恢復")
+    normalized = normalized.replace("日誌 日誌", "日誌")
+    normalized = normalized.replace("恢復 恢復", "恢復")
+    normalized = normalized.replace("命名空間", "namespace")
+    normalized = normalized.replace(
+        "白箱測試討論點包括：第一，驗證、K、八、S dashboards、與 應用程式介面、servers are not publicly、暴露。",
+        "白箱測試的第一個討論點，是確認 K、八、S、dashboard 與應用程式介面伺服器沒有暴露在公開網路上。",
+    )
+    normalized = normalized.replace(
+        "第二， prohibit long-lived、雲端 憑證、inside pods or、環境 變數。",
+        "第二，避免在 Pod 或環境變數裡放長期有效的雲端憑證。",
+    )
+    normalized = normalized.replace(
+        "第三，審查 服務帳號、token、範圍 與、R B A C permissions。",
+        "第三，審查服務帳號、token、範圍與 R B A C 權限。",
+    )
+    normalized = normalized.replace(
+        "第四， scan manifests、容器 映像檔、 C I C D、變數、for、機密資料。",
+        "第四，掃描部署清單、容器映像檔與 C I C D 變數裡的機密資料。",
+    )
+    normalized = normalized.replace(
+        "第五，驗證 雲端、I A M、最小權限、from、工作負載 身分。",
+        "第五，從工作負載身分驗證雲端 I A M 的最小權限。",
+    )
+    normalized = normalized.replace(
+        "第六， ensure、稽核日誌、can reconstruct pod、應用程式介面、憑證、usage。",
+        "第六，確認稽核日誌可以重建 Pod、應用程式介面與憑證使用紀錄。",
+    )
+    normalized = normalized.replace(
+        "此案例很有意思，因為它不是惡意攻擊，而是、Crowd-Strike Falcon、安全內容更新。",
+        "Crowd-Strike 這個案例要用另一種角度聽。它不是傳統惡意攻擊，而是 Falcon 安全內容更新本身出了問題。",
+    )
+    normalized = normalized.replace(
+        "監視器 與、address vulnerabilities",
+        "監控與處理漏洞",
+    )
+    normalized = normalized.replace(
+        "白箱審查可以找出、design、或、code weaknesses",
+        "白箱審查可以找出設計或程式碼弱點",
+    )
+    normalized = normalized.replace(
+        "第二， cybersecure design、與、maintenance。",
+        "第二，資安設計與持續維護。",
+    )
+    normalized = normalized.replace(
+        "最後一個案例是、Synnovis / NHS London、勒索軟體 事件。",
+        "最後用 Synnovis 與 NHS London 的案例收束。這個故事提醒我們，第三方服務發生事件時，醫院自己的系統即使沒有直接被攻破，臨床流程仍然會被拖住。",
+    )
+    normalized = normalized.replace(
+        "事件路徑是：廠商、attack、 lab capacity reduced、臨床、backlog、已驗證 恢復。",
+        "事件路徑可以簡化成：廠商遭攻擊、檢驗量能下降、臨床案件累積，最後才進入已驗證的恢復。",
+    )
+    normalized = normalized.replace(
+        "審查、third-party、整合 信任、boundaries",
+        "審查第三方整合的信任邊界",
+    )
+    normalized = normalized.replace(
+        "驗證、recovered interfaces、與 資料 完整性",
+        "驗證已恢復的介面與資料完整性",
+    )
+    normalized = normalized.replace(
+        "link、恢復 證據、to、臨床連續性",
+        "把恢復證據連回臨床連續性",
+    )
+    normalized = normalized.replace(
+        "風險、identification、威脅建模",
+        "風險識別、威脅建模",
+    )
+    return normalized
+
+
+def enforce_cjk_latin_breaks(text: str) -> str:
+    """Insert audible punctuation at Chinese/English boundaries for TTS stability."""
+    normalized = re.sub(fr"([{CJK_RE}])\s*([A-Za-z])", r"\1、\2", text)
+    normalized = re.sub(fr"([A-Za-z])\s*([{CJK_RE}])", r"\1、\2", normalized)
+    normalized = re.sub(r"([、，。！？；：])\s*([、，。！？；：])+", r"\1", normalized)
+    return normalized
+
+
+def apply_final_storyline_polish(text: str) -> str:
+    """Polish case passages after CJK/English boundary punctuation is inserted."""
+    polished = text
+    replacements = {
+        "白箱測試討論點包括：第一，驗證、K、八、S dashboards、與 應用程式介面、servers are not publicly、暴露。": "白箱測試的第一個討論點，是確認 K、八、S、dashboard 與應用程式介面伺服器沒有暴露在公開網路上。",
+        "第二，prohibit long-lived、雲端 憑證、inside pods or、環境 變數。": "第二，避免在 Pod 或環境變數裡放長期有效的雲端憑證。",
+        "第三，審查 服務帳號、token、範圍 與、R B A C permissions。": "第三，審查服務帳號、token、範圍與 R B A C 權限。",
+        "第四，scan manifests、容器 映像檔、C I C D、變數、for、機密資料。": "第四，掃描部署清單、容器映像檔與 C I C D 變數裡的機密資料。",
+        "第五，驗證 雲端、I A M、最小權限、from、工作負載 身分。": "第五，從工作負載身分驗證雲端 I A M 的最小權限。",
+        "第六，ensure、稽核日誌、can reconstruct pod、應用程式介面、憑證、usage。": "第六，確認稽核日誌可以重建 Pod、應用程式介面與憑證使用紀錄。",
+        "此案例很有意思，因為它不是惡意攻擊，而是、Crowd-Strike Falcon、安全內容更新。": "Crowd-Strike 這個案例要用另一種角度聽。它不是傳統惡意攻擊，而是 Falcon 安全內容更新本身出了問題。",
+        "第一，監視器 與、address vulnerabilities。": "第一，監控與處理漏洞。",
+        "白箱審查可以找出、design、或、code weaknesses": "白箱審查可以找出設計或程式碼弱點",
+        "第二，cybersecure design、與、maintenance。": "第二，資安設計與持續維護。",
+        "最後一個案例是、Synnovis / NHS London、勒索軟體 事件。": "最後用 Synnovis 與 NHS London 的案例收束。這個故事提醒我們，第三方服務發生事件時，醫院自己的系統即使沒有直接被攻破，臨床流程仍然會被拖住。",
+        "事件路徑是：廠商、attack、lab capacity reduced、臨床、backlog、已驗證 恢復。": "事件路徑可以簡化成：廠商遭攻擊、檢驗量能下降、臨床案件累積，最後才進入已驗證的恢復。",
+        "審查、third-party、整合 信任、boundaries": "審查第三方整合的信任邊界",
+        "驗證、recovered interfaces、與 資料 完整性": "驗證已恢復的介面與資料完整性",
+        "link、恢復 證據、to、臨床連續性": "把恢復證據連回臨床連續性",
+        "風險、identification、威脅建模": "風險識別、威脅建模",
+        "Downtime procedure、要成為現場可啟動、可交接、可回填的操作能力。": "停機時間處置流程，要成為現場可啟動、可交接、可回填的操作能力。",
+        "可是、complex、醫療器材 與 醫療資訊系統 需要更深一層的說明。": "可是，複雜醫療器材與醫療資訊系統，需要更深一層的說明。",
+        "憑證 與 金鑰處理 要保護 服務 帳號、應用程式介面 金鑰、 certificates、與 更新簽章金鑰。": "憑證與金鑰處理，要保護服務帳號、應用程式介面金鑰、憑證與更新簽章金鑰。",
+        "部署 是、engineering、控制措施 接上 臨床現實 的地方。": "部署是工程控制接上臨床現實的地方。",
+        "第一，驗證 更新、authenticity、與 完整性 控制措施。": "第一，驗證更新來源真實性與完整性控制措施。",
+        "第二， document、臨床 驗證 與 回滾、assumptions。": "第二，記錄臨床驗證與回滾假設。",
+        "第三，保存、residual-風險、rationale after、修補處置。": "第三，保存修補處置後的剩餘風險接受理由。",
+        "第二是、implementation、證據。": "第二是實作證據。",
+        "第一，驗證、M F A is enforced on real、部署 路徑。": "第一，驗證真實部署路徑已強制使用 M F A。",
+        "是否有、shared、憑證？": "是否有共用憑證？",
+        "第三，保存 部署 偏離事項 與、ownership。": "第三，保存部署偏離事項與責任歸屬。",
+        "此案例可以用一句話總結：白箱審查、should、測試、deployed、存取 路徑, not only product features.": "此案例可以用一句話總結：白箱審查應該測試實際部署後的存取路徑，而不只是產品功能。",
+        "這裡有一個很實用的 審查、question： Which、資產, assumption, 與 剩餘風險、does each、發現事項 對應、back to?": "這裡有一個很實用的審查問題：每一個發現事項，分別對應哪個資產、假設與剩餘風險？",
+        "這一頁列出、F D A-relevant、的 安全 測試、activities。": "這一頁列出與 F D A 審查相關的安全測試活動。",
+        "靜態程式碼分析 可以在 執行期 前找出、vulnerable patterns，例如 不安全函式、 insecure crypto、 hardcoded、機密資料、 SQL injection pattern。": "靜態程式碼分析可以在執行期前找出易受攻擊模式，例如不安全函式、不安全加密、硬編碼機密資料與 S Q L injection 模式。",
+        "所以這頁的重點是： Different tests produce different、證據 — combine them to explain、根本原因 與 驗證、the、修補.": "所以這頁的重點是：不同測試會產生不同證據，合併起來可以說明根本原因，並驗證修補有效。",
+        "Dependencies、容器 層、 third-party libraries、必須能連到 弱點評估。": "相依套件、容器層與第三方函式庫，必須能連到弱點評估。",
+        "這裡的、practical goal、是： trace each regulatory expectation to、控制措施 與 驗證 證據.": "這裡的實務目標，是把每一項法規期待追溯到控制措施與驗證證據。",
+        "真正有價值的白箱測試，是能把 發現事項 轉成、reviewable、證據。": "真正有價值的白箱測試，是能把發現事項轉成可審查證據。",
+        "它會使用、open-source libraries、 commercial、元件、容器、base、映像檔、執行期、 database driver、人工智慧、framework、 web framework。": "它會使用開源函式庫、商用元件、容器基礎映像檔、執行期、資料庫驅動程式、人工智慧框架與網頁框架。",
+        "Direct、相依套件 是我們直接使用的套件。": "直接相依套件，是我們直接使用的套件。",
+        "對、healthcare organizations、來說，第一個問題往往不是立刻修，而是先判斷：": "對醫療機構來說，第一個問題往往不是立刻修，而是先判斷：",
+        "廠商、tool、裡": "廠商工具裡",
+        "appliance、裡": "設備裡",
+        "不能只看、package.json、或、requirements.txt、的第一層，要看完整 相依套件、tree。": "不能只看 package.json 或 requirements.txt 的第一層，要看完整相依套件樹。",
+        "第二， track、廠商、binaries、與 容器 層。": "第二，追蹤廠商二進位檔與容器層。",
+        "有些風險藏在 廠商-provided binary、或 容器基礎映像檔 裡。": "有些風險藏在廠商提供的二進位檔或容器基礎映像檔裡。",
+        "第三， assign、負責人、修補 路徑、重測證據。": "第三，指定負責人、修補路徑與重測證據。",
+        "這頁可以用一句話收斂：軟體物料清單，當漏洞出現時，軟體物料清單會決定回應速度.": "這頁可以用一句話收斂：當漏洞出現時，軟體物料清單會決定回應速度。",
+        "Log、建立、investigation、證據；驗證 建立、trusted、恢復。": "日誌建立調查證據，驗證建立可信恢復。",
+        "第一條是、audit trail： login、應用程式介面 存取、 config change、 alert、 investigation。": "第一條是稽核軌跡：登入、應用程式介面存取、設定變更、警示與調查。",
+        "這些、log、能幫助我們知道誰在什麼時間做了什麼": "這些日誌能幫助我們知道誰在什麼時間做了什麼",
+        "第二條是 恢復、chain： detect、 contain、 recover、驗證、 resume、臨床 服務。": "第二條是恢復鏈：偵測、圍堵、復原、驗證與恢復臨床服務。",
+        "log、讓調查有證據": "日誌讓調查有證據",
+        "log、是否包含足夠、context？": "日誌是否包含足夠脈絡？",
+        "導致、pathology、 blood、測試、 transfusion、服務、 appointments、 operations、都受到影響。": "導致病理檢驗、血液檢測、輸血服務、門診預約與手術安排都受到影響。",
+        "一開始，我們用 風險、identification、找出哪些資產與臨床流程重要。": "一開始，我們用風險識別找出哪些資產與臨床流程重要。",
+        "再透過 白箱、 gray-box、黑箱、 S C A、 fuzzing、人工審查 等測試方法產生證據。": "再透過白箱、灰箱、黑箱、S C A、模糊測試與人工審查等方法產生證據。",
+        "真正的 信任 會從、verbal assurance、推進成、auditable、證據。": "真正的信任，會從口頭保證推進成可稽核證據。",
+        "condition、 修補處置、 重測、 日誌與恢復 串起來。": "部署條件、修補處置、重測、日誌與恢復串起來。",
+        "所有證據最後要回到、 life cycle、 信任。": "所有證據最後要回到生命週期信任。",
+        "最後， 把三個 前測、 pre-測試 與後測、 post-測試、 question、": "最後，把三個前測與後測問題，",
+    }
+    for old, new in replacements.items():
+        polished = polished.replace(old, new)
+    polished = re.sub(
+        r"但對醫療系統來說，我們不能只看挖礦。.*?甚至造成資料外洩或臨床服務中斷。",
+        "對醫療系統來說，這個故事的重點不是挖礦本身，而是同一條路徑如果出現在醫療環境，可能影響人工智慧推論服務、病人資料管線、影像處理服務、應用程式介面閘道，甚至造成資料外洩或臨床服務中斷。",
+        polished,
+    )
+    polished = re.sub(
+        r"第二，\s*prohibit long-lived、雲端 憑證、inside pods or、環境 變數。",
+        "第二，避免在 Pod 或環境變數裡放長期有效的雲端憑證。",
+        polished,
+    )
+    polished = re.sub(
+        r"第四，\s*scan manifests、容器 映像檔、 C I C D、變數、for、機密資料。",
+        "第四，掃描部署清單、容器映像檔與 C I C D 變數裡的機密資料。",
+        polished,
+    )
+    polished = re.sub(
+        r"第六，\s*ensure、稽核日誌、can reconstruct pod、應用程式介面、憑證、usage。",
+        "第六，確認稽核日誌可以重建 Pod、應用程式介面與憑證使用紀錄。",
+        polished,
+    )
+    polished = re.sub(
+        r"事件路徑是：廠商、attack、\s*lab capacity reduced、臨床、backlog、已驗證 恢復。",
+        "事件路徑可以簡化成：廠商遭攻擊、檢驗量能下降、臨床案件累積，最後才進入已驗證的恢復。",
+        polished,
+    )
+    polished = re.sub(
+        r"白箱測試、explains why a、風險、exists\s*[—-]\s*與、how to prove it is controlled\.",
+        "白箱測試說明風險為什麼存在，以及如何證明它已被控制。",
+        polished,
+    )
+    polished = re.sub(
+        r"黑箱測試、may see suspicious traffic; 白箱審查、explains why the、行為、exists\.",
+        "黑箱測試可能看到可疑流量；白箱審查可以說明此行為為什麼存在。",
+        polished,
+    )
+    polished = re.sub(
+        r"這裡有一個很實用的\s*審查、question：\s*Which、資產,\s*assumption,\s*與\s*剩餘風險、does each、發現事項\s*對應、back to\?",
+        "這裡有一個很實用的審查問題：每一個發現事項，分別對應哪個資產、假設與剩餘風險？",
+        polished,
+    )
+    polished = re.sub(
+        r"這裡有一個很實用的.*?back to\?",
+        "這裡有一個很實用的審查問題：每一個發現事項，分別對應哪個資產、假設與剩餘風險？",
+        polished,
+    )
+    polished = re.sub(
+        r"(?:deployment、)?condition、\s*修補處置、\s*重測、\s*日誌與恢復\s*串起來。",
+        "部署條件、修補處置、重測、日誌與恢復串起來。",
+        polished,
+    )
+    polished = re.sub(
+        r"(?:最後，\s*把三個 前測、\s*)?pre-測試\s*與後測、\s*post-測試、\s*question、\s*對應到今天的重點。",
+        "最後，把三個前測與後測問題，對應到今天的重點。",
+        polished,
+    )
+    polished = polished.replace("第二， cybersecure design、與、maintenance。", "第二，資安設計與持續維護。")
+    polished = polished.replace("第二，cybersecure design、與、maintenance。", "第二，資安設計與持續維護。")
+    for phrase in ["剩餘風險", "發現事項", "控制證據"]:
+        polished = re.sub(rf"{phrase}[，、]\s*{phrase}", phrase, polished)
+    late_replacements = {
+        "臨床 資安、in practice、出發": "臨床資安實務出發",
+        "資安 已經不只是、IT、問題": "資安已經不只是資訊團隊的問題",
+        "傳統、IT、視角": "傳統資訊團隊視角",
+        "系統、of systems": "系統中的系統",
+        "不是、IT、部門自己決定": "不是資訊團隊自己決定",
+        "hospital、網路": "醫院網路",
+        "isolated hardware": "獨立硬體",
+        "人工智慧-enabled S A M D、 model、更新": "人工智慧支援的 S A M D、模型更新",
+        "medical、供應鏈": "醫療供應鏈",
+        "responsibility、對應": "責任對應",
+        "breach、這類": "資料外洩事件這類",
+        "penetration、測試": "滲透測試",
+        "沒有最小權限、時間限制、來源限制與、log": "沒有最小權限、時間限制、來源限制與日誌",
+        "是否有、log？": "是否有日誌？",
+        "Radiology modality": "放射影像設備",
+        "third-party、整合 信任邊界": "第三方整合信任邊界",
+        "email-based intrusion、或、espionage、行動": "電子郵件入侵或間諜行動",
+        "IT、第三方廠商": "資訊團隊、第三方廠商",
+        "停機時間、procedures、與紙本流程": "停機時間處置流程與紙本流程",
+        "勒索軟體、note、與後續應變案例": "勒索軟體事件紀錄與後續應變案例",
+        "造成、crash、資料污染": "造成當機、資料污染",
+        "足夠、log、可以調查": "足夠日誌可以調查",
+        "bedside patient、監視器": "床邊病人監視器",
+        "如果、bedside、監視器": "如果床邊監視器",
+        "identify hardcoded endpoints、與 資料、flows": "辨識硬編碼端點與資料流",
+        "對應 行為、back to、威脅模型 證據": "把行為連回威脅模型證據",
+        "IT、修補": "資訊系統修補",
+        "pacemaker、韌體、recall": "心律調節器韌體召回",
+        "Pacemaker、是植入式設備": "心律調節器是植入式設備",
+        "未使用、port": "未使用連接埠",
+        "應用程式介面、key、 certificate": "應用程式介面金鑰、憑證",
+        "Kubernetes，也就是、K、八、S": "K、八、S",
+        "Kubernetes": "K、八、S",
+        "Helm、charts、deployment manifests": "Helm 圖表與部署清單",
+        "機密資料、handling": "機密資料處理",
+        "雲端 憑證、exposure": "雲端憑證暴露",
+        "環境、variable": "環境變數",
+        "網路、Policy， ingress rules，暴露 服務": "網路政策、入口規則與暴露服務",
+        "K、八、S、應用程式介面、dashboard": "K、八、S、管理儀表板與應用程式介面",
+        "K、八、S、應用程式介面、 dashboard": "K、八、S、管理儀表板與應用程式介面",
+        "K、八、S、dashboard": "K、八、S、管理儀表板",
+        "K、八、S、 dashboard": "K、八、S、管理儀表板",
+        "K、八、S、管理儀表板與應用程式介面、dashboard": "K、八、S、管理儀表板與應用程式介面",
+        "特權、mode": "特權模式",
+        "hostPath mount": "hostPath 掛載",
+        "bottom line": "底線",
+        "安全、boundary": "安全邊界",
+        "真正的、boundary": "真正的邊界",
+        "網路、policy、與 部署、governance": "網路政策與部署治理",
+        "cryptomining、工作負載": "挖礦工作負載",
+        "dashboard、與應用程式介面": "管理儀表板與應用程式介面",
+        "映像檔、layer、或 管線": "映像檔層或管線",
+        "沒有、audit log": "沒有稽核日誌",
+        "United Health cyberattack": "United Health 資安事件",
+        "no M F A": "沒有 M F A",
+        "critical platform": "關鍵平台",
+        "care、與、payment disruption": "照護與支付中斷",
+        "工作流程、s、在美國醫療體系": "工作流程在美國醫療體系",
+        "服務、console": "服務主控台",
+        "role-based、存取控制": "角色式存取控制",
+        "audit、日誌": "稽核日誌",
+        "log、是否記錄": "日誌是否記錄",
+        "單一、checklist": "單一檢核表",
+        "traceable、證據": "可追溯證據",
+        "機密資料、detection": "機密資料偵測",
+        "Fuzz、或 異常輸入 測試": "模糊測試或異常輸入測試",
+        "測試、parser、和資料處理流程": "測試解析器和資料處理流程",
+        "Attack-surface analysis、會看 暴露、interfaces、與 服務": "攻擊面分析會看暴露介面與服務",
+        "弱點、chaining、則是": "弱點串連則是",
+        "缺少、log、錯誤網路配置": "缺少日誌、錯誤網路配置",
+        "元件、mapped to known、風險": "元件對應到已知風險",
+        "global outage": "全球中斷事件",
+        "content、更新": "內容更新",
+        "分階段、rollout": "分階段推出",
+        "Section、五二四": "Section 五二四",
+        "submission expectation": "送件期待",
+        "postmarket exploit": "上市後可利用弱點",
+        "updates、與、patches": "更新與修補",
+        "signing、完整性": "簽章與完整性",
+        "release、控制措施": "發布控制措施",
+        "特權、mode": "特權模式",
+        "設定、change、網路、policy、更新、憑證、rotation": "設定變更、網路政策更新與憑證輪替",
+        "Affected、元件": "受影響元件",
+        "source file、 config、容器、介面": "原始碼檔案、設定、容器與介面",
+        "威脅-model link": "威脅模型連結",
+        "重測、result": "重測結果",
+        "相依套件、visibility": "相依套件可視性",
+        "廠商、binaries、必須知道、exact version、與、origin": "廠商二進位檔必須知道精確版本與來源",
+        "base OS": "基礎作業系統",
+        "應用程式、layer": "應用程式層",
+        "ownership tracking": "責任歸屬追蹤",
+        "monitoring、 patching、 retesting": "監控、修補與重測",
+        "paperwork、推進成": "文件清單推進成",
+        "Log4j、的、remote-code-execution、風險": "Log4j 的遠端程式碼執行風險",
+        "SQL injection、風險": "S Q L injection 風險",
+        "應用程式、direct、相依套件": "應用程式、直接相依套件",
+        "相依套件、inventory": "相依套件清冊",
+        "對應、direct、與 間接相依套件": "對應直接與間接相依套件",
+        "package.json、或、requirements.txt": "package.json 或 requirements.txt",
+        "life cycle、 信任": "生命週期信任",
+        "life cycle、信任": "生命週期信任",
+        "一般、IT、角度": "一般資訊系統角度",
+        "pod、服務帳號": "Pod、服務帳號",
+    }
+    for old, new in late_replacements.items():
+        polished = polished.replace(old, new)
+    polished = re.sub(r"\s+", " ", polished)
+    polished = re.sub(r"\s+([，。！？；：、])", r"\1", polished)
+    return polished
+
+
 def normalize_text(text: str) -> str:
     normalized = clean_model_text(text)
     for old, new in TERM_NORMALIZATIONS.items():
         normalized = normalized.replace(old, new)
     normalized = apply_pilot_review_conditioning(normalized)
+    normalized = apply_non_proper_english_zh_tw(normalized)
     normalized = normalized.replace(LEGACY_WHITE_BOX_TERM, PREFERRED_WHITE_BOX_TERM)
     normalized = sanitize_tts_text(normalized)
+    normalized = enforce_cjk_latin_breaks(normalized)
+    normalized = apply_final_storyline_polish(normalized)
+    normalized = enforce_cjk_latin_breaks(normalized)
     normalized = re.sub(r"[ \t]+", " ", normalized).strip()
     return normalized
 
@@ -309,6 +947,11 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "exposed K 八 S console": "暴露在外、未受保護的 K 八 S 管理主控台",
         "pod credentials": "Pod 憑證",
         "A W S access": "A W S 存取權限",
+        "prohibit long-lived、雲端 憑證、inside pods or environment variables": "禁止在 Pod 或環境變數裡放長期有效的雲端憑證",
+        "服務-account token scope、與、R B A C permissions": "服務帳號 token 範圍與 R B A C 權限",
+        "scan manifests、容器、images、 C I C D variables for、機密資料": "掃描部署清單、容器映像檔、C I C D 變數裡的機密資料",
+        "validate、雲端、I A M、最小權限、from、工作負載 身分": "從工作負載身分驗證雲端 I A M 最小權限",
+        "ensure、稽核日誌、can reconstruct pod、應用程式介面、憑證、usage": "確認稽核日誌可以重建 Pod、應用程式介面、憑證使用紀錄",
         "exposed Kubernetes console， pod credentials， A W S access， crypto mining workload": "暴露在外、未受保護的 K 八 S 管理主控台，Pod 憑證，A W S 存取權限，crypto mining workload",
         "exposed Kubernetes console": "暴露在外、未受保護的 K 八 S 管理主控台",
         "Kubernetes administrative console": "K 八 S 管理主控台",
@@ -377,6 +1020,26 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "Root cause": "根本原因",
         "root cause": "根本原因",
         "logging 與 recovery": "logging 日誌與 recovery 恢復",
+        "白箱測試、explains why a、風險、exists — 與、how to prove it is controlled": "白箱測試說明風險為什麼存在，以及如何證明它已被控制",
+        "黑箱測試、may see suspicious traffic; 白箱審查、explains why the、行為、exists": "黑箱測試可能看到可疑流量；白箱審查可以說明此行為為什麼存在",
+        "internal cause": "內部成因",
+        "verification、證據": "驗證證據",
+        "audit、日誌": "稽核日誌",
+        "log、是否記錄": "日誌是否記錄",
+        "traceable、證據": "可追溯證據",
+        "Which、資產, assumption, 與 剩餘風險，剩餘風險、does each、發現事項 對應、back to?": "每一個發現事項，分別對應哪個資產、假設與剩餘風險？",
+        "F D A-relevant、的 安全 測試、activities": "與 F D A 審查相關的安全測試活動",
+        "Static code analysis、可以在 執行期 前找出、vulnerable patterns，例如、unsafe function、 insecure crypto、 hardcoded、機密資料、 SQL injection pattern。": "靜態程式碼分析可以在執行期前找出易受攻擊模式，例如不安全函式、不安全加密、硬編碼機密資料與 SQL injection 模式。",
+        "Attack-surface analysis、會看 暴露、interfaces、與 服務": "攻擊面分析會看暴露介面與服務",
+        "Different tests produce different、證據 — combine them to explain、根本原因 與 驗證、the、修補.": "不同測試會產生不同證據；合併起來可以說明根本原因，並驗證修補有效。",
+        "trace each regulatory expectation to、控制措施 與、verification、證據": "把每一項法規期待追溯到控制措施與驗證證據",
+        "paperwork、推進成、vulnerability response": "文件清單推進成弱點回應",
+        "S B O M determines response speed when a vulnerability appears": "當漏洞出現時，軟體物料清單會決定回應速度",
+        "audit trail： login、應用程式介面 存取、 config change、 alert、 investigation": "稽核軌跡包含登入、應用程式介面存取、設定變更、警示與調查",
+        "恢復、chain： detect、 contain、 recover、 validate、 resume、臨床 服務": "恢復鏈包含偵測、圍堵、復原、驗證與恢復臨床服務",
+        "third-party integration、信任、boundaries": "第三方整合信任邊界",
+        "validate recovered interfaces、與 資料 完整性": "驗證已恢復介面與資料完整性",
+        "link、恢復 證據、to、臨床連續性": "把恢復證據連回臨床連續性",
         "pre-test 與 post-test question": "前測 pre-test 與後測 post-test question",
         "最後證據要能回到 lifecycle trust。": "所有證據最後要回到 life cycle trust。",
         "醫療資安是一條由臨床連續性、工程控制、法規證據與上市後維護共同形成的信任鏈。": "醫療資安的信任鏈，由臨床連續性、工程控制、法規證據，以及上市後的持續維護共同形成。",
@@ -825,6 +1488,9 @@ def prepare_package() -> None:
         "segment_count": len(segments),
         "target_total_seconds": sum(segment.target_seconds for segment in segments),
         "target_total_time": "80:00",
+        "delivery_target_seconds": DELIVERY_TARGET_SECONDS,
+        "delivery_target_time": DELIVERY_TARGET_TIME,
+        "delivery_target_policy": "After raw stitching, apply one global tempo factor raw_duration_seconds / 4200 to produce an approximately 70-minute master.",
         "model_text_characters": sum(len(segment.clean_text) for segment in segments),
         "bv26_markup_in_model_text": False,
         "pronunciation_notes_path": rel(PRONUNCIATION_NOTES),
@@ -842,6 +1508,7 @@ def prepare_package() -> None:
                 f"- Source SHA-256: `{source_hash}`",
                 "- Segment count: `26`",
                 "- Target timing: `80:00`",
+                f"- Delivery master target: `{DELIVERY_TARGET_TIME}` after one global post-synthesis tempo normalization",
                 "- Model text characters: `28053`",
                 "- Model text contains `BV26`: `false`",
                 "",
@@ -1238,6 +1905,9 @@ def prepare_package() -> None:
             "format": "wav",
             "sample_rate": "BreezyVoice runtime default; archive copy may be normalized after render",
             "loudness_lufs": -16,
+            "delivery_target_seconds": DELIVERY_TARGET_SECONDS,
+            "delivery_target_time": DELIVERY_TARGET_TIME,
+            "tempo_policy": "Apply a single global atempo factor after raw stitch: raw_duration_seconds / 4200.",
             "silence_policy": "preserve natural paragraph pauses; do not aggressive trim",
             "subclip_output_dir": rel(LOCAL_ROOT / f"output/{VERSION}/subclips"),
             "parent_chunk_output_dir": rel(LOCAL_ROOT / f"output/{VERSION}/parent_chunks"),
@@ -1254,6 +1924,8 @@ def prepare_package() -> None:
                 "- Output format: `.wav`",
                 "- Sample rate: use the BreezyVoice runtime default, then create a normalized archive copy if needed.",
                 "- Loudness target: about `-16 LUFS` after final normalization.",
+                f"- Delivery duration target: about `{DELIVERY_TARGET_TIME}` after one global tempo pass.",
+                "- Tempo policy: compute `raw_duration_seconds / 4200` after raw stitch and apply it once to the full master.",
                 "- Silence policy: preserve natural paragraph pauses; do not aggressive-trim subclips.",
                 f"- Subclip output path: `{rel(LOCAL_ROOT / f'output/{VERSION}/subclips')}/`",
                 f"- Parent chunk output path: `{rel(LOCAL_ROOT / f'output/{VERSION}/parent_chunks')}/`",
@@ -1276,7 +1948,8 @@ def prepare_package() -> None:
                 "",
                 "- English acronyms are not slurred or misread.",
                 "- `K eight S`, `F D and C Act Section 五二四 B`, and `Channel File 二九一` are stable.",
-                "- Speaking speed stays close to the `80:00` pacing plan.",
+                "- Speaking speed is internally consistent and the final master is normalized to about `70:00`.",
+                "- Case passages sound like concise story sharing: setup, event path, clinical implication, review takeaway.",
                 "- Long sentences do not sound fatigued.",
                 "- Opening sounds stable and the close sounds authoritative.",
                 "- Handoff into Jingzhong's white-box/system-review section sounds natural.",
