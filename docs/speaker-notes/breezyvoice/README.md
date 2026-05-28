@@ -58,6 +58,12 @@ python3 tools/build_breezyvoice_pilot_correction_matrix.py
 
 The setup script keeps the official BreezyVoice clone and Python venv under `.local/`, then replaces the official `torch==2.3.1+cu118` runtime with a CUDA `12.8` PyTorch build that supports RTX 5080 / `sm_120`.
 
+`tools/prepare_breezyvoice_render_package.py` applies model-facing sanitation
+before subclip generation: known stage cues, filler tokens, and hallucination
+residue are removed from TTS inputs while the frozen source stays unchanged.
+The generated pilot template overwrites pilot WAVs so revised text cannot be
+silently paired with stale audio.
+
 Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, `pilot_machine_review.md`, `pilot_listening_review.csv`, `render_review_log.csv`, `pilot_correction_matrix.md`, and `full_batch_gate.json`. Rebuild `render_review_log.csv` and `pilot_correction_matrix.md` after any stitch, expert-review ingestion, or rerender so runtime, issue, fix, accepted status, and stop-gate source stay aligned.
 
 ## Experiment Logging Rule

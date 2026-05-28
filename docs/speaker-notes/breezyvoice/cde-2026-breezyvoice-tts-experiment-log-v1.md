@@ -51,6 +51,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-09` | guarded-full-render-template | Add guarded full-render template without running TTS | full_render_template_ready_but_gate_closed | Wait for returned expert review CSV; ingest it, then rerun the gate checker |
 | `EXP-20260528-10` | review-log-traceability | Build consolidated render review log before next human gate | render_review_log_builder_ready_gate_still_closed | Export refreshed Downloads review package and wait for completed expert review CSV or specific minimal pilot-fix instruction |
 | `EXP-20260528-11` | human-review-traceability | Add pilot correction matrix to human review package | correction_matrix_ready_gate_still_closed | Wait for completed expert review CSV or a specific minimal pilot-fix instruction; do not run full render |
+| `EXP-20260528-12` | pilot-repair-rerender | Round-2 pilot rerender after all-reject contamination review | round2_pilot_rendered_stop_for_human_review | Export refreshed Downloads package and wait for round-2 human listening review |
 
 ## Detailed Records
 
@@ -895,3 +896,87 @@ Next action:
 Additional observations:
 
 - FIRST PRINCIPLE: the pilot gate is a quality-control batch record; reviewers need to know whether they are judging an unresolved defect or a fix that still needs acceptance
+
+### EXP-20260528-12 - Round-2 pilot rerender after all-reject contamination review
+
+- Timestamp: `2026-05-28T08:46:00+08:00`
+- Stage: `pilot-repair-rerender`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case, cde_full_16_k8s_review_controls, cde_full_20_crowdstrike_update_524b, cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- Returned expert review rejected all four pilot parent chunks for text-cleaning contamination symptoms, no-reference hallucination, pacing collapse, and tail-end fatigue
+
+Hypothesis:
+
+- Model-facing sanitizer, stale input quarantine, finer pilot splitting, 700ms stitch silence, and pilot-only overwrite rerender can reduce decoder instability before another human listening gate
+
+Change summary:
+
+- Ingested the returned all-reject expert review
+- Added model-facing stage-cue, filler, and hallucination-residue sanitizer
+- Forced cde_full_16/cde_full_20 to four subclips and cde_full_26 to anchor-based subclips
+- Archived stale generated subclip text that no longer appears in the current manifest
+- Overwrote and rerendered all 16 current pilot subclips only
+
+Commands:
+
+- python3 tools/prepare_breezyvoice_render_package.py
+- python3 tools/ingest_breezyvoice_expert_review.py --input .local/breezyvoice/review/v1/returned_expert_review_2026-05-28_round2.csv
+- PYTHONUTF8=1 .local/breezyvoice/runtime/v1/venv/bin/python tools/breezyvoice_render_subclips.py --selection pilot --voice-mode default --subclip-manifest .local/breezyvoice/manifests/v1/subclip_manifest.csv --pilot-manifest .local/breezyvoice/manifests/v1/pilot_manifest.csv --output-dir .local/breezyvoice/output/v1/subclips --overwrite
+- python3 tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full --overwrite --silence-ms 700
+- .local/breezyvoice/runtime/v1/venv/bin/python -m whisper .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav --model tiny --language zh --output_format txt --output_dir .local/breezyvoice/review/v1/asr
+- python3 tools/verify_breezyvoice_objective.py --write-report
+
+Logs:
+
+- .local/breezyvoice/review/v1/returned_expert_review_2026-05-28_round2.csv
+- .local/breezyvoice/review/v1/orphan_input_inventory.csv
+- .local/breezyvoice/runtime/v1/pilot_gpu_render_after_round2_repair.log
+- .local/breezyvoice/review/v1/asr/pilot_whisper_tiny_after_round2_repair.log
+- .local/breezyvoice/review/v1/objective_verification.json
+
+Outputs:
+
+- .local/breezyvoice/manifests/v1/subclip_manifest.csv
+- .local/breezyvoice/output/v1/subclips/
+- .local/breezyvoice/output/v1/parent_chunks/
+- .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+
+Machine result:
+
+- Round-2 manifest has 97 planned full subclips and 16 current pilot subclips
+- All 16 pilot subclips were overwritten and rendered in no-reference/default mode
+- Pilot was stitched with 700ms silence; parent runtimes are about 223.47s, 145.63s, 159.25s, and 166.93s
+- Tiny ASR was regenerated as an auxiliary signal; it still shows poor mixed technical-term recognition, so human listening remains required
+- Full-render gate remains allowed=false
+
+Human result:
+
+- Returned review is all reject; no round-2 acceptance yet
+
+Decision: `round2_pilot_rendered_stop_for_human_review`
+
+Fix applied:
+
+- Pilot-only model-facing preprocessing, stale input quarantine, finer subclip split, and overwrite rerender; frozen source unchanged; no full render
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- Stop after exporting the round-2 pilot package; do not run full render until human review accepts all four required pilot chunks
+
+Next action:
+
+- Export refreshed Downloads package and wait for round-2 human listening review
+
+Additional observations:
+
+- FIRST PRINCIPLE: no-reference/default voice may be the underlying instability; round-2 review should decide whether to continue with this voice path or switch voice strategy before full render

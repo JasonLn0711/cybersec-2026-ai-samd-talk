@@ -29,6 +29,13 @@ The `output_prefix` column is stable so individual clips can be regenerated with
 
 For an `80` minute controlled render, use `cde-2026-breezyvoice-80min-engineered-transcript-v1-zh-tw.md` as the orchestrator-facing draft. Strip `BV26` / `BV26_META` markup before sending text into the model, and keep the stable `output_prefix` values for per-row regeneration. Reference audio is optional; if no prompt WAV is present, run pilot rendering in no-reference / default-voice mode. The local runner path for that policy is `tools/breezyvoice_render_subclips.py --voice-mode default`.
 
+The render package generator keeps the v1 source frozen and applies only
+model-facing sanitation: known stage cues, filler tokens, and hallucination
+residue are removed from generated TTS inputs. After the round-2 expert review,
+the pilot plan uses `97` full-session subclips and `16` pilot subclips; the
+pilot template overwrites pilot WAVs to avoid pairing revised text with stale
+audio.
+
 On RTX 5080, run `bash tools/setup_breezyvoice_rtx5080_runtime.sh` before rendering. The official BreezyVoice requirement uses a CUDA `11.8` PyTorch wheel that does not support RTX 5080 / `sm_120`; the local setup script replaces it with a CUDA `12.8` PyTorch runtime and keeps all runtime files under `.local/`.
 
 After pilot rendering, use `tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full` to verify the subclip-to-parent and parent-to-combined stitch path before any full batch render.
