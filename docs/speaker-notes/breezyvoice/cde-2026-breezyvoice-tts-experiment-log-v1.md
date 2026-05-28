@@ -2010,6 +2010,80 @@ Stop rule:
 - Do not start another human-review cycle unless the owner requests it.
 - Do not use Whisper for auxiliary ASR in this project; continue using Breeze-ASR-25 only.
 
+## EXP-20260528-28 — v1.1 full render with original v1 reference audio and v3 pacing text
+
+Timestamp: `2026-05-28T21:48:00+08:00`
+
+Stage: `v1_1-full-render-v1-reference-v3-text`
+
+Decision: `completed_under80_master_without_human_review`
+
+Reason:
+
+- Owner requested a v1.1 TTS version using the original v1 reference audio, while reusing the v3 text and pacing design.
+- Owner explicitly said no additional human review is needed after this correction run.
+- The delivery constraint was under 80 minutes with consistent whole-session pacing.
+
+Fix applied:
+
+- Created v1.1 manifests from the v3 text/pacing manifests while routing output to `.local/breezyvoice/output/v1_1/`.
+- Rendered all 102 subclips in prompt mode with `.local/breezyvoice/prompts/v1/jason_reference.wav` and `.local/breezyvoice/prompts/v1/jason_reference.txt`.
+- Detected one visible text-layer duplicate in `cde_full_26_shared_close_test_anchors_p15` (`控制證據，控制證據`), preserved the original generated WAV as `.pre_dedup.wav`, rewrote only the v1.1 local input, and rerendered that subclip.
+- Stitched all parent chunks and the full WAV with `350ms` silence between subclips.
+- Applied loudness normalization and produced an M4A listening copy.
+- Built a Downloads handoff folder with WAV, M4A, transcript, metadata, stitch summary, telemetry summaries, and checksums.
+
+Commands:
+
+- `tools/run_with_gpu_telemetry.py --summary-json .local/breezyvoice/runtime/v1_1/telemetry/full_v1_reference_v3_text_v11_summary.json -- tools/breezyvoice_render_subclips.py --version v1_1 --selection all --voice-mode prompt --prompt-audio .local/breezyvoice/prompts/v1/jason_reference.wav --prompt-text-file .local/breezyvoice/prompts/v1/jason_reference.txt`
+- `tools/run_with_gpu_telemetry.py --summary-json .local/breezyvoice/runtime/v1_1/telemetry/rerender_p15_dedup_summary.json -- tools/breezyvoice_render_subclips.py --version v1_1 --selection all --voice-mode prompt`
+- `python3 tools/stitch_breezyvoice_outputs.py --version v1_1 --selection all --stitch-full --full-output .local/breezyvoice/output/v1_1/full/cde-2026-breezyvoice-v1_1-v1-reference-v3-text-under80.raw.wav --overwrite --silence-ms 350`
+- `ffmpeg -af loudnorm=I=-16:TP=-1.5:LRA=11 -ar 22050`
+- `ffmpeg -c:a aac -b:a 128k -movflags +faststart`
+
+Logs:
+
+- `.local/breezyvoice/runtime/v1_1/full_v1_reference_v3_text_v11.log`
+- `.local/breezyvoice/runtime/v1_1/rerender_p15_dedup.log`
+- `.local/breezyvoice/runtime/v1_1/telemetry/full_v1_reference_v3_text_v11_gpu.jsonl`
+- `.local/breezyvoice/runtime/v1_1/telemetry/rerender_p15_dedup_gpu.jsonl`
+- `.local/breezyvoice/review/v1_1/all_stitch_summary.json`
+
+Outputs:
+
+- `.local/breezyvoice/output/v1_1/full/cde-2026-breezyvoice-v1_1-v1-reference-v3-text-under80.raw.wav`
+- `.local/breezyvoice/output/v1_1/full/cde-2026-breezyvoice-v1_1-v1-reference-v3-text-under80.loudnorm.wav`
+- `.local/breezyvoice/output/v1_1/full/cde-2026-breezyvoice-v1_1-v1-reference-v3-text-under80.loudnorm.m4a`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v1_1-v1-reference-v3-text-under80-2026-05-28/`
+
+Machine result:
+
+- Full prompt render elapsed: `3309.895s`; exit code `0`.
+- Full prompt render GPU telemetry: average GPU utilization `87.5%`; max GPU memory `15562 MB`; estimated GPU-only energy `228.481323 Wh`.
+- p15 dedup rerender elapsed: `16.966s`; estimated GPU-only energy `0.551087 Wh`.
+- Observable TTS GPU-only energy for retained path: approximately `229.03 Wh`, excluding CPU, storage, display, PSU loss, and monitor energy.
+- Raw stitched duration: `4359.936553s` / `72.666min` / `01:12:39.94`.
+- Tempo adjustment: none required because the master is already under 80 minutes.
+- Raw WAV SHA256: `7963b26547a34a155335e5f0ef5f3964f93ddaec977596a12716964a96bb6cf7`.
+- Loudness-normalized WAV SHA256: `0430af2ec1512fabe7dcf0f3936348bc4717d3028f6dcf70a0cf6d5e4ddd4d50`.
+- M4A duration: `4359.936009s`; size `50690726` bytes; reported bit rate `93011`; SHA256 `175f45826f45e3cf7318869cbde2a5d3a399d485fb4b7553e7d59c1a114e4df5`.
+
+Human result:
+
+- No human review was initiated, per owner instruction.
+- No auxiliary ASR was run for this v1.1 package. The standing rule remains: use Breeze-ASR-25 only, never Whisper.
+
+Additional observations:
+
+- The v1.1 render reuses the v3 pacing-conditioned text while switching voice reference back to the original v1 prompt.
+- The final duration is closer to 73 minutes than 80 minutes, but it satisfies the explicit under-80-minute constraint without tempo compression.
+- The p15 duplicate was fixed at the text-input level rather than by cutting audio, preserving future rerender traceability.
+
+Next action:
+
+- Use the Downloads folder for playback or stakeholder handoff.
+- If another quality pass is requested later, run auxiliary ASR with Breeze-ASR-25 only.
+
 ## EXP-20260528-27 — Wu teacher readable transcript material
 
 Timestamp: `2026-05-28T20:44:00+08:00`
