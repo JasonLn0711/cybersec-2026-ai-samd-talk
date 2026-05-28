@@ -65,12 +65,12 @@ CORRECTIONS = {
         ),
         "conditioning_applied": (
             "Replaced rollback with 回滾 where appropriate, kept F D C Act and "
-            "五二四/英文字母B款 anchors, retained 白盒 wording, removed filler "
+            "五二四/英文字母B款 anchors, retained 白箱 wording, removed filler "
             "pressure, and rerendered cde20-only final6b after ASR auxiliary "
             "warning by expanding SBOM to 軟體物料清單，英文四個字母，S，B，O，M."
         ),
         "next_listener_question": (
-            "Does final6b preserve CrowdStrike, supply-chain, 白盒, Section "
+            "Does final6b preserve CrowdStrike, supply-chain, 白箱, Section "
             "524B, 回滾, and SBOM credibility without filler-like stumbles?"
         ),
     },

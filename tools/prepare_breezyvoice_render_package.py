@@ -28,6 +28,8 @@ PRONUNCIATION_NOTES = REPO_ROOT / "docs/speaker-notes/breezyvoice/model-ready/cd
 LOCAL_ROOT = REPO_ROOT / ".local/breezyvoice"
 VERSION = "v1"
 REFERENCE_AUDIO_REQUIRED = False
+LEGACY_WHITE_BOX_TERM = "\u767d\u76d2"
+PREFERRED_WHITE_BOX_TERM = "\u767d\u7bb1"
 
 PILOT_PREFIXES = [
     "cde_full_01_opening_positioning_crazyhunter_entry_case",
@@ -85,11 +87,13 @@ TERM_NORMALIZATIONS = {
     "vendor access": "廠商存取",
     "patching limitation": "修補限制",
     "credential risk": "憑證風險",
-    "White-box Testing": "白盒測試",
-    "White box Testing": "白盒測試",
-    "white-box validation": "白盒驗證",
-    "software supply paths": "software supply chain，供應鏈",
-    "supply path": "supply chain，供應鏈",
+    "White-box Testing": "白箱測試",
+    "White box Testing": "白箱測試",
+    "white-box validation": "白箱驗證",
+    "software supply paths": "軟體供應鏈",
+    "software supply chain": "軟體供應鏈",
+    "supply path": "供應鏈",
+    "supply chain": "供應鏈",
     "CrazyHunter": "Crazy Hunter",
     "UnitedHealth": "United Health",
     "OneBlood": "One Blood",
@@ -127,6 +131,7 @@ FILLER_RE = re.compile(
 )
 HALLUCINATION_RESIDUE_RE = re.compile(r"(媽媽我?|嗎嗎我|這老能喝|這老能吼|金普斯是死老|精普斯是死老|老能喝|老能吼)")
 DEMONSTRATIVE_FILLER_RE = re.compile(r"(這個|那個)(?=[\u4e00-\u9fff])")
+PHONETIC_ANNOTATION_RE = re.compile(r"\[:[^\]\n]{1,32}\]")
 
 CONTROL_RE = re.compile(
     r"<!-- BV26_META\n(?P<meta>.*?)\n-->\n\n"
@@ -200,6 +205,7 @@ def parse_meta(meta: str) -> tuple[dict[str, str], list[str]]:
 
 def clean_model_text(text: str) -> str:
     cleaned = text.replace("\u3000", " ")
+    cleaned = PHONETIC_ANNOTATION_RE.sub("", cleaned)
     cleaned = re.sub(r"[ \t]+", " ", cleaned)
     cleaned = re.sub(r"\s*\n\s*", " ", cleaned).strip()
     return cleaned
@@ -227,6 +233,7 @@ def normalize_text(text: str) -> str:
     for old, new in TERM_NORMALIZATIONS.items():
         normalized = normalized.replace(old, new)
     normalized = apply_pilot_review_conditioning(normalized)
+    normalized = normalized.replace(LEGACY_WHITE_BOX_TERM, PREFERRED_WHITE_BOX_TERM)
     normalized = sanitize_tts_text(normalized)
     normalized = re.sub(r"[ \t]+", " ", normalized).strip()
     return normalized
@@ -251,8 +258,8 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "當醫療器材、人工智慧系統、派克斯， H I S， E M R、雲端服務與廠商維護通道全部連在一起時，醫院要怎麼判斷此系統可以被信任。": "當醫療器材、人工智慧系統、派克斯，H I S，E M R、雲端服務與廠商維護通道全部連在一起時。醫院端需要判斷：系統是否可信。",
         "要怎麼判斷這個系統可以被信任。今天會": "需要判斷系統是否可信。今天會",
         "要怎麼判斷此系統可以被信任。今天會": "需要判斷系統是否可信。今天會",
-        "醫院會問：這個系統接到哪裡？誰可以登入？資料怎麼流？廠商如何維護？弱點誰負責？修補多久？修完怎麼證明？事件後如何調查與恢復？": "醫院會依序確認。此系統接到哪裡。誰可以登入。資料如何流動。廠商如何維護。弱點由誰負責。修補需要多久。修完之後如何證明。事件後如何調查與恢復。",
-        "醫院會問：此系統接到哪裡？誰可以登入？資料怎麼流？廠商如何維護？弱點誰負責？修補多久？修完怎麼證明？事件後如何調查與恢復？": "醫院會依序確認。此系統接到哪裡。誰可以登入。資料如何流動。廠商如何維護。弱點由誰負責。修補需要多久。修完之後如何證明。事件後如何調查與恢復。",
+        "醫院會問：這個系統接到哪裡？誰可以登入？資料怎麼流？廠商如何維護？弱點誰負責？修補多久？修完怎麼證明？事件後如何調查與恢復？": "醫院會依序確認：一，系統接到哪裡。二，誰可以登入。三，資料如何流動。四，廠商如何維護。五，弱點由誰負責。六，修補需要多久。七，修完之後如何證明。八，事件後如何調查與恢復。",
+        "醫院會問：此系統接到哪裡？誰可以登入？資料怎麼流？廠商如何維護？弱點誰負責？修補多久？修完怎麼證明？事件後如何調查與恢復？": "醫院會依序確認：一，系統接到哪裡。二，誰可以登入。三，資料如何流動。四，廠商如何維護。五，弱點由誰負責。六，修補需要多久。七，修完之後如何證明。八，事件後如何調查與恢復。",
         "掛號、檢查、影像、報告、病歷查詢、轉診、用藥與收費": "掛號流程、檢查流程、影像流程、報告流程、病歷查詢、轉診、用藥與收費",
         "戴康 DICOM 工作流程": "戴康影像流程",
         "戴康 DICOM router": "戴康路由器",
@@ -292,18 +299,36 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "Tesla 的 cloud infrastructure": "Tesla 的雲端基礎設施",
         "Pod 中存在 credential，使攻擊者能進一步存取 A W S 基礎設施": "Pod 裡的憑證外洩，使攻擊者能進一步存取 A W S 基礎設施",
         "cloud resource 進行 cryptocurrency mining": "雲端資源進行加密貨幣挖礦",
-        "faulty security content update": "CrowdStrike Falcon 安全內容更新",
+        "faulty security content update": "Crowd-Strike Falcon 安全內容更新",
+        "CrowdStrike Falcon 安全內容更新": "Crowd-Strike Falcon 安全內容更新",
+        "content update、 validator、解釋器、 endpoint crash": "內容更新、驗證器、解釋器、端點當機",
+        "validator": "驗證器",
+        "endpoint agent": "端點代理程式",
+        "endpoint crash": "端點當機",
+        "trust boundary": "信任邊界",
         "rollback 機制": "回滾機制",
         "rollback evidence": "回滾證據",
         "staged rollout": "分階段 rollout",
-        "test update validators and malformed inputs": "test update validators，以及異常輸入測試",
+        "test update validators and malformed inputs": "測試更新驗證器，以及異常輸入測試",
+        "test update validators，以及異常輸入測試": "測試更新驗證器，以及異常輸入測試",
+        "test update 驗證器s and 異常輸入": "測試更新驗證器，以及異常輸入測試",
         "treat update infrastructure": "threat update infrastructure",
         "treat update": "threat update",
         "threat update infrastructure as a trust boundary": "將更新基礎設施視為 trust boundary",
         "interpreter": "解釋器",
         "malformed inputs": "異常輸入",
-        "Security updates are also software supply chain，供應鏈 that require white box validation，白箱驗證.": "安全更新本身也是 software supply chain，供應鏈；因此需要白盒驗證。",
-        "Security updates are also software supply chain，供應鏈 that require 白盒驗證.": "安全更新本身也是 software supply chain，供應鏈；因此需要白盒驗證。",
+        "require 分階段 rollout and 回滾證據": "要具備分階段 rollout 與回滾證據",
+        "threat update infrastructure as a 信任邊界": "將更新基礎設施視為信任邊界",
+        "Security updates are also software supply chain，供應鏈 that require white box validation，白箱驗證.": "安全更新本身也是軟體供應鏈，因此需要白箱驗證。",
+        "Security updates are also software supply chain，供應鏈 that require 白箱驗證.": "安全更新本身也是軟體供應鏈，因此需要白箱驗證。",
+        "Security updates are also 軟體供應鏈 that require 白箱驗證.": "安全更新本身也是軟體供應鏈。因此需要白箱驗證。",
+        "安全更新本身也是 software supply chain，供應鏈；因此需要白箱驗證。": "安全更新本身也是軟體供應鏈。因此需要白箱驗證。",
+        "資安工具與資安更新本身也是 supply chain，供應鏈": "資安工具與資安更新本身也是供應鏈",
+        "cyber devices": "資安醫療器材",
+        "medical device": "醫療器材",
+        "endpoint 同時吃到同一個更新": "端點設備同時接收同一個更新",
+        "critical service": "關鍵服務",
+        "remote management agent": "遠端管理代理程式",
         "並管理 軟體物料清單，S B O M 與元件風險": "並管理軟體物料清單，英文四個字母，S，B，O，M，以及元件風險",
         "並管理 軟體物料清單， S B O M 與元件風險": "並管理軟體物料清單，英文四個字母，S，B，O，M，以及元件風險",
         "F D and C Act Section 五 二 四 B": "F D C Act，Section 五二四，英文字母 B 款",
@@ -313,15 +338,15 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "F D and C Act Section五、二、四，B": "F D C Act，Section 五二四，英文字母 B 款",
         "F D A、T F D A、五、二、四，B、S B O M": "F D A，T F D A，五二四，英文字母 B 款，軟體物料清單，S B O M",
         "F D A， T F D A，五、二、四，B， S B O M": "F D A，T F D A，五二四，英文字母 B 款，軟體物料清單，S B O M",
-        "White box Testing 與 system review": "白盒測試與系統審查",
-        "White box testing，白箱測試 與 system review": "白盒測試與系統審查",
-        "White box testing，白箱測試與滲透測試": "白盒測試與滲透測試",
-        "白箱測試從內部程式": "白盒測試，從程式碼內部",
-        "白箱測試": "白盒測試",
-        "白箱審查": "白盒審查",
-        "白箱證據": "白盒證據",
-        "白箱可以證明": "白盒證據可以證明",
-        "白箱討論點": "白盒測試討論點",
+        "White box Testing 與 system review": "白箱測試與系統審查",
+        "White box testing，白箱測試 與 system review": "白箱測試與系統審查",
+        "White box testing，白箱測試與滲透測試": "白箱測試與滲透測試",
+        "白箱測試從內部程式": "白箱測試，從程式碼內部",
+        "白箱測試": "白箱測試",
+        "白箱審查": "白箱審查",
+        "白箱證據": "白箱證據",
+        "白箱可以證明": "白箱證據可以證明",
+        "白箱討論點": "白箱測試討論點",
         "派克斯 或 A I 派克斯": "派克斯，或 A I 派克斯",
         "戴康 DICOM router": "戴康路由器",
         "K eight S，A P I，dashboard，internal service": "K 八 S 管理介面，dashboard，internal service",
@@ -332,6 +357,8 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "root cause": "根本原因",
         "logging 與 recovery": "logging 日誌與 recovery 恢復",
         "pre-test 與 post-test question": "前測 pre-test 與後測 post-test question",
+        "最後證據要能回到 lifecycle trust。": "所有證據最後要回到 life cycle trust。",
+        "醫療資安是一條由臨床連續性、工程控制、法規證據與上市後維護共同形成的信任鏈。": "醫療資安的信任鏈，由臨床連續性、工程控制、法規證據，以及上市後的持續維護共同形成。",
         "finding 要能推動修補": "finding，發現事項，要能推動修補",
         "exploitability 與 control evidence": "可利用性與 control evidence，控制證據",
         "residual risk": "residual risk，剩餘風險",
@@ -344,6 +371,8 @@ def apply_pilot_review_conditioning(text: str) -> str:
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
+    text = text.replace("test update 驗證器s and 異常輸入", "測試更新驗證器，以及異常輸入測試")
+    text = text.replace("test update 驗證器s，以及異常輸入測試", "測試更新驗證器，以及異常輸入測試")
     text = re.sub(
         r"當醫療器材、人工智慧系統、派克斯.*?醫院要怎麼判斷此系統可以被信任。",
         "當醫療器材、人工智慧系統、派克斯，H I S，E M R、雲端服務與廠商維護通道全部連在一起時。醫院端需要判斷：系統是否可信。",
@@ -351,7 +380,7 @@ def apply_pilot_review_conditioning(text: str) -> str:
     )
     text = re.sub(
         r"醫院會問：此系統接到哪裡？\s*誰可以登入？\s*資料怎麼流？\s*廠商如何維護？\s*弱點誰負責？\s*修補多久？\s*修完怎麼證明？\s*事件後如何調查與恢復？",
-        "醫院會依序確認。此系統接到哪裡。誰可以登入。資料如何流動。廠商如何維護。弱點由誰負責。修補需要多久。修完之後如何證明。事件後如何調查與恢復。",
+        "醫院會依序確認：一，系統接到哪裡。二，誰可以登入。三，資料如何流動。四，廠商如何維護。五，弱點由誰負責。六，修補需要多久。七，修完之後如何證明。八，事件後如何調查與恢復。",
         text,
     )
     text = text.replace(
@@ -362,7 +391,11 @@ def apply_pilot_review_conditioning(text: str) -> str:
     text = text.replace("醫院要怎麼判斷此系統可以被信任", "醫院端需要判斷：系統是否可信")
     text = text.replace(
         "醫院會問：此系統接到哪裡？ 誰可以登入？ 資料怎麼流？ 廠商如何維護？ 弱點誰負責？ 修補多久？ 修完怎麼證明？ 事件後如何調查與恢復？",
+        "醫院會依序確認：一，系統接到哪裡。二，誰可以登入。三，資料如何流動。四，廠商如何維護。五，弱點由誰負責。六，修補需要多久。七，修完之後如何證明。八，事件後如何調查與恢復。",
+    )
+    text = text.replace(
         "醫院會依序確認。此系統接到哪裡。誰可以登入。資料如何流動。廠商如何維護。弱點由誰負責。修補需要多久。修完之後如何證明。事件後如何調查與恢復。",
+        "醫院會依序確認：一，系統接到哪裡。二，誰可以登入。三，資料如何流動。四，廠商如何維護。五，弱點由誰負責。六，修補需要多久。七，修完之後如何證明。八，事件後如何調查與恢復。",
     )
     text = text.replace("application endpoint，", "application endpoint。")
     text = text.replace("應用程式介面、 dashboard、 internal service", "應用程式介面，dashboard，internal service")
@@ -486,11 +519,11 @@ def split_long_chunks(chunks: list[str], max_chars: int) -> list[str]:
 
 def split_subclips(text: str, output_prefix: str = "") -> list[str]:
     if output_prefix == "cde_full_01_opening_positioning_crazyhunter_entry_case":
-        return split_long_chunks([text], 80)
+        return split_long_chunks([text], 70)
 
     if output_prefix == "cde_full_26_shared_close_test_anchors":
-        closing_clips = split_long_chunks([text], 80)
-        if 10 <= len(closing_clips) <= 16 and all(len(item) <= 100 for item in closing_clips):
+        closing_clips = split_long_chunks([text], 45)
+        if 12 <= len(closing_clips) <= 24 and all(len(item) <= 90 for item in closing_clips):
             return closing_clips
 
     sentences = split_sentences(text)
@@ -500,8 +533,8 @@ def split_subclips(text: str, output_prefix: str = "") -> list[str]:
             return clips
         target_count = 6
     elif output_prefix == "cde_full_20_crowdstrike_update_524b":
-        clips = split_long_chunks([text], 130)
-        if 7 <= len(clips) <= 12 and all(len(item) <= 170 for item in clips):
+        clips = split_long_chunks([text], 90)
+        if 10 <= len(clips) <= 20 and all(len(item) <= 120 for item in clips):
             return clips
         target_count = 5
     elif len(text) <= 850:

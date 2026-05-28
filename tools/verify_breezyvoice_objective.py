@@ -30,6 +30,8 @@ FORBIDDEN_MODEL_TOKENS = ["BV26", "[BV26", "[/BV26]", "<!--", "-->", "```", "\n#
 MAX_SUBCLIPS_BY_PARENT = {
     # cde01 is intentionally finer after the returned loop/filler review.
     "cde_full_01_opening_positioning_crazyhunter_entry_case": 24,
+    "cde_full_20_crowdstrike_update_524b": 20,
+    "cde_full_26_shared_close_test_anchors": 24,
 }
 DEFAULT_MAX_SUBCLIPS_PER_PARENT = 16
 

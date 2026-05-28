@@ -168,9 +168,9 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
     asr_dir = review_dir / "asr"
     copy_file(asr_dir / "cde-2026-breezyvoice-pilot-stitched-v1.txt", package / "review/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt")
     for log_name in [
-        "breeze_asr25_after_partial_accept_repair_final6b.log",
-        "breeze_asr25_after_partial_accept_repair_final6b.json",
-        "breeze_asr25_after_partial_accept_repair_final6b_timestamped.txt",
+        "breeze_asr25_after_mixed_gate_repair_final7.log",
+        "breeze_asr25_after_mixed_gate_repair_final7.json",
+        "breeze_asr25_after_mixed_gate_repair_final7_timestamped.txt",
     ]:
         log_path = asr_dir / log_name
         if log_path.exists():
@@ -178,53 +178,17 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
 
     runtime_dir = LOCAL_ROOT / f"runtime/{VERSION}"
     for log_name in [
-        "pilot_reference_after_partial_accept_repair_final6b_cde20.log",
-        "pilot_reference_after_partial_accept_repair_final6.log",
-        "pacing_partial_accept_repair_final6.log",
-        "pilot_reference_after_total_reject_repair_final5b.log",
-        "pilot_reference_after_total_reject_repair_final5.log",
-        "pacing_total_reject_repair_final5b.log",
-        "tail_trim_total_reject_repair_final5b.log",
-        "pilot_reference_after_confident_speech_final4.log",
-        "pacing_confident_speech_final4.log",
-        "pilot_reference_after_confident_speech_final3.log",
-        "pilot_reference_after_returned_review_final2.log",
-        "pacing_returned_review_final2.log",
-        "pilot_reference_cuda_ort_after_clause90.log",
-        "pilot_reference_cuda_ort_after_clause_split.log",
-        "pilot_reference_after_returned_review_final.log",
-        "pilot_reference_after_returned_review_repair_rerun.log",
-        "pilot_reference_after_returned_review_repair.log",
-        "pilot_gpu_render_with_reference_audio_cuda_ort_after_close_split.log",
-        "pilot_gpu_render_with_reference_audio_cuda_ort.log",
-        "pilot_reference_cuda_provider_smoke.log",
-        "pilot_gpu_render_with_reference_audio.log",
+        "pilot_reference_after_mixed_gate_repair_final7.log",
+        "tail_trim_20260528-mixed-gate-final7.log",
+        "last_render_plan.csv",
     ]:
         log_path = runtime_dir / log_name
         if log_path.exists():
             copy_file(log_path, package / "review/runtime" / log_name)
     telemetry_dir = runtime_dir / "telemetry"
     for telemetry_name in [
-        "pilot_reference_after_partial_accept_repair_final6b_cde20_summary.json",
-        "pilot_reference_after_partial_accept_repair_final6b_cde20_gpu.jsonl",
-        "pilot_reference_after_partial_accept_repair_final6_summary.json",
-        "pilot_reference_after_partial_accept_repair_final6_gpu.jsonl",
-        "pilot_reference_after_total_reject_repair_final5b_summary.json",
-        "pilot_reference_after_total_reject_repair_final5b_gpu.jsonl",
-        "pilot_reference_after_total_reject_repair_final5_summary.json",
-        "pilot_reference_after_total_reject_repair_final5_gpu.jsonl",
-        "pilot_reference_after_confident_speech_final4_summary.json",
-        "pilot_reference_after_confident_speech_final4_gpu.jsonl",
-        "pilot_reference_after_returned_review_final2_summary.json",
-        "pilot_reference_after_returned_review_final2_gpu.jsonl",
-        "pilot_reference_after_returned_review_final_summary.json",
-        "pilot_reference_after_returned_review_final_gpu.jsonl",
-        "pilot_reference_after_returned_review_repair_rerun_summary.json",
-        "pilot_reference_after_returned_review_repair_rerun_gpu.jsonl",
-        "pilot_reference_cuda_ort_after_clause90_summary.json",
-        "pilot_reference_cuda_ort_after_clause90_gpu.jsonl",
-        "pilot_reference_cuda_ort_after_clause_split_summary.json",
-        "pilot_reference_cuda_ort_after_clause_split_gpu.jsonl",
+        "pilot_reference_after_mixed_gate_repair_final7_summary.json",
+        "pilot_reference_after_mixed_gate_repair_final7_gpu.jsonl",
     ]:
         telemetry_path = telemetry_dir / telemetry_name
         if telemetry_path.exists():
@@ -352,7 +316,7 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
    - F D C Act，Section 五二四，英文字母 B 款
    - Channel File 二九一
    - Log four Shell
-   - 白盒測試 / 白盒驗證
+   - 白箱測試 / 白箱驗證
    - 派克斯停機時間 / 臨床連續性 / evidence chain
 
 3. 語速與 pacing：
@@ -462,9 +426,10 @@ Important: ASR is generated with Breeze-ASR-25 and is only an auxiliary signal. 
 
 Special attention:
 
-- The latest returned human review accepted `cde_full_26_shared_close_test_anchors`; that audio is preserved and included as the accepted continuity baseline.
-- `cde_full_01_opening_positioning_crazyhunter_entry_case`, `cde_full_16_k8s_review_controls`, and `cde_full_20_crowdstrike_update_524b` were repaired and rerendered for this package after the partial-accept review.
-- `cde_full_16_k8s_review_controls` was previously rejected for runtime compression around 0.73. The current package applies finer subclip splitting plus a reproducible post-synthesis `atempo=0.88` pacing override; use the current WAV, current review CSV, and listening judgement rather than the old runtime.
+- The latest returned human review accepted `cde_full_16_k8s_review_controls`; that audio is preserved and included as the accepted continuity baseline.
+- `cde_full_01_opening_positioning_crazyhunter_entry_case`, `cde_full_20_crowdstrike_update_524b`, and `cde_full_26_shared_close_test_anchors` were repaired and rerendered for this package after the mixed gate review.
+- The model-facing Chinese white-box terminology is standardized as `白箱`. Listen especially for `白箱測試`, `白箱驗證`, `白箱證據`, and `白箱審查`.
+- `cde_full_16_k8s_review_controls` was previously rejected for runtime compression around 0.73 and is currently accepted by human review; use the current WAV and current review CSV rather than older ASR or runtime logs.
 - The model-facing text now removes low-confidence fillers such as `這個`, `那個`, `嗯`, `呃`, explicit breath cues, and known hallucination residues before synthesis. Small confident natural vocalization is acceptable; hesitant filler delivery is not.
 - The ASR machine check uses Breeze-ASR-25 only. It is an auxiliary signal and can still miss or distort technical terms.
 
