@@ -168,6 +168,7 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
     asr_dir = review_dir / "asr"
     copy_file(asr_dir / "cde-2026-breezyvoice-pilot-stitched-v1.txt", package / "review/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt")
     for log_name in [
+        "pilot_whisper_tiny_after_confident_speech_final4.log",
         "pilot_whisper_tiny_after_reference_cuda_ort_clause90.log",
         "pilot_whisper_tiny_after_round2_repair.log",
         "pilot_whisper_tiny_after_expert_conditioning.log",
@@ -179,8 +180,16 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
 
     runtime_dir = LOCAL_ROOT / f"runtime/{VERSION}"
     for log_name in [
+        "pilot_reference_after_confident_speech_final4.log",
+        "pacing_confident_speech_final4.log",
+        "pilot_reference_after_confident_speech_final3.log",
+        "pilot_reference_after_returned_review_final2.log",
+        "pacing_returned_review_final2.log",
         "pilot_reference_cuda_ort_after_clause90.log",
         "pilot_reference_cuda_ort_after_clause_split.log",
+        "pilot_reference_after_returned_review_final.log",
+        "pilot_reference_after_returned_review_repair_rerun.log",
+        "pilot_reference_after_returned_review_repair.log",
         "pilot_gpu_render_with_reference_audio_cuda_ort_after_close_split.log",
         "pilot_gpu_render_with_reference_audio_cuda_ort.log",
         "pilot_reference_cuda_provider_smoke.log",
@@ -191,6 +200,14 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
             copy_file(log_path, package / "review/runtime" / log_name)
     telemetry_dir = runtime_dir / "telemetry"
     for telemetry_name in [
+        "pilot_reference_after_confident_speech_final4_summary.json",
+        "pilot_reference_after_confident_speech_final4_gpu.jsonl",
+        "pilot_reference_after_returned_review_final2_summary.json",
+        "pilot_reference_after_returned_review_final2_gpu.jsonl",
+        "pilot_reference_after_returned_review_final_summary.json",
+        "pilot_reference_after_returned_review_final_gpu.jsonl",
+        "pilot_reference_after_returned_review_repair_rerun_summary.json",
+        "pilot_reference_after_returned_review_repair_rerun_gpu.jsonl",
         "pilot_reference_cuda_ort_after_clause90_summary.json",
         "pilot_reference_cuda_ort_after_clause90_gpu.jsonl",
         "pilot_reference_cuda_ort_after_clause_split_summary.json",
@@ -319,7 +336,7 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
 
 2. 關鍵術語是否穩定：
    - K eight S
-   - FD&C Act Section 524B / 五二四 B
+   - FD&C Act Section 524B / 五、二、四，B
    - Channel File 二九一
    - Log four Shell
    - White box Testing
@@ -327,7 +344,7 @@ def expert_prompt(summary: dict[str, object], pilot_subclip_count: int) -> str:
 
 3. 語速與 pacing：
    - 是否像 80 分鐘講課，而不是太趕的逐字稿朗讀？
-   - 特別注意 `cde_full_16_k8s_review_controls`，目前機器 gate 標示為 `needs_pacing_review`，因為 runtime ratio 約 0.73。
+   - 特別注意 `cde_full_16_k8s_review_controls`：前一輪人工審查曾指出 runtime ratio 約 0.73 與語速壓縮；本包已套用細切 subclip 與 post-synthesis pacing override，請以目前音檔實聽結果判斷是否已修復。
 
 4. 長句聽感：
    - 是否疲勞？
@@ -432,8 +449,9 @@ Important: ASR is only an auxiliary signal. Judge by listening to the WAV files.
 
 Special attention:
 
-- `cde_full_16_k8s_review_controls` is currently marked `needs_pacing_review` because its runtime ratio is about 0.73.
-- The ASR machine check found no forbidden control markup, but it still missed or distorted several technical terms.
+- `cde_full_16_k8s_review_controls` was previously rejected for runtime compression around 0.73. The current package applies finer subclip splitting plus a reproducible post-synthesis pacing override; use the current WAV, current review CSV, and listening judgement rather than the old runtime.
+- The model-facing text now removes low-confidence fillers such as `這個`, `那個`, `嗯`, `呃`, explicit breath cues, and known hallucination residues before synthesis. Small confident natural vocalization is acceptable; hesitant filler delivery is not.
+- The ASR machine check is only an auxiliary signal and can miss or distort technical terms.
 
 ## How To Fill The Review
 

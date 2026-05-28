@@ -38,11 +38,13 @@ PILOT_PREFIXES = [
 
 TERM_NORMALIZATIONS = {
     "CDE": "C D E",
-    "AI": "A I",
+    "AI": "人工智慧",
     "ASR": "A S R",
     "TTS": "T T S",
     "TFDA": "T F D A",
     "FDA": "F D A",
+    "510(k)": "五一零 K",
+    "510(K)": "五一零 K",
     "SaMD": "S A M D",
     "SBOM": "S B O M",
     "SCA": "S C A",
@@ -65,11 +67,11 @@ TERM_NORMALIZATIONS = {
     "K8S": "K eight S",
     "CI/CD": "C I C D",
     "AWS": "A W S",
-    "FD&C Act Section 524B": "F D and C Act Section 五二四 B",
-    "FD&C Act，Section 524B": "F D and C Act，Section 五二四 B",
-    "FD&C Act Section 五二四 B": "F D and C Act Section 五二四 B",
+    "FD&C Act Section 524B": "F D and C Act Section 五、二、四，B",
+    "FD&C Act，Section 524B": "F D and C Act，Section 五、二、四，B",
+    "FD&C Act Section 五二四 B": "F D and C Act Section 五、二、四，B",
     "FD&C Act": "F D and C Act",
-    "524B": "五二四 B",
+    "524B": "五、二、四，B",
     "Log4Shell": "Log four Shell",
     "MOVEit Transfer": "Move it Transfer",
     "Channel File 291": "Channel File 二九一",
@@ -117,8 +119,13 @@ STAGE_CUE_RE = re.compile(
     r"\s*(\)|）|\]|】|\*)",
     re.I,
 )
-FILLER_RE = re.compile(r"(^|[，。！？；：、\s])(?:嗯|呃|呃啊|啊|阿哈|對啊|呵呵呵|呵呵|哈哈哈|哈哈)(?=([，。！？；：、\s]|$))")
+FILLER_RE = re.compile(
+    r"(^|[，。！？；：、\s])"
+    r"(?:嗯|呃|呃啊|啊|阿哈|對啊|這個|那個|呵呵呵|呵呵|哈哈哈|哈哈|吱吱嗚嗚|支支吾吾)"
+    r"(?=([，。！？；：、\s]|$))"
+)
 HALLUCINATION_RESIDUE_RE = re.compile(r"(媽媽我?|嗎嗎我|這老能喝|這老能吼|金普斯是死老|精普斯是死老|老能喝|老能吼)")
+DEMONSTRATIVE_FILLER_RE = re.compile(r"(這個|那個)(?=[\u4e00-\u9fff])")
 
 CONTROL_RE = re.compile(
     r"<!-- BV26_META\n(?P<meta>.*?)\n-->\n\n"
@@ -201,6 +208,7 @@ def sanitize_tts_text(text: str) -> str:
     """Remove stage-cue and filler contamination from model-facing text."""
     sanitized = STAGE_CUE_RE.sub("，", text)
     sanitized = HALLUCINATION_RESIDUE_RE.sub("", sanitized)
+    sanitized = DEMONSTRATIVE_FILLER_RE.sub(lambda match: "此" if match.group(1) == "這個" else "該", sanitized)
     previous = None
     while sanitized != previous:
         previous = sanitized
@@ -231,22 +239,47 @@ def apply_pilot_review_conditioning(text: str) -> str:
     replacements = {
         "P A C S、H I S、E M R": "派克斯，H I S，E M R",
         "派克斯、H I S、E M R": "派克斯，H I S，E M R",
+        "人工智慧 系統": "人工智慧系統",
+        "醫療 人工智慧": "醫療人工智慧",
+        "醫療影像 人工智慧": "醫療影像人工智慧",
+        "人工智慧 派克斯": "人工智慧派克斯",
+        "掛號、檢查、影像、報告、病歷查詢、轉診、用藥與收費": "掛號流程、檢查流程、影像流程、報告流程、病歷查詢、轉診、用藥與收費",
         "戴康 DICOM 工作流程": "戴康 DICOM 影像流程",
         "戴康 DICOM router": "戴康 DICOM router",
-        "verify R B A C、service accounts、namespace isolation": "verify，R B A C，service accounts，namespace isolation",
+        "verify R B A C、service accounts、namespace isolation": "驗證，R B A C。再看 service accounts。再看 namespace isolation",
+        "第二，要 verify， R B A C， service accounts， namespace isolation。": "第二，要驗證 R B A C。先看 service accounts。再看 namespace isolation。",
+        "每個 workload 的權限是否最小化？ service account 是否被共用？ namespace 是否真的隔離？": "每個 workload 的權限是否最小化？服務帳號是否被共用？namespace 是否真的隔離？",
+        "service account 是否被共用": "服務帳號是否被共用",
         "secrets handling and cloud credential exposure": "secrets handling，以及 cloud credential exposure",
+        "Secret 是否被放在 environment variable？是否被寫進 image？ C I C D variables 是否外洩？": "Secret 是否被放在 environment variable 裡？是否被寫進 image？C I 與 C D 變數是否外洩？",
+        "C I C D variables 是否外洩": "C I 與 C D 變數是否外洩",
         "Network Policy、ingress rules、exposed services": "Network Policy，ingress rules，exposed services",
-        "application endpoint，K eight S A P I、dashboard、internal service": "application endpoint，K eight S，A P I，dashboard，internal service",
+        "不是只有 application endpoint， Kubernetes API， dashboard， internal service 也都可能成為攻擊面。": "不是只有 application endpoint。Kubernetes API、dashboard、internal service，也都可能成為攻擊面。",
+        "application endpoint，K eight S A P I、dashboard、internal service": "application endpoint，Kubernetes API，dashboard，internal service",
+        "image provenance、 container privileges、 admission controls": "image provenance，container privileges，admission controls",
+        "哪個 pod、哪個 service account、哪個 A P I call": "哪一個 Pod、哪一個服務帳號、哪一個 API call",
         "In Kubernetes, the security boundary is not the container. The real boundary is identity, configuration, network policy, and deployment governance.": "在 Kubernetes 裡，security boundary 不是 container。真正的 boundary 是 identity、configuration、network policy 與 deployment governance。",
         "Tesla Kubernetes Console Cryptojacking": "Tesla 雲端基礎設施加密貨幣挖礦案例",
+        "Tesla 雲端基礎設施加密貨幣挖礦案例 這個真實事件": "Tesla 雲端基礎設施加密貨幣挖礦這個真實事件",
         "exposed K eight S console、pod credentials、A W S access、cryptomining workload": "exposed K eight S console，pod credentials，A W S access，crypto mining workload",
+        "exposed Kubernetes console， pod credentials， A W S access， crypto mining workload": "暴露在外、未受保護的 Kubernetes 管理者主控台，pod credentials，A W S access，crypto mining workload",
+        "exposed Kubernetes console": "暴露在外、未受保護的 Kubernetes 管理者主控台",
+        "Kubernetes administrative console": "Kubernetes 管理者主控台",
         "Tesla 的 cloud infrastructure": "Tesla 的雲端基礎設施",
+        "Pod 中存在 credential，使攻擊者能進一步存取 A W S 基礎設施": "Pod 裡的憑證外洩，使攻擊者能進一步存取 A W S 基礎設施",
         "cloud resource 進行 cryptocurrency mining": "雲端資源進行加密貨幣挖礦",
         "faulty security content update": "CrowdStrike Falcon 安全內容更新",
+        "test update validators and malformed inputs": "test update validators，以及異常輸入測試",
+        "malformed inputs": "異常輸入",
         "Security updates are also software supply chain，供應鏈 that require white box validation，白箱驗證.": "Security updates are also software supply chain，供應鏈；they require white box validation，白箱驗證。",
-        "F D and C Act Section 五二四 B": "F D and C Act，Section 五二四 B",
-        "F D A、T F D A、五二四 B、S B O M": "F D A，T F D A，五二四 B，S B O M",
-        "White box Testing 與 system review": "White box testing，白箱測試，與 system review",
+        "F D and C Act Section 五 二 四 B": "F D and C Act，Section 五、二、四，B",
+        "F D and C Act Section 五二四 B": "F D and C Act，Section 五、二、四，B",
+        "F D and C Act，Section 五二四 B": "F D and C Act，Section 五、二、四，B",
+        "F D and C Act， Section 五、二、四，B": "F D and C Act，Section 五、二、四，B",
+        "F D A、T F D A、五、二、四，B、S B O M": "F D A，T F D A，五、二、四，B，S B O M",
+        "F D A， T F D A，五、二、四，B， S B O M": "F D A，T F D A，五、二、四，B，S B O M",
+        "White box Testing 與 system review": "白箱測試與系統審查",
+        "White box testing，白箱測試 與 system review": "白箱測試與系統審查",
         "White box testing，白箱測試與滲透測試": "White box testing，白箱測試，與滲透測試",
         "白箱測試從內部程式": "White box testing，白箱測試，從內部程式",
         "白箱審查": "White box review，白箱審查",
@@ -255,7 +288,14 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "派克斯 或 A I 派克斯": "派克斯，或 A I 派克斯",
         "戴康 DICOM router": "戴康 DICOM 路由器",
         "K eight S，A P I，dashboard，internal service": "Kubernetes API，dashboard，internal service",
-        "exposed K eight S console": "exposed Kubernetes console",
+        "exposed K eight S console": "暴露在外、未受保護的 Kubernetes 管理者主控台",
+        "root cause、 deployment condition、 remediation、 retest、 logging 與 recovery": "root cause 根因、deployment condition 部署條件、remediation 修補、retest 重測、logging 日誌與 recovery 恢復",
+        "root cause、 deployment condition、 remediation、 retest、": "root cause 根因、deployment condition 部署條件、remediation 修補、retest 重測、",
+        "logging 與 recovery": "logging 日誌與 recovery 恢復",
+        "pre-test 與 post-test question": "前測 pre-test 與後測 post-test question",
+        "finding 要能推動修補": "finding，發現事項，要能推動修補",
+        "exploitability 與 control evidence": "可利用性與 control evidence，控制證據",
+        "residual risk": "residual risk，剩餘風險",
         "請各位把這三題帶回今天的主軸：": "最後請把這三題帶回今天的主軸：",
     }
     for old, new in replacements.items():
@@ -375,16 +415,27 @@ def split_long_chunks(chunks: list[str], max_chars: int) -> list[str]:
 
 
 def split_subclips(text: str, output_prefix: str = "") -> list[str]:
+    if output_prefix == "cde_full_01_opening_positioning_crazyhunter_entry_case":
+        clips = split_long_chunks([text], 175)
+        if 4 <= len(clips) <= 8 and all(len(item) <= 220 for item in clips):
+            return clips
+
     if output_prefix == "cde_full_26_shared_close_test_anchors":
-        anchored = split_by_markers(text, ["第一題問：", "第二題問：", "第三題問："])
-        if anchored:
-            anchored = split_long_chunks(anchored, 90)
-            if 2 <= len(anchored) <= 14 and all(len(item) <= 140 for item in anchored):
-                return anchored
+        closing_clips = split_long_chunks([text], 80)
+        if 10 <= len(closing_clips) <= 16 and all(len(item) <= 100 for item in closing_clips):
+            return closing_clips
 
     sentences = split_sentences(text)
-    if output_prefix in {"cde_full_16_k8s_review_controls", "cde_full_20_crowdstrike_update_524b"}:
-        target_count = 4
+    if output_prefix == "cde_full_16_k8s_review_controls":
+        clips = split_long_chunks([text], 170)
+        if 5 <= len(clips) <= 8 and all(len(item) <= 220 for item in clips):
+            return clips
+        target_count = 6
+    elif output_prefix == "cde_full_20_crowdstrike_update_524b":
+        clips = split_long_chunks([text], 170)
+        if 4 <= len(clips) <= 10 and all(len(item) <= 220 for item in clips):
+            return clips
+        target_count = 5
     elif len(text) <= 850:
         target_count = 2
     elif len(text) <= 1100:

@@ -128,7 +128,7 @@ def main() -> int:
     bad_parent_counts = {
         prefix: len(items)
         for prefix, items in subclips_by_parent.items()
-        if not (2 <= len(items) <= 14)
+        if not (2 <= len(items) <= 16)
     }
 
     pilot_prefixes = [row["output_prefix"] for row in pilot_manifest]
