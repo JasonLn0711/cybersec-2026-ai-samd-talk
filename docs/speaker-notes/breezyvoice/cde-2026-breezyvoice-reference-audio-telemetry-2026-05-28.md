@@ -110,3 +110,54 @@ max `33.128 s`.
 - Future full-length attempts should use telemetry by default and should keep
   prompt-mode subclip limits tighter than no-reference/default mode.
 
+## Returned-Review Repair Addendum
+
+`EXP-20260528-14` supersedes the earlier `25`-subclip pilot for the next human
+listening gate. It responds to the returned expert review and the added
+confident-speech rule: the model-facing text now removes low-confidence fillers
+such as `這個`, `那個`, `嗯`, `呃`, explicit breath cues, laughter strings,
+`吱吱嗚嗚` / `支支吾吾`, and known hallucination residues before synthesis.
+
+The final4 prompt-mode run used the local reference audio and RTX 5080:
+
+| Run | Exit | Rendered | Wall time | Avg GPU power | GPU Wh estimate | Avg GPU util | Peak GPU memory | Notes |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `pilot_reference_after_confident_speech_final4` | `0` | `38` | `494.384 s` | `203.473 W` | `27.942732 Wh` | `70.164%` | `14016 MB` | Completed all current pilot subclips in prompt mode after returned-review conditioning. |
+
+The current pilot split is:
+
+| Parent chunk | Subclips | Stitched audio | Target | Ratio | Notes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `cde_full_01_opening_positioning_crazyhunter_entry_case` | `8` | `233.84 s` | `185 s` | `1.26` | Slower opening is acceptable only if expert listening confirms authority and no looping. |
+| `cde_full_16_k8s_review_controls` | `7` | `182.67 s` | `190 s` | `0.96` | Includes local-only post-synthesis `atempo=0.76` pacing override after synthesis. |
+| `cde_full_20_crowdstrike_update_524b` | `9` | `168.85 s` | `190 s` | `0.89` | Still requires expert listening for CrowdStrike, malformed input, supply-chain, and 524B boundaries. |
+| `cde_full_26_shared_close_test_anchors` | `14` | `169.72 s` | `155 s` | `1.09` | Short split protects against close-section fatigue; expert should judge stitch naturalness. |
+
+Interrupted or superseded repair attempts are retained in the experiment log:
+
+- `pilot_reference_after_returned_review_repair`: interrupted when stdout
+  showed `FDA 510(k)` could become `五百一十(k)`; fixed by mapping `510(k)` /
+  `510(K)` to `五一零 K`.
+- `pilot_reference_after_returned_review_repair_rerun`: interrupted when
+  whitespace-only `五 二 四 B` collapsed toward `五二四B`; fixed with
+  punctuation mapping `五、二、四，B`.
+- `pilot_reference_after_returned_review_final`: completed but was superseded
+  because the close split still relied on a fallback path.
+- `pilot_reference_after_confident_speech_final3`: interrupted conservatively
+  after runtime printed internal zhuyin annotations; follow-up verified these
+  annotations were not present in normalized model inputs.
+
+`tools/verify_breezyvoice_objective.py --write-report` exits `2` with
+`overall_status=gated_waiting_human_review`, and
+`tools/check_breezyvoice_full_render_gate.py --write-report` exits `2` with
+`status=full_render_blocked`. The current human-review package is:
+
+```text
+/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+```
+
+Package validation: `1` full WAV, `4` parent WAVs, `38` subclip WAVs, `4`
+normalized segment text files, `38` subclip text files, expert prompt, README,
+and expert CSV form. The full 80-minute render remains blocked until all four
+parent chunks receive explicit human `accept` decisions.

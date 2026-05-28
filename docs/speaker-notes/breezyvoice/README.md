@@ -59,7 +59,8 @@ python3 tools/build_breezyvoice_pilot_correction_matrix.py
 The setup script keeps the official BreezyVoice clone and Python venv under `.local/`, then replaces the official `torch==2.3.1+cu118` runtime with a CUDA `12.8` PyTorch build that supports RTX 5080 / `sm_120`.
 
 `tools/prepare_breezyvoice_render_package.py` applies model-facing sanitation
-before subclip generation: known stage cues, filler tokens, and hallucination
+before subclip generation: known stage cues, filler tokens, low-confidence
+demonstratives such as `這個` / `那個`, hesitant sounds, and hallucination
 residue are removed from TTS inputs while the frozen source stays unchanged.
 The generated pilot template overwrites pilot WAVs so revised text cannot be
 silently paired with stale audio.
@@ -70,6 +71,20 @@ should be run through `tools/run_with_gpu_telemetry.py` so stdout, GPU samples,
 wall time, peak memory, and GPU-only Wh estimates are captured with the render.
 The current reference-audio telemetry appendix is
 `cde-2026-breezyvoice-reference-audio-telemetry-2026-05-28.md`.
+
+Current pilot package after the returned expert review and confident-speech
+sanitization is `EXP-20260528-14`: `119` full-session subclips, `38` pilot
+subclips, prompt mode with the local reference audio, and a reproducible
+post-synthesis `atempo=0.76` pacing override only for
+`cde_full_16_k8s_review_controls`. The exported human-review package is:
+
+```text
+/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+```
+
+The full render remains closed because the final4 pilot has no returned human
+acceptance decisions yet.
 
 Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, `pilot_machine_review.md`, `pilot_listening_review.csv`, `render_review_log.csv`, `pilot_correction_matrix.md`, and `full_batch_gate.json`. Rebuild `render_review_log.csv` and `pilot_correction_matrix.md` after any stitch, expert-review ingestion, or rerender so runtime, issue, fix, accepted status, and stop-gate source stay aligned.
 

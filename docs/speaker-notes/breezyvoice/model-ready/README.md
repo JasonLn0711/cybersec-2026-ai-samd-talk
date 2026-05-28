@@ -30,16 +30,24 @@ The `output_prefix` column is stable so individual clips can be regenerated with
 For an `80` minute controlled render, use `cde-2026-breezyvoice-80min-engineered-transcript-v1-zh-tw.md` as the orchestrator-facing draft. Strip `BV26` / `BV26_META` markup before sending text into the model, and keep the stable `output_prefix` values for per-row regeneration. Reference audio is optional; if no prompt WAV is present, run pilot rendering in no-reference / default-voice mode. The local runner path for that policy is `tools/breezyvoice_render_subclips.py --voice-mode default`.
 
 The render package generator keeps the v1 source frozen and applies only
-model-facing sanitation: known stage cues, filler tokens, and hallucination
-residue are removed from generated TTS inputs. After the reference-audio CUDA
-pilot repair, the plan uses `106` full-session subclips and `25` pilot subclips;
-the prompt-mode close is split into conservative clause-level subclips to avoid
-zero-shot long-sentence attention failures. The pilot template overwrites pilot
-WAVs to avoid pairing revised text with stale audio.
+model-facing sanitation: known stage cues, filler tokens, low-confidence
+demonstratives such as `這個` / `那個`, hesitant sounds, and hallucination
+residue are removed from generated TTS inputs. After the returned expert review
+and confident-speech repair, the plan uses `119` full-session subclips and `38`
+pilot subclips: `8` for `cde_full_01`, `7` for `cde_full_16`, `9` for
+`cde_full_20`, and `14` for `cde_full_26`. The prompt-mode close is split into
+short subclips to avoid zero-shot long-sentence attention failures. The pilot
+template overwrites pilot WAVs to avoid pairing revised text with stale audio.
 
 On RTX 5080, run `bash tools/setup_breezyvoice_rtx5080_runtime.sh` before rendering. The official BreezyVoice requirement uses a CUDA `11.8` PyTorch wheel that does not support RTX 5080 / `sm_120`; the local setup script replaces it with a CUDA `12.8` PyTorch runtime and keeps all runtime files under `.local/`.
 
 After pilot rendering, use `tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full` to verify the subclip-to-parent and parent-to-combined stitch path before any full batch render.
+
+For `cde_full_16_k8s_review_controls`, the returned expert review identified a
+runtime-compression failure around `0.73`. The current repair applies finer
+subclip splitting plus `tools/apply_breezyvoice_audio_pacing.py --tempo 0.76`
+after synthesis, improving the current stitched runtime ratio to about `0.96`.
+Archive originals remain local-only under `.local/breezyvoice/output/v1/archive/`.
 
 Then run `tools/build_breezyvoice_pilot_review.py` and
 `tools/build_breezyvoice_render_review_log.py`, followed by

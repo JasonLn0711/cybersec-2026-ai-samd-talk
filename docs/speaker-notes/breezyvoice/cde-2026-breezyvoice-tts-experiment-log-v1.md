@@ -51,6 +51,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-09` | guarded-full-render-template | Add guarded full-render template without running TTS | full_render_template_ready_but_gate_closed | Wait for returned expert review CSV; ingest it, then rerun the gate checker |
 | `EXP-20260528-10` | review-log-traceability | Build consolidated render review log before next human gate | render_review_log_builder_ready_gate_still_closed | Export refreshed Downloads review package and wait for completed expert review CSV or specific minimal pilot-fix instruction |
 | `EXP-20260528-11` | human-review-traceability | Add pilot correction matrix to human review package | correction_matrix_ready_gate_still_closed | Wait for completed expert review CSV or a specific minimal pilot-fix instruction; do not run full render |
+| `EXP-20260528-14` | returned-review-repair | Reference-audio pilot repair with confident-speech sanitization | full_render_blocked_pending_human_listening | Send the Downloads package and PROMPT_FOR_TTS_EXPERT.md to the expert; after returned form, ingest with tools/ingest_breezyvoice_expert_review.py and only then decide the next minimal repair or full-render release |
 | `EXP-20260528-12` | pilot-repair-rerender | Round-2 pilot rerender after all-reject contamination review | round2_pilot_rendered_stop_for_human_review | Export refreshed Downloads package and wait for round-2 human listening review |
 | `EXP-20260528-13` | reference-audio-cuda-telemetry | Reference-audio pilot render with ONNX CUDA telemetry | reference_prompt_pilot_rendered_stop_for_human_review | Export refreshed Downloads review package with telemetry and wait for expert listening review. |
 
@@ -897,6 +898,112 @@ Next action:
 Additional observations:
 
 - FIRST PRINCIPLE: the pilot gate is a quality-control batch record; reviewers need to know whether they are judging an unresolved defect or a fix that still needs acceptance
+
+### EXP-20260528-14 - Reference-audio pilot repair with confident-speech sanitization
+
+- Timestamp: `2026-05-28T03:08:48.658384+00:00`
+- Stage: `returned-review-repair`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case, cde_full_16_k8s_review_controls, cde_full_20_crowdstrike_update_524b, cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- Returned expert audit conservatively rejected all four parent chunks; user additionally required no hesitant TTS fillers such as 這個, 那個, or 吱吱嗚嗚 in generated audio
+- Full 80-minute render must remain blocked until renewed human listening accepts all four parent chunks
+- Research log must capture runtime, GPU/energy telemetry, failed/interrupted attempts, cause, resolution, and remaining observations
+
+Hypothesis:
+
+- Reference audio can preserve a more suitable lecturer identity if model-facing text removes stage cues, known hallucination residues, low-confidence fillers, and high-risk English/Chinese boundary pressure
+- Fine subclip splitting plus post-synthesis atempo=0.76 for cde_full_16 should move the technical chunk out of the prior 0.73 compressed pacing band
+- ASR tiny is useful only as a weak risk signal for gross breakdowns, not as a substitute for human listening
+
+Change summary:
+
+- Conditioned model-facing text for AI, PACS/DICOM workflow wording, RBAC/service-account/Kubernetes/Tesla console wording, CrowdStrike malformed-input and 524B punctuation, closing white-box/logging/recovery anchors
+- Added generic sanitization for low-confidence fillers: 這個, 那個, 嗯, 呃, 對啊, 阿哈, laughter strings, 吱吱嗚嗚, 支支吾吾, and known hallucination residues
+- Prepared 119 full-session subclips and 38 pilot subclips; pilot split is cde01=8, cde16=7, cde20=9, cde26=14
+- Added reproducible post-synthesis audio pacing tool and applied atempo=0.76 to the seven cde_full_16 subclips after final4 render
+
+Commands:
+
+- python3 tools/prepare_breezyvoice_render_package.py
+- python3 tools/run_with_gpu_telemetry.py --telemetry-jsonl .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_confident_speech_final4_gpu.jsonl --summary-json .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_confident_speech_final4_summary.json --stdout-log .local/breezyvoice/runtime/v1/pilot_reference_after_confident_speech_final4.log --sample-interval-s 1 -- .local/breezyvoice/runtime/v1/venv/bin/python tools/breezyvoice_render_subclips.py --selection pilot --voice-mode prompt --model-path MediaTek-Research/BreezyVoice --speaker-id auto --prompt-audio .local/breezyvoice/prompts/v1/jason_reference.wav --prompt-text-file .local/breezyvoice/prompts/v1/jason_reference.txt --subclip-manifest .local/breezyvoice/manifests/v1/subclip_manifest.csv --pilot-manifest .local/breezyvoice/manifests/v1/pilot_manifest.csv --output-dir .local/breezyvoice/output/v1/subclips --overwrite
+- python3 tools/apply_breezyvoice_audio_pacing.py --parent-prefix cde_full_16_k8s_review_controls --tempo 0.76 --label 20260528-confident-speech-final4 --overwrite
+- python3 tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full --overwrite --silence-ms 700
+- python3 tools/build_breezyvoice_pilot_review.py
+- python3 tools/build_breezyvoice_render_review_log.py
+- python3 tools/build_breezyvoice_pilot_correction_matrix.py
+- .local/breezyvoice/runtime/v1/venv/bin/python -m whisper .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav --model tiny --language zh --output_format txt --output_dir .local/breezyvoice/review/v1/asr
+- python3 tools/verify_breezyvoice_objective.py --write-report
+- python3 tools/check_breezyvoice_full_render_gate.py --write-report
+- python3 tools/export_breezyvoice_expert_review_package.py --overwrite
+
+Logs:
+
+- .local/breezyvoice/runtime/v1/pilot_reference_after_returned_review_repair.log: interrupted after stdout showed FDA 510(k) would synthesize as 五百一十(k); fixed by mapping 510(k)/510(K) to 五一零 K
+- .local/breezyvoice/runtime/v1/pilot_reference_after_returned_review_repair_rerun.log: interrupted after stdout showed 五 二 四 B spacing collapsed to 五二四B; fixed by punctuation mapping 五、二、四，B
+- .local/breezyvoice/runtime/v1/pilot_reference_after_returned_review_final.log: completed 37 subclips but was superseded because cde26 split fallback was still too coarse
+- .local/breezyvoice/runtime/v1/pilot_reference_after_confident_speech_final3.log: interrupted conservatively when runtime printed internal zhuyin annotations; follow-up confirmed annotations were BreezyVoice internal frontend output and not present in normalized inputs
+- .local/breezyvoice/runtime/v1/pilot_reference_after_confident_speech_final4.log: completed 38 selected subclips in prompt mode
+- .local/breezyvoice/runtime/v1/pacing_confident_speech_final4.log
+- .local/breezyvoice/review/v1/asr/pilot_whisper_tiny_after_confident_speech_final4.log
+- .local/breezyvoice/review/v1/objective_verification.json
+- .local/breezyvoice/review/v1/full_render_gate_check.json
+
+Outputs:
+
+- .local/breezyvoice/output/v1/subclips/: 38 current pilot WAV files
+- .local/breezyvoice/output/v1/parent_chunks/: 4 stitched parent WAV files
+- .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav sha256=f6c98568fa2b210bbf6b6b3105205712ea2af2852a91648628985f1d2bc20a69
+- .local/breezyvoice/review/v1/pilot_listening_review.csv
+- .local/breezyvoice/review/v1/pilot_stitch_summary.json
+- .local/breezyvoice/review/v1/pilot_correction_matrix.md
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Machine result:
+
+- RTX 5080 used successfully; torch CUDA reports NVIDIA GeForce RTX 5080 and ONNX Runtime providers include TensorRTExecutionProvider, CUDAExecutionProvider, CPUExecutionProvider
+- final4 render elapsed_s=494.384, avg_gpu_power_w=203.473, estimated_gpu_energy_wh=27.942732, avg_gpu_utilization_pct=70.164, max_gpu_memory_used_mb=14016.0, sample_count=481
+- post-pacing cde_full_16 runtime=182.67s, target=190s, ratio=0.96; prior returned-review failure band was about 0.73
+- current parent runtimes: cde01=233.84/185 ratio=1.26, cde16=182.67/190 ratio=0.96, cde20=168.85/190 ratio=0.89, cde26=169.72/155 ratio=1.09
+- normalized text scan found no 這個, 那個, 吱吱嗚嗚, 支支吾吾, 對啊, 阿哈, 媽媽, 這老能, x console, or x公顯 residues
+- objective verifier exited 2 with overall_status=gated_waiting_human_review; full-render gate checker exited 2 with status=full_render_blocked
+- Downloads review package validation passed with 1 full WAV, 4 parent WAVs, 38 subclip WAVs, 4 normalized segment text files, 38 subclip text files, expert prompt, README, and expert form
+- Whisper tiny ASR remains noisy and flags possible repeated/garbled regions; treat it as auxiliary evidence requiring expert listening, not as an automatic reject/accept decision
+
+Human result:
+
+- Returned expert audit before this rerender was conservatively interpreted as reject for all four pilot parent chunks; no human acceptance exists for final4 yet; Downloads package is ready for expert listening
+
+Decision: `full_render_blocked_pending_human_listening`
+
+Fix applied:
+
+- No-reference requirement remains supported, but this experiment intentionally used the Downloads reference audio and transcript in prompt mode for comparison
+- Removed low-confidence filler wording from model-facing text; confident natural vocalization is allowed, hesitant filler delivery is not
+- Applied post-synthesis atempo=0.76 only to cde_full_16 and archived originals under .local/breezyvoice/output/v1/archive/pacing-before-20260528-confident-speech-final4/
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- Stop before any 80-minute full render; wait for human expert review of the exported final4 package; proceed only after all four parent chunks are accepted
+
+Next action:
+
+- Send the Downloads package and PROMPT_FOR_TTS_EXPERT.md to the expert; after returned form, ingest with tools/ingest_breezyvoice_expert_review.py and only then decide the next minimal repair or full-render release
+
+Additional observations:
+
+- BreezyVoice runtime prints internal zhuyin annotations such as 稽[:ㄐㄧ1]核 after frontend conversion; these are not present in normalized input text and should be monitored in listening review for possible leakage
+- The closing chunk cde26 now has 14 very short subclips, which protects autoregressive fatigue but may create a slightly segmented delivery; expert should judge stitch naturalness
+- The biggest unresolved research risk is not GPU capability but mixed-language decoder stability under technical acronym clusters; future iterations may need a domain lexicon or stronger Chinese paraphrase policy for high-risk English lists
 
 ### EXP-20260528-12 - Round-2 pilot rerender after all-reject contamination review
 
