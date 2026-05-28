@@ -68,6 +68,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-24` | v3-full-render-70min-final | v3 70-minute full render with ConvNet prompt and Breeze-ASR-25 final check | completed_local_70min_master_with_asr_warning_notes | Package the 70-minute audio and model-facing transcript for stakeholder handoff when requested. |
 | `EXP-20260528-25` | v3-wu-teacher-handoff-package | Wu teacher reference package with M4A and transcript | downloads_handoff_package_created | Share the Downloads folder or tar.gz package with Wu teacher; keep auxiliary ASR as warning signal only. |
 | `EXP-20260528-26` | v3-wu-teacher-handoff-postprocess | Wu teacher package 0.9x M4A listening copy | downloads_handoff_package_updated | Use the 0.9x M4A when a slower reference-listening copy is preferred; original M4A remains preserved. |
+| `EXP-20260528-27` | v3-wu-teacher-readable-transcript | Wu teacher readable transcript material | downloads_handoff_package_updated | Use the teacher-readable transcript as the primary text handout; model-facing text remains available only for traceability. |
 
 ## Detailed Records
 
@@ -2008,6 +2009,57 @@ Stop rule:
 
 - Do not start another human-review cycle unless the owner requests it.
 - Do not use Whisper for auxiliary ASR in this project; continue using Breeze-ASR-25 only.
+
+## EXP-20260528-27 — Wu teacher readable transcript material
+
+Timestamp: `2026-05-28T20:44:00+08:00`
+
+Stage: `v3-wu-teacher-readable-transcript`
+
+Decision: `downloads_handoff_package_updated`
+
+Reason:
+
+- Owner asked whether the Downloads package contains a teacher-facing transcript, and then requested it be segmented, organized, and made readable as transcript material for Wu teacher.
+- The existing package had a model-facing transcript for TTS traceability, but that file exposed subclip-oriented formatting and was not the right primary teacher handout.
+
+Fix applied:
+
+- Generated a teacher-readable transcript in Markdown and plain text.
+- Organized the transcript into 26 chapter-level sections with shorter reading paragraphs.
+- Normalized TTS-oriented spelling into reading-friendly technical terms where safe, including `CDE`, `FDA`, `TFDA`, `K8S`, `SBOM`, `VPN`, `MFA`, `SIEM`, `SCA`, `SQL`, `SaMD`, `Log4Shell`, and `MOVEit Transfer`.
+- Preserved the existing model-facing transcript as traceability material, but made the teacher-readable transcript the primary handout in `README_FOR_WU_TEACHER.md`.
+- Updated package metadata, checksums, and the tar.gz archive.
+
+Outputs:
+
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-teacher-readable-transcript-zh-tw.md`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-teacher-readable-transcript-zh-tw.txt`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-teacher-facing-transcript-zh-tw.md`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28/cde-2026-breezyvoice-v3-teacher-facing-transcript-zh-tw.txt`
+- `/home/jnln3799/Downloads/cde-2026-breezyvoice-v3-wu-teacher-reference-package-2026-05-28.tar.gz`
+
+Machine result:
+
+- Teacher-readable Markdown: `354` lines, `56337` bytes.
+- Teacher-readable plain text: `354` lines, `56805` bytes.
+- Teacher-readable Markdown SHA256: `4f6afb18dac31e17bda4248994188e04c7e1a3744efa844ef9054c44215fd7a9`.
+- Teacher-readable plain text SHA256: `6d321372d5272f62e7059701f2e231d7cc8654b46cfc87e303cb8112108cde6c`.
+- Updated tar.gz package size: approximately `126M`.
+
+Human result:
+
+- No human review was requested or initiated.
+- This is a stakeholder-readable handout improvement for the existing Downloads package.
+
+Additional observations:
+
+- The teacher-readable transcript contains no subclip/chunk/model/ASR/ffmpeg operational labels in the body.
+- A PPTX file is present in the package and is now included in checksums and README.
+
+Next action:
+
+- Send Wu teacher the tar.gz package or the folder, and point first to `cde-2026-breezyvoice-v3-teacher-readable-transcript-zh-tw.md`.
 
 ## EXP-20260528-26 — Wu teacher package 0.9x M4A listening copy
 
