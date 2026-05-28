@@ -14,6 +14,7 @@ LOCAL_ROOT = REPO_ROOT / ".local/breezyvoice"
 VERSION = "v1"
 PILOT_COMBINED_WAV = LOCAL_ROOT / f"output/{VERSION}/full/cde-2026-breezyvoice-pilot-stitched-v1.wav"
 ASR_TXT = LOCAL_ROOT / f"review/{VERSION}/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt"
+OWNER_OVERRIDE_PATH = LOCAL_ROOT / f"review/{VERSION}/full_render_owner_override.json"
 
 
 def rel(path: Path) -> str:
@@ -43,6 +44,19 @@ def wav_duration(path: Path) -> float | None:
 def load_text(path_value: str) -> str:
     path = REPO_ROOT / path_value
     return path.read_text(encoding="utf-8").strip()
+
+
+def read_owner_override() -> dict[str, object]:
+    if not OWNER_OVERRIDE_PATH.exists():
+        return {}
+    return json.loads(OWNER_OVERRIDE_PATH.read_text(encoding="utf-8"))
+
+
+def owner_override_allowed(override: dict[str, object]) -> bool:
+    return (
+        override.get("full_render_allowed") is True
+        and override.get("accepted_by_owner_override") is True
+    )
 
 
 def target_seconds(value: str) -> int:
@@ -90,6 +104,8 @@ def main() -> None:
 
     stitch_summary = json.loads(stitch_summary_path.read_text(encoding="utf-8")) if stitch_summary_path.exists() else {}
     machine_review = json.loads(machine_review_path.read_text(encoding="utf-8")) if machine_review_path.exists() else {}
+    owner_override = read_owner_override()
+    override_allowed = owner_override_allowed(owner_override)
     asr_exists = ASR_TXT.exists()
     existing_reviews = {}
     if existing_review_path.exists():
@@ -116,6 +132,7 @@ def main() -> None:
         "Decision rule:",
         "",
         "- Keep `full_batch_allowed=false` until all four parent rows are accepted by listening.",
+        "- If owner override is recorded, full render may proceed without another listening round while preserving the review history.",
         "- If any row fails, fix the smallest affected surface first: punctuation, English spacing, single-term replacement, shorter subclip, preset/pause, then spoken-content edit.",
         "",
         "| Parent | WAV | Runtime | Target | Ratio | Review status |",
@@ -183,8 +200,9 @@ def main() -> None:
     accepted = all(row["decision"] == "accept" for row in review_rows)
     unaccepted = [row["output_prefix"] for row in review_rows if row["decision"] != "accept"]
     full_gate = {
-        "full_batch_allowed": accepted,
+        "full_batch_allowed": accepted or override_allowed,
         "accepted_by_listening": accepted,
+        "accepted_by_owner_override": override_allowed,
         "pilot_parent_count": len(review_rows),
         "review_rows_requiring_decision": sum(1 for row in review_rows if row["decision"] != "accept"),
         "unaccepted_prefixes": unaccepted,
@@ -193,7 +211,12 @@ def main() -> None:
         "pilot_listening_review_md": f".local/breezyvoice/review/{VERSION}/pilot_listening_review.md",
         "pilot_review_playlist": f".local/breezyvoice/review/{VERSION}/pilot_review_playlist.m3u",
         "machine_review_status": machine_review.get("status", "not_available"),
-        "reason": "human listening acceptance required before full batch",
+        "owner_override": owner_override if override_allowed else {},
+        "reason": (
+            "owner override allows full render after final7 repair without another listening round"
+            if override_allowed
+            else "human listening acceptance required before full batch"
+        ),
     }
 
     review_dir = LOCAL_ROOT / f"review/{VERSION}"

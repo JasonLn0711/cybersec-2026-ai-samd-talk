@@ -88,11 +88,12 @@ def main() -> int:
     reasons: list[str] = []
     if not gate.get("full_batch_allowed"):
         reasons.append("full_batch_gate.json has full_batch_allowed=false")
-    if not gate.get("accepted_by_listening"):
-        reasons.append("full_batch_gate.json has accepted_by_listening=false")
+    accepted_by_owner_override = gate.get("accepted_by_owner_override") is True
+    if not gate.get("accepted_by_listening") and not accepted_by_owner_override:
+        reasons.append("full_batch_gate.json has accepted_by_listening=false and no owner override is active")
     if missing_prefixes:
         reasons.append(f"missing required pilot decision rows: {', '.join(missing_prefixes)}")
-    if unaccepted_prefixes:
+    if unaccepted_prefixes and not accepted_by_owner_override:
         reasons.append(f"unaccepted required pilot chunks: {', '.join(unaccepted_prefixes)}")
     if summary.get("full_batch_allowed") is True and gate.get("full_batch_allowed") is not True:
         reasons.append("package_summary and full_batch_gate disagree")
@@ -114,6 +115,7 @@ def main() -> int:
         "full_batch_gate": {
             "full_batch_allowed": gate.get("full_batch_allowed"),
             "accepted_by_listening": gate.get("accepted_by_listening"),
+            "accepted_by_owner_override": gate.get("accepted_by_owner_override"),
             "machine_review_status": gate.get("machine_review_status"),
         },
         "machine_review_status": machine.get("status"),
@@ -124,7 +126,7 @@ def main() -> int:
         "unaccepted_prefixes": unaccepted_prefixes,
         "reasons": reasons,
         "stop_rule": (
-            "Do not run full render until full_batch_allowed=true and every required pilot parent chunk has decision=accept."
+            "Do not run full render until full_batch_allowed=true and every required pilot parent chunk has decision=accept or an explicit owner override is active."
         ),
         "next_action": (
             "Wait for human listening review or apply only the next expert-specified minimal pilot fix, then re-export a Downloads review package."

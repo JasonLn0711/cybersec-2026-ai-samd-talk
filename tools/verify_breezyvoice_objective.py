@@ -119,6 +119,10 @@ def main() -> int:
         if line.strip()
     ]
     reference_audio_exists = reference_gate.get("audio_exists") is True
+    owner_override_active = (
+        full_gate.get("accepted_by_owner_override") is True
+        or gate_check.get("full_batch_gate", {}).get("accepted_by_owner_override") is True
+    )
 
     segment_texts = sorted((LOCAL_ROOT / f"inputs/{VERSION}/segments").glob("*.txt"))
     normalized_segment_texts = sorted((LOCAL_ROOT / f"inputs/{VERSION}/normalized_segments").glob("*.txt"))
@@ -212,10 +216,19 @@ def main() -> int:
             [f"format={audio_spec.get('format')}", f"loudness_lufs={audio_spec.get('loudness_lufs')}"],
         ),
         row(
-            "9. pilot render only",
-            "completed_pilot_rendered" if len(pilot_manifest) == 4 and len(pilot_parent_wavs_exist) == 4 and not full_lecture_wav.exists() else "failed",
+            "9. pilot render and release transition",
+            "completed_full_render_released"
+            if len(pilot_manifest) == 4 and len(pilot_parent_wavs_exist) == 4 and full_lecture_wav.exists() and owner_override_active
+            else "completed_pilot_rendered"
+            if len(pilot_manifest) == 4 and len(pilot_parent_wavs_exist) == 4 and not full_lecture_wav.exists()
+            else "failed",
             [rel(paths["pilot_manifest"]), rel(paths["pilot_review"])],
-            [f"pilot_rows={len(pilot_manifest)}", f"pilot_parent_wavs={len(pilot_parent_wavs_exist)}", f"full_lecture_exists={full_lecture_wav.exists()}"],
+            [
+                f"pilot_rows={len(pilot_manifest)}",
+                f"pilot_parent_wavs={len(pilot_parent_wavs_exist)}",
+                f"full_lecture_exists={full_lecture_wav.exists()}",
+                f"owner_override_active={owner_override_active}",
+            ],
         ),
         row(
             "10. pilot review checklist",
@@ -237,9 +250,17 @@ def main() -> int:
         ),
         row(
             "13. full render stitch and review log",
-            "gated_incomplete" if full_lecture_duration is None else "needs_review_log_completion",
+            "completed_owner_release"
+            if full_lecture_duration is not None and owner_override_active
+            else "gated_incomplete"
+            if full_lecture_duration is None
+            else "needs_review_log_completion",
             [rel(paths["review_log"]), rel(full_lecture_wav)],
-            [f"full_lecture_duration={full_lecture_duration}", f"accepted_review_rows={len(accepted_review_rows)}"],
+            [
+                f"full_lecture_duration={full_lecture_duration}",
+                f"accepted_review_rows={len(accepted_review_rows)}",
+                f"owner_override_active={owner_override_active}",
+            ],
         ),
         row(
             "14. TTS experiment log",
@@ -262,13 +283,13 @@ def main() -> int:
         "overall_status": overall_status,
         "completed": overall_status == "complete",
         "checks": checks,
-        "stop_rule": "Do not run full render until requirement 12 is completed_open and the full-render gate checker exits 0.",
+        "stop_rule": "Do not run full render until requirement 12 is completed_open and the full-render gate checker exits 0, unless a recorded owner override is active.",
         "next_action": (
             "Wait for human listening acceptance or apply the next expert-specified minimal pilot fix."
             if overall_status == "gated_waiting_human_review"
             else "Resolve failed checks before proceeding."
             if overall_status == "failed"
-            else "Proceed to full render and post-render stitch/log completion."
+            else "Proceed to post-render ASR, loudness packaging, and release-log completion."
         ),
     }
     if args.write_report:
