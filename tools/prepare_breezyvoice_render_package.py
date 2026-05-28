@@ -111,6 +111,15 @@ PILOT_ASR_TERM_VARIANTS = {
     "SBOM": ["S B O M", "SBOM"],
 }
 
+STAGE_CUE_RE = re.compile(
+    r"(\(|（|\[|【|\*)\s*"
+    r"(?:吸氣聲?|吐氣聲?|換氣聲?|喘息聲?|嘆氣聲?|笑聲?|乾笑|停頓|pause\s*:?\s*\d*\s*ms?)"
+    r"\s*(\)|）|\]|】|\*)",
+    re.I,
+)
+FILLER_RE = re.compile(r"(^|[，。！？；：、\s])(?:嗯|呃|呃啊|啊|阿哈|對啊|呵呵呵|呵呵|哈哈哈|哈哈)(?=([，。！？；：、\s]|$))")
+HALLUCINATION_RESIDUE_RE = re.compile(r"(媽媽我?|嗎嗎我|這老能喝|這老能吼|金普斯是死老|精普斯是死老|老能喝|老能吼)")
+
 CONTROL_RE = re.compile(
     r"<!-- BV26_META\n(?P<meta>.*?)\n-->\n\n"
     r"### (?P<title>.*?)\n\n"
@@ -188,11 +197,27 @@ def clean_model_text(text: str) -> str:
     return cleaned
 
 
+def sanitize_tts_text(text: str) -> str:
+    """Remove stage-cue and filler contamination from model-facing text."""
+    sanitized = STAGE_CUE_RE.sub("，", text)
+    sanitized = HALLUCINATION_RESIDUE_RE.sub("", sanitized)
+    previous = None
+    while sanitized != previous:
+        previous = sanitized
+        sanitized = FILLER_RE.sub(lambda match: match.group(1), sanitized)
+    sanitized = re.sub(r"[，、]\s*[，、]+", "，", sanitized)
+    sanitized = re.sub(r"\s+", " ", sanitized)
+    sanitized = re.sub(r"\s+([，。！？；：、])", r"\1", sanitized)
+    sanitized = re.sub(r"([，。！？；：、])([A-Za-z0-9])", r"\1 \2", sanitized)
+    return sanitized.strip(" ，、")
+
+
 def normalize_text(text: str) -> str:
     normalized = clean_model_text(text)
     for old, new in TERM_NORMALIZATIONS.items():
         normalized = normalized.replace(old, new)
     normalized = apply_pilot_review_conditioning(normalized)
+    normalized = sanitize_tts_text(normalized)
     normalized = re.sub(r"[ \t]+", " ", normalized).strip()
     return normalized
 
@@ -227,6 +252,11 @@ def apply_pilot_review_conditioning(text: str) -> str:
         "白箱審查": "White box review，白箱審查",
         "白箱證據": "White box evidence，白箱證據",
         "白箱可以證明": "White box evidence 可以證明",
+        "派克斯 或 A I 派克斯": "派克斯，或 A I 派克斯",
+        "戴康 DICOM router": "戴康 DICOM 路由器",
+        "K eight S，A P I，dashboard，internal service": "Kubernetes API，dashboard，internal service",
+        "exposed K eight S console": "exposed Kubernetes console",
+        "請各位把這三題帶回今天的主軸：": "最後請把這三題帶回今天的主軸：",
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
@@ -302,9 +332,30 @@ def split_sentences(text: str) -> list[str]:
     return sentences or [text]
 
 
-def split_subclips(text: str) -> list[str]:
+def split_by_markers(text: str, markers: list[str]) -> list[str]:
+    positions = []
+    for marker in markers:
+        index = text.find(marker)
+        if index > 0:
+            positions.append(index)
+    if not positions:
+        return []
+    positions = sorted(set(positions))
+    starts = [0, *positions]
+    ends = [*positions, len(text)]
+    return [text[start:end].strip() for start, end in zip(starts, ends) if text[start:end].strip()]
+
+
+def split_subclips(text: str, output_prefix: str = "") -> list[str]:
+    if output_prefix == "cde_full_26_shared_close_test_anchors":
+        anchored = split_by_markers(text, ["第一題問：", "第二題問：", "第三題問："])
+        if 2 <= len(anchored) <= 4 and all(len(item) <= 500 for item in anchored):
+            return anchored
+
     sentences = split_sentences(text)
-    if len(text) <= 850:
+    if output_prefix in {"cde_full_16_k8s_review_controls", "cde_full_20_crowdstrike_update_524b"}:
+        target_count = 4
+    elif len(text) <= 850:
         target_count = 2
     elif len(text) <= 1100:
         target_count = 3
@@ -603,7 +654,7 @@ def prepare_package() -> None:
     for segment in segments:
         write_text(segment.clean_text_path, segment.clean_text)
         write_text(segment.normalized_text_path, segment.normalized_text)
-        subclips = split_subclips(segment.normalized_text)
+        subclips = split_subclips(segment.normalized_text, segment.output_prefix)
         subclip_paths = []
         for sub_index, subclip in enumerate(subclips, start=1):
             validate_model_text(subclip, f"{segment.output_prefix}_p{sub_index:02d}")
@@ -697,6 +748,32 @@ def prepare_package() -> None:
     ]
     write_csv(LOCAL_ROOT / f"manifests/{VERSION}/subclip_manifest.csv", subclip_rows, subclip_fields)
     write_jsonl(LOCAL_ROOT / f"manifests/{VERSION}/subclip_manifest.jsonl", subclip_rows)
+
+    planned_subclip_texts = {REPO_ROOT / str(row["clean_text_path"]) for row in subclip_rows}
+    actual_subclip_texts = sorted((LOCAL_ROOT / f"inputs/{VERSION}/subclips").glob("*.txt"))
+    orphan_text_archive = LOCAL_ROOT / f"inputs/{VERSION}/archive/orphan-subclips"
+    orphan_input_rows = []
+    for text_path in actual_subclip_texts:
+        if text_path in planned_subclip_texts:
+            continue
+        orphan_text_archive.mkdir(parents=True, exist_ok=True)
+        archived_path = orphan_text_archive / text_path.name
+        if archived_path.exists():
+            archived_path.unlink()
+        shutil.move(str(text_path), str(archived_path))
+        orphan_input_rows.append(
+            {
+                "input_text": rel(text_path),
+                "archived_to": rel(archived_path),
+                "status": "orphan_not_in_current_subclip_manifest",
+                "action": "archived_before_review_or_render_to_prevent_stale_text_confusion",
+            }
+        )
+    write_csv(
+        LOCAL_ROOT / f"review/{VERSION}/orphan_input_inventory.csv",
+        orphan_input_rows,
+        ["input_text", "archived_to", "status", "action"],
+    )
 
     pilot_rows = [row for row in manifest_rows if row["output_prefix"] in PILOT_PREFIXES]
     write_csv(LOCAL_ROOT / f"manifests/{VERSION}/pilot_manifest.csv", pilot_rows, manifest_fields)
@@ -1116,7 +1193,8 @@ def prepare_package() -> None:
                 "  --prompt-text-file \"$PROMPT_TXT\" \\",
                 "  --subclip-manifest \"$SUBCLIPS\" \\",
                 "  --pilot-manifest \"$MANIFEST\" \\",
-                "  --output-dir \"$OUTPUT_DIR\"",
+                "  --output-dir \"$OUTPUT_DIR\" \\",
+                "  --overwrite",
             ]
         ),
     )

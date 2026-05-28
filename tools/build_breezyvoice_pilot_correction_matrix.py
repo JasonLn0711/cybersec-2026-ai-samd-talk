@@ -20,61 +20,64 @@ VERSION = "v1"
 CORRECTIONS = {
     "cde_full_01_opening_positioning_crazyhunter_entry_case": {
         "expert_issue": (
-            "Opening chunk had mixed Chinese/English token adhesion, artificial "
-            "breath artifacts, and unstable PACS/DICOM rendering."
+            "Opening chunk was rejected again for stutters, filler-like vocal "
+            "artifacts, acronym instability, and loss of professional authority."
         ),
         "conditioning_applied": (
-            "Applied model-facing acronym/token isolation around PACS, HIS, EMR, "
-            "and DICOM; kept frozen source unchanged; retained professional "
-            "clinical opening language."
+            "Applied model-facing sanitizer for stage cues, fillers, and known "
+            "hallucination residues; kept frozen source unchanged; retained "
+            "short opening subclips and PACS/HIS/EMR/DICOM isolation."
         ),
         "next_listener_question": (
-            "Does the rerendered opening sound clinically stable and free of "
-            "distracting breath artifacts or DICOM/PACS misreads?"
+            "Does the round-2 rerendered opening recover clinical authority, or "
+            "does no-reference/default voice remain unstable for this lecture?"
         ),
     },
     "cde_full_16_k8s_review_controls": {
         "expert_issue": (
-            "K8S/RBAC/service-account section was too compressed, with stumbles "
-            "around dense English technical boundaries."
+            "K8S/RBAC/service-account section was rejected for compressed pacing, "
+            "technical acronym collapse, and no-reference hallucination."
         ),
         "conditioning_applied": (
-            "Inserted punctuation pacing around RBAC, service accounts, namespace "
-            "isolation, K eight S API, dashboard, Network Policy, and cloud "
-            "credential exposure; normalized the Tesla cloud cryptomining case."
+            "Forced this parent chunk to four shorter subclips; increased stitch "
+            "silence to 700ms; normalized high-risk K8S phrases toward "
+            "Kubernetes API / Kubernetes console where the prior K eight S path "
+            "was unstable."
         ),
         "next_listener_question": (
-            "Is the technical sequence now understandable enough for clinical "
-            "learners, or does this chunk still need shorter subclips or speed/"
-            "pause adjustment?"
+            "Is the round-2 K8S section understandable enough, or should this "
+            "workflow switch away from no-reference/default voice before any "
+            "further render work?"
         ),
     },
     "cde_full_20_crowdstrike_update_524b": {
         "expert_issue": (
-            "CrowdStrike/Falcon, supply-chain, 524B, and white-box terms needed "
-            "stronger isolation because misreads would weaken regulatory authority."
+            "CrowdStrike/524B section was rejected for emotional leakage, sighing "
+            "artifacts, and hallucination around law and supply-chain terms."
         ),
         "conditioning_applied": (
-            "Normalized Falcon security-content update, supply chain, FD&C Act "
-            "Section 524B, SBOM, and white-box wording with punctuation boundaries."
+            "Kept CrowdStrike/Falcon/supply-chain/Section 524B boundaries, forced "
+            "four subclips, rebuilt the ASR auxiliary transcript after rerender, "
+            "and preserved the frozen source."
         ),
         "next_listener_question": (
-            "Are Falcon, supply chain, Section 524B, SBOM, and white-box terms "
-            "stable enough for the regulatory bridge?"
+            "Does Section 524B now sound steady and professional, or does the "
+            "default voice still leak emotion/hallucinated words around this term?"
         ),
     },
     "cde_full_26_shared_close_test_anchors": {
         "expert_issue": (
-            "First review accepted the close, but later review conservatively "
-            "rejected it because white-box terminology might remain unstable."
+            "Closing anchors were rejected for tail-end breakdown, fatigue, and "
+            "word-salad hallucination."
         ),
         "conditioning_applied": (
-            "Applied white-box testing/review/evidence wording normalization and "
-            "kept the closing trust-chain structure intact."
+            "Split the close into anchor-based subclips around first, second, and "
+            "third questions; sanitized model-facing text; added 700ms stitch "
+            "silence; kept the closing trust-chain content intact."
         ),
         "next_listener_question": (
-            "Can this close serve as the final tone baseline after white-box "
-            "terminology normalization, or does it still need a focused rerender?"
+            "Does anchor-based rerendering prevent the closing tail collapse, or "
+            "does the project need a different voice path before full render?"
         ),
     },
 }

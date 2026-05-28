@@ -69,7 +69,15 @@ def norm(value: str | None) -> str:
 
 
 def row_prefix(row: dict[str, str]) -> str:
-    return norm(row.get("output_prefix")) or norm(row.get("parent_chunk_id")) or norm(row.get("chunk_id"))
+    value = (
+        norm(row.get("output_prefix"))
+        or norm(row.get("parent_chunk_id"))
+        or norm(row.get("parent_chunk"))
+        or norm(row.get("chunk_id"))
+    )
+    if value.endswith(".wav"):
+        value = value[:-4]
+    return value
 
 
 def row_decision(row: dict[str, str]) -> str:

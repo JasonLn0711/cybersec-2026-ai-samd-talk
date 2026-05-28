@@ -38,6 +38,7 @@ REVIEW_FILES = [
     "pilot_correction_matrix.csv",
     "pilot_correction_matrix.md",
     "pilot_correction_matrix.json",
+    "orphan_input_inventory.csv",
     "orphan_audio_inventory.csv",
     "full_render_gate_check.json",
     "objective_verification.json",
@@ -142,7 +143,14 @@ def copy_package_inputs(package: Path, review_rows: list[dict[str, str]]) -> Non
 
     asr_dir = review_dir / "asr"
     copy_file(asr_dir / "cde-2026-breezyvoice-pilot-stitched-v1.txt", package / "review/asr/cde-2026-breezyvoice-pilot-stitched-v1.txt")
-    copy_file(asr_dir / "pilot_whisper_tiny_after_term_normalization.log", package / "review/asr/pilot_whisper_tiny_after_term_normalization.log")
+    for log_name in [
+        "pilot_whisper_tiny_after_round2_repair.log",
+        "pilot_whisper_tiny_after_expert_conditioning.log",
+        "pilot_whisper_tiny_after_term_normalization.log",
+    ]:
+        log_path = asr_dir / log_name
+        if log_path.exists():
+            copy_file(log_path, package / "review/asr" / log_name)
 
     manifest_dir = LOCAL_ROOT / f"manifests/{VERSION}"
     for filename in MANIFEST_FILES:

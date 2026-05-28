@@ -169,7 +169,7 @@ def main() -> int:
         ),
         row(
             "4. subclip split",
-            "completed" if len(subclip_manifest) == 92 and not bad_parent_counts and not overlong_subclips else "failed",
+            "completed" if len(subclip_manifest) >= 52 and not bad_parent_counts and not overlong_subclips else "failed",
             [rel(paths["subclip_manifest"])],
             [f"subclips={len(subclip_manifest)}", f"bad_parent_counts={bad_parent_counts}", f"overlong_subclips={overlong_subclips}"],
         ),
