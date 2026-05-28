@@ -32,7 +32,22 @@ For an `80` minute controlled render, use `cde-2026-breezyvoice-80min-engineered
 The render package generator keeps the v1 source frozen and applies only
 model-facing sanitation: known stage cues, filler tokens, low-confidence
 demonstratives such as `這個` / `那個`, hesitant sounds, and hallucination
-residue are removed from generated TTS inputs. After the partial-accept
+residue are removed from generated TTS inputs. It also inserts `、` at every
+Chinese-English boundary in model-facing text so mixed Mandarin/English terms
+do not merge during synthesis. Except for necessary English proper nouns,
+product names, event names, and standard acronyms, model-facing TTS wording
+should use Taiwan Traditional Chinese customary phrasing rather than ordinary
+English phrases. Preserve `token` and `namespace` as English technical terms.
+If a generated clip becomes unstable, first
+repair the model-facing text with shorter sentences, clearer sentence breaks,
+isolated technical terms, and removal of duplicated repeated passages before
+using audio-only fixes. The full-session delivery target is now approximately
+`70` minutes. After raw stitching, compute one global tempo factor from
+`raw_duration_seconds / 4200` and apply that factor to the master copy; avoid
+per-section speed changes unless a specific defect requires repair. Case-study
+model-facing text should be written as concise Taiwan Traditional Chinese
+storytelling: setup, event path, clinical implication, and review takeaway,
+while preserving necessary proper nouns and standard acronyms. After the partial-accept
 returned expert review and final6/final6b repair, the plan uses `133`
 full-session subclips and `53` pilot subclips: `19` for `cde_full_01`, `9` for
 `cde_full_16`, `11` for `cde_full_20`, and `14` for the accepted

@@ -73,6 +73,26 @@ The planning repo may link to this repo for project context. This repo should no
    - Engineering notes may keep exact machine-safety wording when needed, but
      spoken transcripts should use positive, confident, generous phrasing.
 
+   - For BreezyVoice / TTS model-facing text, insert an ideographic comma
+     `、` at every Chinese-English boundary before rendering. This keeps mixed
+     Mandarin/English medical and cybersecurity terms from merging in speech.
+     Except for necessary English proper nouns, product names, event names,
+     and standard acronyms, rewrite TTS wording into Taiwan Traditional
+     Chinese usage rather than leaving ordinary English phrases in the script.
+     Preserve `token` and `namespace` as English technical terms.
+     The full-session delivery target is now approximately `70` minutes.
+     After the raw stitch, normalize the master with a single global tempo
+     factor computed from `raw_duration_seconds / 4200`; do not use
+     section-by-section speed changes unless fixing a documented defect.
+     Case-study passages should sound like a confident teacher sharing a
+     concrete story with listeners: use Taiwan Traditional Chinese phrasing,
+     short setup -> event path -> clinical implication -> review takeaway,
+     while preserving necessary proper nouns and standard acronyms.
+     If a TTS clip becomes unstable, simplify the model-facing text first:
+     split long sentences, add clear sentence breaks, isolate technical terms,
+     delete any duplicated repeated passage, and keep the spoken wording easy
+     to follow before using audio-only fixes.
+
 3. Keep the talk package public-safe.
    - Exclude proprietary code, raw student records, private hospital/client detail, credentials, exploit-ready private instructions, and patent-sensitive implementation mechanics.
 

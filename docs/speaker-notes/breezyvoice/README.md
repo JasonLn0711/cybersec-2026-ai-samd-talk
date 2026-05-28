@@ -62,6 +62,23 @@ The setup script keeps the official BreezyVoice clone and Python venv under `.lo
 before subclip generation: known stage cues, filler tokens, low-confidence
 demonstratives such as `這個` / `那個`, hesitant sounds, and hallucination
 residue are removed from TTS inputs while the frozen source stays unchanged.
+For mixed Mandarin/English output, the model-facing text must insert `、` at
+every Chinese-English boundary before rendering. Except for necessary English
+proper nouns, product names, event names, and standard acronyms, model-facing
+TTS wording should use Taiwan Traditional Chinese customary phrasing rather
+than ordinary English phrases. Preserve `token` and `namespace` as English
+technical terms. If a clip becomes unstable,
+repair the model-facing text first by making the wording simpler, splitting
+long sentences, adding clear sentence breaks, and isolating technical terms;
+delete duplicated repeated passages before rerendering. Post-synthesis audio
+edits are secondary. The full-session delivery target is now approximately
+`70` minutes. After raw stitching, compute one global tempo factor from
+`raw_duration_seconds / 4200` and apply that factor to the master copy; avoid
+per-section speed changes unless a specific defect requires repair. Case-study
+passages should be model-conditioned as concise Taiwan Traditional Chinese
+storytelling: setup, event path, clinical implication, and review takeaway.
+The goal is a confident teacher sharing a concrete case with listeners, not a
+dense English technical list.
 The generated pilot template overwrites pilot WAVs so revised text cannot be
 silently paired with stale audio.
 
