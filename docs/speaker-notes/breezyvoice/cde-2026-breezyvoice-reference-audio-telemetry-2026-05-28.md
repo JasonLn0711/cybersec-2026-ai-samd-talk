@@ -161,3 +161,61 @@ Package validation: `1` full WAV, `4` parent WAVs, `38` subclip WAVs, `4`
 normalized segment text files, `38` subclip text files, expert prompt, README,
 and expert CSV form. The full 80-minute render remains blocked until all four
 parent chunks receive explicit human `accept` decisions.
+
+## Total-Reject Repair Addendum
+
+`EXP-20260528-15` supersedes final4 for the next listening gate. It responds to
+the returned expert decision that all four parent chunks must remain rejected
+until the pilot is repaired and relistened.
+
+The repair keeps the v1 source frozen and changes only the model-facing render
+inputs and local audio post-processing:
+
+- `cde_full_01`: removes trust-question pressure, keeps filler cleanup, uses a
+  safer `戴康` reading for DICOM, and splits the opening into `12` subclips.
+- `cde_full_16`: localizes K8S/API/RBAC pressure, removes dash/slash leakage
+  risk, rewrites the Tesla exposed-console path, splits to `10` subclips, and
+  applies `atempo=0.82` after synthesis.
+- `cde_full_20`: replaces ambiguous FD&C/524B/SBOM/white-box strings with
+  explicit spoken anchors and splits to `11` subclips.
+- `cde_full_26`: replaces risky homophones, uses `根本原因` / `白盒` anchors,
+  preserves the `14` short closing subclips, and trims `0.8 s` from the final
+  thank-you subclip tail.
+
+The final5 attempt was intentionally interrupted when stdout showed a stale
+Tesla console phrase. The final5b run completed:
+
+| Run | Exit | Rendered | Wall time | Avg GPU power | GPU Wh estimate | Avg GPU util | Peak GPU memory | Notes |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `pilot_reference_after_total_reject_repair_final5` | interrupted | partial | logged locally | n/a | n/a | n/a | n/a | Stopped after stale `exposed K八S console` wording appeared in runtime stdout. |
+| `pilot_reference_after_total_reject_repair_final5b` | `0` | `47` | `507.566 s` | `197.054 W` | `27.782796 Wh` | `65.497%` | `14346 MB` | Completed all final5b prompt-mode pilot subclips on RTX 5080. |
+
+Current final5b stitched pilot metrics:
+
+| Parent chunk | Subclips | Stitched audio | Target | Ratio | Post-processing |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `cde_full_01_opening_positioning_crazyhunter_entry_case` | `12` | `232.49 s` | `185 s` | `1.26` | none |
+| `cde_full_16_k8s_review_controls` | `10` | `172.19 s` | `190 s` | `0.91` | `atempo=0.82` |
+| `cde_full_20_crowdstrike_update_524b` | `11` | `168.97 s` | `190 s` | `0.89` | none |
+| `cde_full_26_shared_close_test_anchors` | `14` | `172.23 s` | `155 s` | `1.11` | final subclip tail trimmed by `0.8 s` |
+| Full pilot stitch | `4 parent WAVs` | `747.99 s` | n/a | n/a | `700 ms` parent silence |
+
+ASR tiny was regenerated only as an auxiliary warning signal. It remains weak
+for mixed Mandarin/English medical cybersecurity terms and must not override
+expert listening. In this pass it still produced severe technical-term
+recognition errors, so the gate stays conservative.
+
+`tools/verify_breezyvoice_objective.py --write-report` exits `2` with
+`overall_status=gated_waiting_human_review`, and
+`tools/check_breezyvoice_full_render_gate.py --write-report` exits `2` with
+`status=full_render_blocked`. The refreshed package is:
+
+```text
+/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+/home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+```
+
+Package validation: `1` full WAV, `4` parent WAVs, `47` subclip WAVs, `4`
+normalized segment text files, `47` subclip text files, expert prompt, README,
+and expert CSV form. The full 80-minute render remains blocked until all four
+final5b parent chunks receive explicit human `accept` decisions.

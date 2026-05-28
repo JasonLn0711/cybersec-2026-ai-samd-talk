@@ -54,6 +54,7 @@ the traceable decision record and local evidence paths.
 | `EXP-20260528-14` | returned-review-repair | Reference-audio pilot repair with confident-speech sanitization | full_render_blocked_pending_human_listening | Send the Downloads package and PROMPT_FOR_TTS_EXPERT.md to the expert; after returned form, ingest with tools/ingest_breezyvoice_expert_review.py and only then decide the next minimal repair or full-render release |
 | `EXP-20260528-12` | pilot-repair-rerender | Round-2 pilot rerender after all-reject contamination review | round2_pilot_rendered_stop_for_human_review | Export refreshed Downloads package and wait for round-2 human listening review |
 | `EXP-20260528-13` | reference-audio-cuda-telemetry | Reference-audio pilot render with ONNX CUDA telemetry | reference_prompt_pilot_rendered_stop_for_human_review | Export refreshed Downloads review package with telemetry and wait for expert listening review. |
+| `EXP-20260528-15` | final4-human-reject-repair | Total-reject pilot repair with jargon-safe substitutions | final5b_exported_full_render_blocked_for_human_review | Send the refreshed Downloads package to the TTS expert; ingest the returned forms/expert_pilot_review_form.csv; if any row is reject, apply only the next minimal expert-specified pilot fix and rerender affected pilot chunks. |
 
 ## Detailed Records
 
@@ -1150,3 +1151,97 @@ Next action:
 Additional observations:
 
 - Energy figures are GPU-only nvidia-smi power.draw estimates and exclude CPU/system/display/PSU energy; thinking time is recorded as observable engineering intervention chronology rather than hidden model reasoning; ONNX CUDA improved prompt-mode runtime substantially but ASR proxy still suggests clinical listening review is non-negotiable; future renders should always run through tools/run_with_gpu_telemetry.py.
+
+### EXP-20260528-15 - Total-reject pilot repair with jargon-safe substitutions
+
+- Timestamp: `2026-05-28T11:50:00+08:00`
+- Stage: `final4-human-reject-repair`
+- Input version: `v1`
+- Source SHA-256: `05c4d43c6d60015bec302f73e0b01b8fef00270992e1b6294363d67b3caf6cdc`
+- Affected prefixes: `cde_full_01_opening_positioning_crazyhunter_entry_case, cde_full_16_k8s_review_controls, cde_full_20_crowdstrike_update_524b, cde_full_26_shared_close_test_anchors`
+
+Reason:
+
+- Returned expert review marked all four parent chunks reject: cde01 loop/bracket/DICOM/filler issues; cde16 K8S/RBAC/API/Tesla collapse and runtime compression; cde20 FD&C/white-box/threat drift; cde26 homophone drift/laughter-like risk/524B/SBOM/root-cause/tail residue.
+
+Hypothesis:
+
+- A model-facing-only repair can reduce decoder pressure without changing the frozen v1 source: safer Chinese anchors for risky jargon, finer pilot splits, cde16 post-synthesis pacing, and cde26 tail trimming should create a better human-review candidate while keeping full render closed.
+
+Change summary:
+
+- Removed low-confidence filler/demonstrative phrasing such as 這個/那個/嗯/呃 from model-facing text only
+- Changed DICOM to 戴康 and PACS downtime to 派克斯停機時間
+- Localized K8S/API/RBAC pressure with Chinese anchors and K 八 S wording
+- Replaced FD&C/524B/SBOM/white-box/root-cause paths with explicit F D C Act, 五二四英文字母B款, S B O M, 白盒, 根本原因 anchors
+- Split pilot to 47 subclips: cde01=12 cde16=10 cde20=11 cde26=14
+- Applied cde16 atempo=0.82 after synthesis and trimmed 0.8s from cde26 p14 tail
+
+Commands:
+
+- python3 tools/ingest_breezyvoice_expert_review.py --input .local/breezyvoice/review/v1/expert_review_returned_20260528_final4_total_reject.csv
+- python3 tools/prepare_breezyvoice_render_package.py
+- python3 tools/run_with_gpu_telemetry.py --telemetry-jsonl .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_total_reject_repair_final5b_gpu.jsonl --summary-json .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_total_reject_repair_final5b_summary.json --stdout-log .local/breezyvoice/runtime/v1/pilot_reference_after_total_reject_repair_final5b.log --sample-interval-s 1 -- .local/breezyvoice/runtime/v1/venv/bin/python tools/breezyvoice_render_subclips.py --selection pilot --voice-mode prompt --model-path MediaTek-Research/BreezyVoice --speaker-id auto --prompt-audio .local/breezyvoice/prompts/v1/jason_reference.wav --prompt-text-file .local/breezyvoice/prompts/v1/jason_reference.txt --subclip-manifest .local/breezyvoice/manifests/v1/subclip_manifest.csv --pilot-manifest .local/breezyvoice/manifests/v1/pilot_manifest.csv --output-dir .local/breezyvoice/output/v1/subclips --overwrite
+- python3 tools/apply_breezyvoice_audio_pacing.py --parent-prefix cde_full_16_k8s_review_controls --tempo 0.82 --label 20260528-total-reject-repair-final5b --overwrite
+- python3 tools/trim_breezyvoice_audio_tail.py --subclip-id cde_full_26_shared_close_test_anchors_p14 --tail-seconds 0.8 --label 20260528-total-reject-repair-final5b --overwrite
+- python3 tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full --overwrite --silence-ms 700
+- python3 tools/build_breezyvoice_pilot_review.py
+- python3 tools/build_breezyvoice_render_review_log.py
+- python3 tools/build_breezyvoice_pilot_correction_matrix.py
+- .local/breezyvoice/runtime/v1/venv/bin/python -m whisper .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav --model tiny --language zh --output_format txt --output_dir .local/breezyvoice/review/v1/asr
+- python3 tools/verify_breezyvoice_objective.py --write-report
+- python3 tools/check_breezyvoice_full_render_gate.py --write-report
+- python3 tools/export_breezyvoice_expert_review_package.py --overwrite
+
+Logs:
+
+- .local/breezyvoice/runtime/v1/pilot_reference_after_total_reject_repair_final5.log
+- .local/breezyvoice/runtime/v1/pilot_reference_after_total_reject_repair_final5b.log
+- .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_total_reject_repair_final5b_summary.json
+- .local/breezyvoice/runtime/v1/telemetry/pilot_reference_after_total_reject_repair_final5b_gpu.jsonl
+- .local/breezyvoice/runtime/v1/pacing_total_reject_repair_final5b.log
+- .local/breezyvoice/runtime/v1/tail_trim_total_reject_repair_final5b.log
+- .local/breezyvoice/review/v1/asr/pilot_whisper_tiny_after_total_reject_repair_final5b.log
+- .local/breezyvoice/review/v1/objective_verification.json
+- .local/breezyvoice/review/v1/full_render_gate_check.json
+
+Outputs:
+
+- .local/breezyvoice/manifests/v1/subclip_manifest.csv
+- .local/breezyvoice/output/v1/subclips
+- .local/breezyvoice/output/v1/parent_chunks
+- .local/breezyvoice/output/v1/full/cde-2026-breezyvoice-pilot-stitched-v1.wav
+- .local/breezyvoice/review/v1/pilot_listening_review.csv
+- .local/breezyvoice/review/v1/render_review_log.csv
+- .local/breezyvoice/review/v1/pilot_correction_matrix.md
+
+Machine result:
+
+- final5 was intentionally interrupted after stdout showed stale exposed K八S console wording; final5b completed 47 selected prompt-mode subclips with exit_code=0; final5b elapsed_s=507.566, avg_gpu_power_w=197.054, estimated_gpu_energy_wh=27.782796, avg_gpu_utilization_pct=65.497, max_gpu_memory_used_mb=14346; final stitched pilot duration=747.99s; parent runtimes/ratios after pacing and trim: cde01 232.49/185=1.26, cde16 172.19/190=0.91, cde20 168.97/190=0.89, cde26 172.23/155=1.11; objective verifier exit 2 and full-render gate exit 2 because all four chunks require fresh human listening decisions; export exit 0 and copied 1 full WAV, 4 parent WAVs, 47 subclip WAVs, 47 subclip text files.
+
+Human result:
+
+- Returned final4 expert review was total reject. No human acceptance exists for final5b; ASR tiny is auxiliary only and produced severe technical-term errors, reinforcing the need for expert listening rather than automated acceptance.
+
+Decision: `final5b_exported_full_render_blocked_for_human_review`
+
+Fix applied:
+
+- Model-facing jargon-safe substitutions, confident-speech filler cleanup, 47-subclip pilot split, cde16 atempo=0.82 pacing, cde26 0.8s tail trim, refreshed review log/matrix, ASR auxiliary pass, and Downloads review package export.
+
+Downloads package:
+
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/
+- /home/jnln3799/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28.tar.gz
+
+Stop rule:
+
+- Stop here. Do not run the 80-minute full render until all four final5b parent chunks are explicitly accepted by human listening review and tools/check_breezyvoice_full_render_gate.py exits 0.
+
+Next action:
+
+- Send the refreshed Downloads package to the TTS expert; ingest the returned forms/expert_pilot_review_form.csv; if any row is reject, apply only the next minimal expert-specified pilot fix and rerender affected pilot chunks.
+
+Additional observations:
+
+- GPU energy is a GPU-only nvidia-smi power.draw estimate and excludes CPU, storage, display, PSU loss, and monitor energy; observable engineering intervention time includes one interrupted final5 render plus the 507.566s final5b render, post-processing, ASR, gate checks, export, and documentation; hidden model reasoning is not measurable, so the log records observable command chronology, timestamps, runtimes, and decision evidence instead. cde01 current subclips are 12 pieces, approximately 60-122 model-text chars each; observed generated audio lengths were roughly 11-26s with average about 18s before stitching. Full render remains closed even though a new package exists.

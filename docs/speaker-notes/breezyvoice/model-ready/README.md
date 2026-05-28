@@ -32,22 +32,29 @@ For an `80` minute controlled render, use `cde-2026-breezyvoice-80min-engineered
 The render package generator keeps the v1 source frozen and applies only
 model-facing sanitation: known stage cues, filler tokens, low-confidence
 demonstratives such as `這個` / `那個`, hesitant sounds, and hallucination
-residue are removed from generated TTS inputs. After the returned expert review
-and confident-speech repair, the plan uses `119` full-session subclips and `38`
-pilot subclips: `8` for `cde_full_01`, `7` for `cde_full_16`, `9` for
-`cde_full_20`, and `14` for `cde_full_26`. The prompt-mode close is split into
-short subclips to avoid zero-shot long-sentence attention failures. The pilot
-template overwrites pilot WAVs to avoid pairing revised text with stale audio.
+residue are removed from generated TTS inputs. After the total-reject returned
+expert review and final5b repair, the plan uses `127` full-session subclips and
+`47` pilot subclips: `12` for `cde_full_01`, `10` for `cde_full_16`, `11` for
+`cde_full_20`, and `14` for `cde_full_26`. The prompt-mode pilot is split into
+short subclips to reduce long-sentence attention failures and isolate
+returned-review defects. The pilot template overwrites pilot WAVs to avoid
+pairing revised text with stale audio.
 
 On RTX 5080, run `bash tools/setup_breezyvoice_rtx5080_runtime.sh` before rendering. The official BreezyVoice requirement uses a CUDA `11.8` PyTorch wheel that does not support RTX 5080 / `sm_120`; the local setup script replaces it with a CUDA `12.8` PyTorch runtime and keeps all runtime files under `.local/`.
 
 After pilot rendering, use `tools/stitch_breezyvoice_outputs.py --selection pilot --stitch-full` to verify the subclip-to-parent and parent-to-combined stitch path before any full batch render.
 
 For `cde_full_16_k8s_review_controls`, the returned expert review identified a
-runtime-compression failure around `0.73`. The current repair applies finer
-subclip splitting plus `tools/apply_breezyvoice_audio_pacing.py --tempo 0.76`
-after synthesis, improving the current stitched runtime ratio to about `0.96`.
-Archive originals remain local-only under `.local/breezyvoice/output/v1/archive/`.
+runtime-compression failure around `0.73` and follow-up K8S/RBAC/API
+terminology collapse. The current final5b repair applies safer model-facing
+technical anchors, finer subclip splitting, and
+`tools/apply_breezyvoice_audio_pacing.py --tempo 0.82` after synthesis,
+improving the current stitched runtime ratio to about `0.91`. Archive originals
+remain local-only under `.local/breezyvoice/output/v1/archive/`.
+
+For `cde_full_26_shared_close_test_anchors`, the final5b repair trims `0.8`
+seconds from the final thank-you subclip tail after synthesis to reduce the
+reported tail-residue risk while preserving the spoken close.
 
 Then run `tools/build_breezyvoice_pilot_review.py` and
 `tools/build_breezyvoice_render_review_log.py`, followed by
@@ -58,7 +65,7 @@ status, accepted state, and review source into `render_review_log.csv`; the
 third gives reviewers a chunk-level issue-to-fix matrix. The full batch stays
 blocked until all four pilot parent rows are accepted by listening.
 
-To hand the current pilot outputs to a TTS expert, run `python3 tools/export_breezyvoice_expert_review_package.py --overwrite`. The exporter copies the four required parent WAVs, the stitched pilot WAV, the manifest-listed pilot subclips, matching model text, manifests, ASR notes, the expert prompt, experiment log, and a fillable review CSV into `~/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/`, then creates a `.tar.gz` next to it.
+To hand the current pilot outputs to a TTS expert, run `python3 tools/export_breezyvoice_expert_review_package.py --overwrite`. The exporter copies the four required parent WAVs, the stitched pilot WAV, the manifest-listed pilot subclips, matching model text, manifests, ASR notes, runtime logs, GPU telemetry, pacing and tail-trim logs, the expert prompt, experiment log, and a fillable review CSV into `~/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/`, then creates a `.tar.gz` next to it.
 
 Before any new TTS run or text-conditioning change, append a record with
 `tools/record_breezyvoice_experiment.py`. The tracked log lives at
