@@ -8,6 +8,16 @@ This folder owns the tracked, syncable text inputs for BreezyVoice production.
 - Local only: generated audio, prompt audio, model cache, temporary WAV files, and failed render attempts.
 - Local-only workspace: `.local/breezyvoice/`.
 
+## Forward QA Rule
+
+Future research-audio production should use the reusable workflow in
+`docs/tts-methodology/`: ASR back-transcription, pronunciation-lexicon checks,
+audio quality checks, chunk consistency, and hash/provenance decide whether an
+output is acceptable. Human listening may be recorded as stakeholder feedback,
+but it is no longer a required gate for future TTS research-material workflow.
+The older CDE BreezyVoice records below preserve their historical human-review
+labels for traceability.
+
 ## Current Files
 
 | File | Role |
@@ -20,7 +30,7 @@ This folder owns the tracked, syncable text inputs for BreezyVoice production.
 | `cde-2026-jingzhong-section-batch-plan.csv` | Planned output groups for batch rendering and review. |
 | `cde-2026-breezyvoice-merged-transcript-workfile.md` | Merge-status and delivery-intake file for the all-session BreezyVoice transcript. |
 | `expert-package-source/` | TTS expert handoff notes, full transcript source bundle, and full-session batch outline. |
-| `cde-2026-breezyvoice-tts-experiment-log-v1.md` / `.jsonl` | Durable experiment log for every TTS text-conditioning, render, stitch, ASR, review-package, and human-gate decision. |
+| `cde-2026-breezyvoice-tts-experiment-log-v1.md` / `.jsonl` | Durable experiment log for every TTS text-conditioning, render, stitch, ASR, review package, and gate decision. |
 
 ## Production Rule
 
@@ -112,14 +122,17 @@ The `cde_full_16_k8s_review_controls` subclips keep the post-synthesis
 tail trim.
 
 Post-render auxiliary ASR used `MediaTek-Research/Breeze-ASR-25` on CUDA only;
-no Whisper ASR was used for this release step. The ASR output is an auxiliary
-warning signal and does not replace the owner release decision.
+no Whisper ASR was used for this release step. In the historical CDE v1 release
+record, ASR was treated as an auxiliary warning signal. For future research
+audio, use `docs/tts-methodology/tts-auto-qa-rubric.md`: ASR
+back-transcription, critical-term matching, audio quality checks, chunk
+consistency, and provenance are the acceptance gate.
 
-All current auxiliary ASR for this project must use
-`MediaTek-Research/Breeze-ASR-25`; do not use Whisper for current BreezyVoice
-review gates. Breeze-ASR-25 output is still only an auxiliary warning signal
-and is not an acceptance source for mixed Mandarin/English medical
-cybersecurity audio.
+All future BreezyVoice QA for this project should use
+`MediaTek-Research/Breeze-ASR-25` unless a new ASR model is explicitly recorded
+in the experiment card. Do not use Whisper for the current BreezyVoice QA path.
+Breeze-ASR-25 output must be interpreted through the pronunciation lexicon,
+term-error list, and warning regions rather than raw transcript text alone.
 
 Pilot review artifacts stay local under `.local/breezyvoice/review/v1/`, including `pilot_audio_inventory.csv`, `pilot_parent_stitch_inventory.csv`, `pilot_stitch_summary.json`, `pilot_machine_review.md`, `pilot_listening_review.csv`, `render_review_log.csv`, `pilot_correction_matrix.md`, and `full_batch_gate.json`. Rebuild `render_review_log.csv` and `pilot_correction_matrix.md` after any stitch, expert-review ingestion, or rerender so runtime, issue, fix, accepted status, and stop-gate source stay aligned.
 
@@ -133,11 +146,11 @@ python3 tools/record_breezyvoice_experiment.py --experiment-id EXP-YYYYMMDD-NN -
 ```
 
 The record must explain the reason, expected effect, affected chunks, commands,
-log paths, outputs, machine result, human result if any, fix applied, next
-action, and stop rule. If human listening is required, export a fresh package to
-`~/Downloads` with `python3 tools/export_breezyvoice_expert_review_package.py
---overwrite`, record that directory/archive in the experiment log, and stop
-before any full render until the human review returns accepted decisions.
+log paths, outputs, machine result, QA result, fix applied, next action, and
+stop rule. For future research-audio production, fill the public-safe card in
+`logs/tts-experiments/` and store automated QA summaries in
+`qa/tts-auto-checks/`. Human listening may be recorded as stakeholder feedback
+only when explicitly requested; it is not the required gate.
 
 Before any full render attempt, run:
 
@@ -145,9 +158,11 @@ Before any full render attempt, run:
 python3 tools/check_breezyvoice_full_render_gate.py --write-report
 ```
 
-Only a zero exit code means the full render gate is open. A non-zero exit means
-the next action is human listening review or the next expert-specified pilot
-repair, not full rendering.
+For the historical CDE v1 toolchain, only a zero exit code means the old full
+render gate is open. For future research-audio work, use the automated rubric
+in `docs/tts-methodology/tts-auto-qa-rubric.md`; a non-zero or incomplete QA
+result means text repair, audio repair, chunk repair, provenance repair, or
+model rerun before full-package acceptance.
 
 After all four pilot parent chunks are accepted, use the guarded full-render
 template generated by `tools/prepare_breezyvoice_render_package.py`:

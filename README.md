@@ -35,6 +35,7 @@ cybersec-2026-ai-samd-talk = what the talk says / shows / scores / rehearses
 | [`docs/02_evaluation_system.md`](docs/02_evaluation_system.md) | `100`-point speech rubric, slide hard gates, penalties, multiplier, and generated evaluation outputs. |
 | [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md) | Dry-run loop, timing checkpoints, peer-review questions, repair order, and readiness checklist. |
 | [`docs/speaker-notes/`](docs/speaker-notes/) | Tracked versioned speaker-prep notes, deeper case material, transcript working copies, audience Q&A prep, and slide-by-slide audience analysis. |
+| [`docs/tts-methodology/`](docs/tts-methodology/) | Reusable TTS research-audio workflow, text-design rules, automated QA gates, failure taxonomy, ethics/rights record, and model comparison notes. |
 
 The three numbered docs replace the older split between strategy, deck spec, transcript, scoring rubric, slide constraints, and rehearsal runbook. The speaker-notes folder is supplemental and versioned for rehearsal depth.
 
@@ -62,6 +63,7 @@ The confirmed CDE session is a derivative use of the same medical-cybersecurity 
 | --- | --- |
 | `docs/speaker-notes/reference/cde-2026-clinical-cybersecurity-80min-prep-zh-tw.md` | Current CDE `2026-06-16` prep note with confirmed constraints, Jason / 靖中 `80` minute split, slide skeleton, workback plan, and draft pre/post-test questions. |
 | `docs/speaker-notes/breezyvoice/` | Syncable BreezyVoice text inputs, small source DOCX files, expert-delivered full-session model-ready transcript, and batch-render plan. Generated audio stays in `.local/breezyvoice/`. |
+| `logs/tts-experiments/` and `qa/tts-auto-checks/` | Public-safe TTS experiment cards and automated QA summaries. Future research-audio acceptance should use ASR back-transcription, term checks, audio quality, chunk consistency, and hash/provenance rather than human listening as a required gate. |
 | `../planning-everything-track/data/knowledge/personal/sources/2026-04-20-cde-prof-wu-clinical-medical-device-it-cybersecurity-speech/source.md` | Planning-side source record for event facts, email archive, deadline, agenda, and capacity routing. |
 
 Boundary: keep raw email PDFs and deadline/source evidence in the planning repo; keep speakable deck content, role split, rehearsal notes, and question drafting here.

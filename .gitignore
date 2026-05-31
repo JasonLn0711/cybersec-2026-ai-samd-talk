@@ -8,3 +8,8 @@ G2PWModel/
 *.tmp
 *.bak
 ~$*
+assets/tts-local-only/
+*.wav
+*.mp3
+*.m4a
+*.mp4

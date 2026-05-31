@@ -4,6 +4,12 @@ Status: `expert-delivered`
 
 This folder owns the current BreezyVoice-ready text package returned by the TTS expert on `2026-05-27`.
 
+Forward workflow note: this file preserves the historical CDE BreezyVoice
+render path. Future research-audio acceptance should follow
+`docs/tts-methodology/tts-auto-qa-rubric.md`, using ASR back-transcription,
+critical-term checks, audio quality checks, chunk consistency, and
+hash/provenance as the gate instead of requiring human listening.
+
 The expert output follows the final PPT order and pacing. It is a rewritten full-session transcript, not a direct paste-up of the source text. Jason's first half, Jingzhong's second half, and the shared close are unified into formal Taiwan Mandarin lecture language with a natural handoff.
 
 ## Files
@@ -72,32 +78,40 @@ For `cde_full_26_shared_close_test_anchors`, the latest returned expert review
 accepted the chunk. The current package preserves that accepted audio as the
 continuity baseline and rerenders only the rejected chunks.
 
-Then run `tools/build_breezyvoice_pilot_review.py` and
-`tools/build_breezyvoice_render_review_log.py`, followed by
-`tools/build_breezyvoice_pilot_correction_matrix.py`. The first tool creates
-the local listening decision table and `full_batch_gate.json`; the second
-consolidates manifest rows, parent WAV runtime, pronunciation issue, fix
-status, accepted state, and review source into `render_review_log.csv`; the
-third gives reviewers a chunk-level issue-to-fix matrix. The full batch stays
-blocked until all four pilot parent rows are accepted by listening.
+For the historical CDE v1 pilot workflow, `tools/build_breezyvoice_pilot_review.py`,
+`tools/build_breezyvoice_render_review_log.py`, and
+`tools/build_breezyvoice_pilot_correction_matrix.py` remain as traceability
+helpers. For future research-audio workflow, replace the old listening table
+with an automated QA summary under `qa/tts-auto-checks/` that records ASR
+back-transcription, critical-term accuracy, audio quality, chunk consistency,
+and hash/provenance.
 
-To hand the current pilot outputs to a TTS expert, run `python3 tools/export_breezyvoice_expert_review_package.py --overwrite`. The exporter copies the four required parent WAVs, the stitched pilot WAV, the manifest-listed pilot subclips, matching model text, manifests, Breeze-ASR-25 notes, runtime logs, GPU telemetry, pacing logs, the expert prompt, experiment log, and a fillable review CSV into `~/Downloads/cde-2026-breezyvoice-pilot-review-package-2026-05-28/`, then creates a `.tar.gz` next to it.
+The old expert export helper,
+`python3 tools/export_breezyvoice_expert_review_package.py --overwrite`, is
+retained for historical reproducibility. Future handoff packages should expose
+public-safe QA summaries and checksums, while keeping generated audio and
+reference audio in local/private storage.
 
-All current auxiliary ASR must use `MediaTek-Research/Breeze-ASR-25`; do not
-use Whisper for this BreezyVoice review workflow. The ASR transcript remains a
-warning signal only, and human listening owns the gate decision.
+All future BreezyVoice QA for this repo should use
+`MediaTek-Research/Breeze-ASR-25` unless a replacement ASR model is explicitly
+recorded in the experiment card. Do not use Whisper for the current
+BreezyVoice QA path. The historical review workflow treated ASR as a warning
+signal; the forward research workflow treats ASR plus lexicon, audio quality,
+chunk consistency, and provenance as the auto / semi-auto gate.
 
 Before any new TTS run or text-conditioning change, append a record with
 `tools/record_breezyvoice_experiment.py`. The tracked log lives at
 `docs/speaker-notes/breezyvoice/cde-2026-breezyvoice-tts-experiment-log-v1.md`
-and is included in every expert review export. If a new run produces a human
-review gate, export a fresh copy to `~/Downloads` and stop until human decisions
-are returned.
+and can be cross-referenced from the public-safe experiment cards under
+`logs/tts-experiments/`. Future runs should stop on failed automated QA rather
+than wait for human listening decisions.
 
-Before a full render command, run
+For the historical CDE v1 full-render template, run
 `python3 tools/check_breezyvoice_full_render_gate.py --write-report`. The command
-must exit `0`; otherwise the full render remains closed and the next action is
-human listening review or the next expert-specified pilot repair.
+must exit `0`; otherwise the old full render remains closed. For future
+research-audio packages, use `docs/tts-methodology/tts-auto-qa-rubric.md`; a
+failed or incomplete QA result means text repair, audio repair, chunk repair,
+provenance repair, or model rerun before acceptance.
 
 Once the gate opens, run
 `bash .local/breezyvoice/commands/v1/run_full_render_template.sh`. The template
