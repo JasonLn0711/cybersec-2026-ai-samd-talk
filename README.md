@@ -36,6 +36,7 @@ cybersec-2026-ai-samd-talk = what the talk says / shows / scores / rehearses
 | [`docs/03_rehearsal_workflow.md`](docs/03_rehearsal_workflow.md) | Dry-run loop, timing checkpoints, peer-review questions, repair order, and readiness checklist. |
 | [`docs/speaker-notes/`](docs/speaker-notes/) | Tracked versioned speaker-prep notes, deeper case material, transcript working copies, audience Q&A prep, and slide-by-slide audience analysis. |
 | [`docs/tts-methodology/`](docs/tts-methodology/) | Reusable TTS research-audio workflow, text-design rules, automated QA gates, failure taxonomy, ethics/rights record, and model comparison notes. |
+| [`docs/delivery-records/`](docs/delivery-records/) | Public-safe post-talk delivery records, organizer outcome evidence, and pointers to local-only raw source captures. |
 
 The three numbered docs replace the older split between strategy, deck spec, transcript, scoring rubric, slide constraints, and rehearsal runbook. The speaker-notes folder is supplemental and versioned for rehearsal depth.
 
@@ -54,6 +55,15 @@ The three numbered docs replace the older split between strategy, deck spec, tra
 | `docs/speaker-notes/archive/` | Superseded drafts and legacy deep-note baselines retained for traceability. |
 
 The original imported file under `~/Downloads` is not the repo source of truth and should not be modified or deleted by agent work.
+
+## Post-Talk Delivery Records
+
+| Artifact | Role |
+| --- | --- |
+| `docs/delivery-records/2026-06-08-cybersec-2026-outcome-report-record-zh-tw.md` | Complete repo-safe record of the CYBERSEC 2026 organizer outcome report PDF and related Gmail source thread. Raw PDFs and full text extraction are preserved locally under `.local/source-records/2026-06-08-cybersec-outcome-report/`. |
+| `docs/delivery-records/2026-06-08-cybersec-2026-score-analysis-and-impact-packaging-zh-tw.md` | Complete follow-up analysis of why the score was below group average, how to raise the next talk to `4.5+`, and how to package the talk for PhD applications, international collaboration, and LinkedIn. |
+
+This evidence supports the talk's post-event contribution record: audience feedback identified the topic as useful for Taiwan medical-device global marketing, quantitative results showed professional content and delivery uptake, and the low promotion score confirmed the session remained a practical knowledge-sharing talk.
 
 ## CDE / Prof. Wu Derivative Prep
 
